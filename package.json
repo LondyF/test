@@ -32,6 +32,7 @@
     "assert": "^1.5.1",
     "axios": "^1.6.0",
     "browserify-zlib": "^0.1.4",
+    "buffer": "^4.9.1",
     "console-browserify": "^1.2.0",
     "constants-browserify": "^1.0.0",
     "dns.js": "^1.0.1",
@@ -70,6 +71,7 @@
     "react-native-onesignal": "^5.0.2",
     "react-native-os": "^1.2.6",
     "react-native-pager-view": "^6.2.2",
+    "react-native-permissions": "^3.10.1",
     "react-native-picker-select": "^9.0.0",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "^6.2.0",
@@ -172,5 +174,8 @@
     "tty": "tty-browserify",
     "vm": "vm-browserify",
     "tls": false
+  },
+  "resolutions": {
+    "react-native-permissions": "^3.10.1"
   }
 }
