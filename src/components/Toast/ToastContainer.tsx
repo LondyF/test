@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useCallback } from 'react';
+import React, {useState} from 'react';
+import {useCallback} from 'react';
 
 import ToastComponent from './Toast';
-import { ToastProps } from './toasts';
-import { ToastTypes } from './toastTypes';
+import {ToastProps} from './toasts';
+import {ToastTypes} from './toastTypes';
 
 interface InitContextProps {
   Toast: (message: string, type: ToastTypes, duration?: number) => void;
@@ -11,7 +11,7 @@ interface InitContextProps {
 
 export const ToastContext = React.createContext({} as InitContextProps);
 
-const ToastContainer: React.FC = ({ children }) => {
+const ToastContainer: React.FC = ({children}) => {
   const [toasts, setToats] = useState<Array<ToastProps>>([]);
 
   const generateNumber = () => {
@@ -19,10 +19,14 @@ const ToastContainer: React.FC = ({ children }) => {
   };
 
   const Toast = useCallback(
-    (message: string, type: ToastTypes = ToastTypes.WARNING, duration: number = 1500) => {
+    (
+      message: string,
+      type: ToastTypes = ToastTypes.WARNING,
+      duration: number = 1500,
+    ) => {
       var id = generateNumber();
-      setToats((prevToats) => {
-        let newToasts = [...prevToats, { id, message, type, duration }];
+      setToats(prevToats => {
+        let newToasts = [...prevToats, {id, message, type, duration}];
         return newToasts;
       });
     },
@@ -30,14 +34,14 @@ const ToastContainer: React.FC = ({ children }) => {
   );
 
   const hideToast = (id: number) => {
-    setToats((prevToats) => {
-      return prevToats.filter((x) => x.id !== id);
+    setToats(prevToats => {
+      return prevToats.filter(x => x.id !== id);
     });
   };
 
   return (
     <React.Fragment>
-      <ToastContext.Provider value={{ Toast }}>{children}</ToastContext.Provider>
+      <ToastContext.Provider value={{Toast}}>{children}</ToastContext.Provider>
       {toasts.map((toast, index) => (
         <ToastComponent
           key={index}
