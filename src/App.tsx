@@ -5,7 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {useTranslation} from 'react-i18next';
-import OneSignal, {OpenedEvent} from 'react-native-onesignal';
+import {NotificationClickEvent, OneSignal} from 'react-native-onesignal';
 
 import {Loader} from '@components/index';
 import {primaryBlue} from '@styles/colors';
@@ -27,9 +27,9 @@ import {
 } from 'react-native-gesture-handler';
 import config from './config';
 
-OneSignal.setLogLevel(6, 0);
-OneSignal.setAppId('44ce5487-cba3-4080-92cc-887eee282fb0');
-OneSignal.promptForPushNotificationsWithUserResponse(() => {});
+OneSignal.Debug.setLogLevel(6);
+OneSignal.initialize('44ce5487-cba3-4080-92cc-887eee282fb0');
+OneSignal.Notifications.requestPermission(true);
 
 const queryClient = new QueryClient();
 
@@ -46,9 +46,9 @@ const App = () => {
     state.setRedirectSettings,
   ]);
 
-  OneSignal.setNotificationOpenedHandler(handleNotficationOpened);
+  OneSignal.Notifications.addEventListener('click', handleNotficationOpened);
 
-  function handleNotficationOpened(openedEvent: OpenedEvent) {
+  function handleNotficationOpened(openedEvent: NotificationClickEvent) {
     const data = openedEvent.notification.additionalData as AdditionalData;
     const action = data?.action ?? '';
     const pageKey = data?.pageKey ?? '';
