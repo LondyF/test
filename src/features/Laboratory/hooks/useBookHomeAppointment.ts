@@ -18,9 +18,10 @@ interface Response {
 }
 
 const useBookHomeAppointment = () => {
-  return useMutation<Response, AxiosError, HomeAppointment>(
-    (appointment: HomeAppointment) => bookHomeAppointment(appointment),
-  );
+  return useMutation<Response, AxiosError, HomeAppointment>({
+    mutationFn: (appointment: HomeAppointment) =>
+      bookHomeAppointment(appointment),
+  });
 };
 
 export default useBookHomeAppointment;

@@ -1,16 +1,19 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 import Modal from 'react-native-modal';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faExclamationTriangle, faInfoCircle } from '@fortawesome/pro-light-svg-icons';
-import { useTranslation } from 'react-i18next';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {
+  faExclamationTriangle,
+  faInfoCircle,
+} from '@fortawesome/pro-light-svg-icons';
+import {useTranslation} from 'react-i18next';
 
 import useTheme from '@hooks/useTheme';
-import { Typography, Button } from '@src/components';
-import { Theme } from '@styles/styles';
+import {Typography, Button} from '@src/components';
+import {Theme} from '@styles/styles';
 
-import { ButtonProps } from './button';
+import {ButtonProps} from './button';
 
 interface Props {
   isVisible: boolean;
@@ -34,7 +37,7 @@ const GenericPopUp: React.FC<Props> = ({
   onLogout,
 }) => {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   const styles = makeStyles(theme);
 
@@ -66,7 +69,7 @@ const GenericPopUp: React.FC<Props> = ({
       <View style={styles.container}>
         <FontAwesomeIcon
           size={75}
-          style={isWarning ? styles.iconWarning : { color: theme.colors.primary }}
+          style={isWarning ? styles.iconWarning : {color: theme.colors.primary}}
           icon={isWarning ? faExclamationTriangle : faInfoCircle}
         />
         <Typography
@@ -77,16 +80,24 @@ const GenericPopUp: React.FC<Props> = ({
         />
         <View>
           <Typography variant="b1" text={t(body)} />
-          <Typography variant="b1" textStyle={styles.marginVertical} text={t(bodyTwo)} />
+          <Typography
+            variant="b1"
+            textStyle={styles.marginVertical}
+            text={t(bodyTwo)}
+          />
         </View>
         <View style={styles.flexRow}>
-          {buttons[buttonType].map(({ text, onPress, variant }, index) => (
+          {buttons[buttonType].map(({text, onPress, variant}, index) => (
             <Button
               key={index}
               onPress={onPress}
               variant={variant ?? 'primary'}
               text={text}
-              textStyle={variant === 'outline' ? { color: theme.colors.primary } : undefined}
+              textStyle={
+                variant === 'outline'
+                  ? {color: theme.colors.primary}
+                  : undefined
+              }
               buttonStyle={{
                 ...(variant === 'outline' ? styles.outlineButton : {}),
                 ...styles.marginRight,

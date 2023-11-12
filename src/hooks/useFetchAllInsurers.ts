@@ -20,9 +20,9 @@ interface FetchAllInsurersResponse {
 }
 
 const useFetchAllInsurers = () =>
-  useQuery<FetchAllInsurersResponse, AxiosError<FetchAllInsurersResponse>>(
-    'insurers',
-    () => fetchAllInsurers(),
-  );
+  useQuery<FetchAllInsurersResponse, AxiosError<FetchAllInsurersResponse>>({
+    queryKey: ['insurers'],
+    queryFn: () => fetchAllInsurers(),
+  });
 
 export default useFetchAllInsurers;

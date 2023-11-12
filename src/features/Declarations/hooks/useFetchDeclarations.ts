@@ -4,8 +4,9 @@ import {fetchAllDeclaration} from '../services/declarations-service';
 import {GetAllDeclariontsReponse} from '../types/declarations';
 
 const useFetchDeclarations = (apuId: number) =>
-  useQuery<GetAllDeclariontsReponse>('declarations', () =>
-    fetchAllDeclaration(apuId),
-  );
+  useQuery<GetAllDeclariontsReponse>({
+    queryKey: ['declarations'],
+    queryFn: () => fetchAllDeclaration(apuId),
+  });
 
 export default useFetchDeclarations;

@@ -7,8 +7,8 @@ const useValidatePhoneNumber = () =>
     ValidateLicenseResponse,
     AxiosError<ValidateLicenseResponse>,
     any
-  >(
-    ({
+  >({
+    mutationFn: ({
       apuId,
       license,
       smsCode,
@@ -19,6 +19,6 @@ const useValidatePhoneNumber = () =>
       smsCode: string;
       device: DeviceInfo;
     }) => validatePhoneNumber(apuId, license, smsCode, device),
-  );
+  });
 
 export default useValidatePhoneNumber;

@@ -3,8 +3,9 @@ import {useQuery} from '@tanstack/react-query';
 import {GetMyMedicationsResponse} from '../types/medication';
 
 const useFetchMyMedications = (apuId: number) =>
-  useQuery<GetMyMedicationsResponse>(['myMedication'], () =>
-    getMyMedications(apuId),
-  );
+  useQuery<GetMyMedicationsResponse>({
+    queryKey: ['myMedication'],
+    queryFn: () => getMyMedications(apuId),
+  });
 
 export default useFetchMyMedications;

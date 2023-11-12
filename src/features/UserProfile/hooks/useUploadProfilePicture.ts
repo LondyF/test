@@ -9,13 +9,11 @@ const useUploadProiflePicture = () =>
     UploadPhotoOfIdResponse,
     AxiosError<UploadPhotoOfIdResponse>,
     any
-  >(
-    ({apuId, image}: {apuId: number; image: string}) =>
+  >({
+    mutationFn: ({apuId, image}: {apuId: number; image: string}) =>
       uploadProfilePicture(apuId, image),
-    {
-      onSuccess() {
-        deleteTmpFolder();
-      },
+    onSuccess() {
+      deleteTmpFolder();
     },
-  );
+  });
 export default useUploadProiflePicture;

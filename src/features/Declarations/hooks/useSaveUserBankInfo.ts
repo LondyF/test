@@ -12,14 +12,14 @@ interface variables {
 }
 
 const useSaveUserBankInfo = () =>
-  useMutation<SaveBankInfoResponse, AxiosError, variables>(
-    ({...values}: variables) =>
+  useMutation<SaveBankInfoResponse, AxiosError, variables>({
+    mutationFn: ({...values}: variables) =>
       saveUserBankInfo(
         values.apuId,
         values.accountNumber,
         values.bankId,
         values.inNameOf,
       ),
-  );
+  });
 
 export default useSaveUserBankInfo;

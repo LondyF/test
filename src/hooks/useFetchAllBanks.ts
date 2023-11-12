@@ -17,9 +17,9 @@ export interface Banks {
 }
 
 const useFetchAllBanks = () =>
-  useQuery<FetchAllBanksResponse, AxiosError<FetchAllBanksResponse>>(
-    'banks',
-    () => fetchAllBanks(),
-  );
+  useQuery<FetchAllBanksResponse, AxiosError<FetchAllBanksResponse>>({
+    queryKey: ['banks'],
+    queryFn: () => fetchAllBanks(),
+  });
 
 export default useFetchAllBanks;

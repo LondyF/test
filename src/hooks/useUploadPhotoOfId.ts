@@ -7,8 +7,8 @@ const useUploadPhotoOfId = () =>
     UploadPhotoOfIdResponse,
     AxiosError<UploadPhotoOfIdResponse>,
     any
-  >(
-    ({
+  >({
+    mutationFn: ({
       apuId,
       lang,
       image,
@@ -21,6 +21,6 @@ const useUploadPhotoOfId = () =>
       rescanFotoId: boolean;
       refId: Number;
     }) => uploadPhotoOfId(apuId, lang, image, rescanFotoId, refId),
-  );
+  });
 
 export default useUploadPhotoOfId;

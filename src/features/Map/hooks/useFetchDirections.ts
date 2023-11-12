@@ -12,14 +12,16 @@ interface values {
 }
 
 const useFetchDirections = () =>
-  useMutation<DirectionsResponse, AxiosError, values>(({...values}: values) => {
-    return fetchDirections(
-      values.apuId,
-      values.originLat,
-      values.desLat,
-      values.originLon,
-      values.desLon,
-    );
+  useMutation<DirectionsResponse, AxiosError, values>({
+    mutationFn: ({...values}: values) => {
+      return fetchDirections(
+        values.apuId,
+        values.originLat,
+        values.desLat,
+        values.originLon,
+        values.desLon,
+      );
+    },
   });
 
 export default useFetchDirections;

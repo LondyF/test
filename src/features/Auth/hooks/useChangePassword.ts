@@ -18,8 +18,8 @@ interface RootObject {
 }
 
 const useChangePassword = () =>
-  useMutation<any, AxiosError<RootObject>, any>(
-    ({
+  useMutation<any, AxiosError<RootObject>, any>({
+    mutationFn: ({
       ...values
     }: {
       apuId: number;
@@ -33,6 +33,6 @@ const useChangePassword = () =>
         values.newPassword,
         values.newPasswordConfirm,
       ),
-  );
+  });
 
 export default useChangePassword;

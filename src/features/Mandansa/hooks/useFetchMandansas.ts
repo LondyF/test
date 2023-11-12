@@ -4,9 +4,10 @@ import {getAllMandansas} from '../services/mandansa-service';
 import {GetAllMandansasResponse} from '../types/mandansa';
 
 const useFetchMandansas = (apuId: User['apuId']) => {
-  return useQuery<GetAllMandansasResponse, {}>(['mandansa', apuId], () =>
-    getAllMandansas(apuId),
-  );
+  return useQuery<GetAllMandansasResponse, {}>({
+    queryKey: ['mandansa', apuId],
+    queryFn: () => getAllMandansas(apuId),
+  });
 };
 
 export default useFetchMandansas;

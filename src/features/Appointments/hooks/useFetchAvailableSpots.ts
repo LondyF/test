@@ -7,13 +7,11 @@ const useFetchAvailableSpots = (
   vesId: number,
   mdwId: number,
 ) => {
-  return useQuery<GetAvailableSpotsResponse>(
-    'freeSpots',
-    () => fetchAvailableSpots(apuId, vesId, mdwId),
-    {
-      enabled: false,
-    },
-  );
+  return useQuery<GetAvailableSpotsResponse>({
+    queryKey: ['freeSpots'],
+    queryFn: () => fetchAvailableSpots(apuId, vesId, mdwId),
+    enabled: false,
+  });
 };
 
 export default useFetchAvailableSpots;

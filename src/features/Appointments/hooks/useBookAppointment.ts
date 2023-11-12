@@ -19,6 +19,8 @@ const useBookAppointment = () =>
     BookAppointmentResponse,
     AxiosError<BookAppointmentResponse>,
     NewAppointment
-  >((appointment: NewAppointment) => bookAppointment(appointment));
+  >({
+    mutationFn: (appointment: NewAppointment) => bookAppointment(appointment),
+  });
 
 export default useBookAppointment;

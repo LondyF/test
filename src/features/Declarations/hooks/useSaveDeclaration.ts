@@ -15,22 +15,20 @@ interface variables {
 const useSaveDeclaration = () => {
   const navigation = useNavigation();
   const queryClient = useQueryClient();
-  return useMutation<SaveDeclarationResponse, AxiosError, variables>(
-    ({...values}: variables) =>
+  return useMutation<SaveDeclarationResponse, AxiosError, variables>({
+    mutationFn: ({...values}: variables) =>
       saveDeclaration(
         values.apuId,
         values.catalogName,
         values.declarationPhotos,
       ),
-    {
-      onSuccess(data) {
-        const {
-          scan: {status},
-        } = data;
-        status.status === 0 && navigation.goBack();
-        queryClient.invalidateQueries('declarations');
-      },
+    onSuccess(data) {
+      const {
+        scan: {status},
+      } = data;
+      status.status === 0 && navigation.goBack();
+      queryClient.invalidateQueries({queryKey: ['declarations']});
     },
-  );
+  });
 };
 export default useSaveDeclaration;

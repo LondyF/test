@@ -25,8 +25,8 @@ interface RootObject {
 }
 
 const useLoginUser = () =>
-  useMutation<any, AxiosError<RootObject>, any>(
-    ({
+  useMutation<any, AxiosError<RootObject>, any>({
+    mutationFn: ({
       ...values
     }: {
       email: string;
@@ -40,6 +40,6 @@ const useLoginUser = () =>
         values.device,
         values.biometricPassword,
       ),
-  );
+  });
 
 export default useLoginUser;

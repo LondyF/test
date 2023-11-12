@@ -22,9 +22,9 @@ interface FetchAllDoctorsResponse {
 }
 
 const useFetchAllDoctors = () =>
-  useQuery<FetchAllDoctorsResponse, AxiosError<FetchAllDoctorsResponse>>(
-    'doctors',
-    () => fetchAllDoctors(),
-  );
+  useQuery<FetchAllDoctorsResponse, AxiosError<FetchAllDoctorsResponse>>({
+    queryKey: ['doctors'],
+    queryFn: () => fetchAllDoctors(),
+  });
 
 export default useFetchAllDoctors;

@@ -3,8 +3,9 @@ import {fetchHealthCheckUpQuestions} from '../services/healthCheckUp-service';
 import {GetHealthCheckUpQuestionsResponse} from '../types/healthCheck';
 
 const useFetchHealthCheckUpQuestions = (apuId: number) =>
-  useQuery<GetHealthCheckUpQuestionsResponse>('myHealthCheckUp', () =>
-    fetchHealthCheckUpQuestions(apuId),
-  );
+  useQuery<GetHealthCheckUpQuestionsResponse>({
+    queryKey: ['myHealthCheckUp'],
+    queryFn: () => fetchHealthCheckUpQuestions(apuId),
+  });
 
 export default useFetchHealthCheckUpQuestions;

@@ -11,10 +11,10 @@ interface Values {
 }
 
 const useScanMandansaQR = () => {
-  return useMutation<any, AxiosError, Values>(
-    ({uuId, apuId, recId, apuMdsId}: Values) =>
+  return useMutation<any, AxiosError, Values>({
+    mutationFn: ({uuId, apuId, recId, apuMdsId}: Values) =>
       scanMandansaQRCode(apuId, uuId, recId, apuMdsId),
-  );
+  });
 };
 
 export default useScanMandansaQR;

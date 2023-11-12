@@ -24,8 +24,8 @@ export interface RegisterUserResponse {
 }
 
 const useRegisterUser = () =>
-  useMutation<RegisterUserResponse, AxiosError<RegisterUserResponse>, any>(
-    ({
+  useMutation<RegisterUserResponse, AxiosError<RegisterUserResponse>, any>({
+    mutationFn: ({
       ...values
     }: {
       firstName: string;
@@ -55,6 +55,6 @@ const useRegisterUser = () =>
         values.doctorId,
         values.apuMdsId,
       ),
-  );
+  });
 
 export default useRegisterUser;

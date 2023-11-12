@@ -7,9 +7,9 @@ const useFetchAllLabRequests = (
   mdsId?: number,
   forceCacheRefresh: boolean = false,
 ) => {
-  return useQuery<GetAllLabRequestsResponse, {}>(
-    ['labRequests', apuId, mdsId],
-    () => getAllLabRequests(apuId, mdsId, forceCacheRefresh),
-  );
+  return useQuery<GetAllLabRequestsResponse, {}>({
+    queryKey: ['labRequests', apuId, mdsId],
+    queryFn: () => getAllLabRequests(apuId, mdsId, forceCacheRefresh),
+  });
 };
 export default useFetchAllLabRequests;

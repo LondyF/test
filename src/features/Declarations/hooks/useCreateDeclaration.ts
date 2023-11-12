@@ -9,8 +9,9 @@ interface variables {
 }
 
 const useCreateDeclaration = () =>
-  useMutation<{}, AxiosError, variables>(({...values}: variables) =>
-    createDeclaration(values.apuId, values.declarationName),
-  );
+  useMutation<{}, AxiosError, variables>({
+    mutationFn: ({...values}: variables) =>
+      createDeclaration(values.apuId, values.declarationName),
+  });
 
 export default useCreateDeclaration;

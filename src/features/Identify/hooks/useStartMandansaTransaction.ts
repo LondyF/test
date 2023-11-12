@@ -10,9 +10,9 @@ type values = {
 };
 
 const useStartMandansaTransaction = () =>
-  useMutation<PollAppResponse, AxiosError, values>(
-    ({uuId, apuId, recId}: values) =>
+  useMutation<PollAppResponse, AxiosError, values>({
+    mutationFn: ({uuId, apuId, recId}: values) =>
       StartMandansaTransaction(uuId, apuId, recId),
-  );
+  });
 
 export default useStartMandansaTransaction;

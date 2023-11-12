@@ -8,6 +8,6 @@ const useAuthUserWithQR = () =>
     AuthUserWthQRResponse,
     AxiosError<AuthUserWthQRResponse>,
     {apuId: number; qr: string}
-  >(({apuId, qr}) => authUserWithQR(apuId, qr));
+  >({mutationFn: ({apuId, qr}) => authUserWithQR(apuId, qr)});
 
 export default useAuthUserWithQR;

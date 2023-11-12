@@ -9,10 +9,9 @@ export type values = {
 };
 
 const useChangeMandansaStatus = () => {
-  return useMutation<{}, AxiosError, values>(
-    ({relation}: values) =>
+  return useMutation<{}, AxiosError, values>({
+    mutationFn: ({relation}: values) =>
       changeMandansaStatus(relation.mdsId, relation.mdsStatus),
-    {},
-  );
+  });
 };
 export default useChangeMandansaStatus;

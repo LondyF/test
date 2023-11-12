@@ -9,8 +9,9 @@ type values = {
 };
 
 const useStartPullTransactie = () =>
-  useMutation<PollAppResponse, AxiosError, values>(({...values}: values) =>
-    StartPullTransactie(values.uuId, values.apuId),
-  );
+  useMutation<PollAppResponse, AxiosError, values>({
+    mutationFn: ({...values}: values) =>
+      StartPullTransactie(values.uuId, values.apuId),
+  });
 
 export default useStartPullTransactie;

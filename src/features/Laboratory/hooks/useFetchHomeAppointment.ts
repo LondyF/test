@@ -7,9 +7,10 @@ const useFetchHomeAppointment = (
   avaId: number,
   mdsId?: number,
 ) => {
-  return useQuery<GetHomeAppointmentResponse, {}>(['labHomeAppointment'], () =>
-    getLabHomeAppointment(apuId, avaId, mdsId),
-  );
+  return useQuery<GetHomeAppointmentResponse, {}>({
+    queryKey: ['labHomeAppointment'],
+    queryFn: () => getLabHomeAppointment(apuId, avaId, mdsId),
+  });
 };
 
 export default useFetchHomeAppointment;

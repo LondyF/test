@@ -17,9 +17,9 @@ export interface ScanTypes {
 }
 
 const useFetchAllDeclarationScanTypes = () =>
-  useQuery<FetchAllScanTypesResponse, AxiosError<FetchAllScanTypesResponse>>(
-    'scanTypes',
-    () => fetchAllDeclarationScanTypes(),
-  );
+  useQuery<FetchAllScanTypesResponse, AxiosError<FetchAllScanTypesResponse>>({
+    queryKey: ['scanTypes'],
+    queryFn: () => fetchAllDeclarationScanTypes(),
+  });
 
 export default useFetchAllDeclarationScanTypes;

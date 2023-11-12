@@ -7,9 +7,10 @@ const useFetchAllLabResults = (
   mdsId?: number,
   forceCacheRefresh: boolean = false,
 ) => {
-  return useQuery<GetAllLabResultsResponse, {}>(['labResults', apuId], () =>
-    getAllLabResults(apuId, forceCacheRefresh, mdsId),
-  );
+  return useQuery<GetAllLabResultsResponse, {}>({
+    queryKey: ['labResults', apuId],
+    queryFn: () => getAllLabResults(apuId, forceCacheRefresh, mdsId),
+  });
 };
 
 export default useFetchAllLabResults;

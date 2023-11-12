@@ -5,19 +5,18 @@ import {saveHealthCheckUpQuestions} from '../services/healthCheckUp-service';
 
 const useSaveHealthCheckUpAnswers = () => {
   const Toast = useToast();
-  return useMutation(
-    ({...values}: {apuId: number; answers: Array<any>}) =>
+  return useMutation({
+    mutationFn: ({...values}: {apuId: number; answers: Array<any>}) =>
       saveHealthCheckUpQuestions(values.apuId, values.answers),
-    {
-      onError() {
-        Toast('Something went wrong', ToastTypes.ERROR);
-      },
 
-      onSuccess() {
-        Toast('Successfully saved answers', ToastTypes.SUCCESS);
-      },
+    onError() {
+      Toast('Something went wrong', ToastTypes.ERROR);
     },
-  );
+
+    onSuccess() {
+      Toast('Successfully saved answers', ToastTypes.SUCCESS);
+    },
+  });
 };
 
 export default useSaveHealthCheckUpAnswers;
