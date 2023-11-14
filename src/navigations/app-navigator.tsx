@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 
-import {HeaderBackButton} from '@react-navigation/stack';
+import {HeaderBackButton} from '@react-navigation/elements';
 import {useTranslation} from 'react-i18next';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
@@ -29,8 +29,9 @@ const AppStack = () => {
 
   return (
     <DrawerNavigator.Navigator
-      drawerStyle={styles.drawer}
       screenOptions={({navigation}) => ({
+        drawerStyle: {...styles.drawer},
+        headerShown: false,
         headerLeft: () => (
           <HeaderBackButton onPress={() => navigation.goBack()} />
         ),

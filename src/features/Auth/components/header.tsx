@@ -32,21 +32,21 @@ const Header: React.FC<HeaderProps> = ({variant = 'white'}) => {
   return (
     <>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => goBack()}>
-          <FontAwesomeIcon
-            color={variant === 'white' ? 'white' : 'black'}
-            size={30}
-            icon={faAngleLeft}
-          />
-        </TouchableOpacity>
-        <Logo variant={variant} />
-        <TouchableOpacity onPress={handleInfoButtonPressed}>
-          <FontAwesomeIcon
-            color={variant === 'white' ? 'white' : 'black'}
-            size={25}
-            icon={faInfoCircle}
-          />
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={() => goBack()}> */}
+        {/*   <FontAwesomeIcon */}
+        {/*     color={variant === 'white' ? 'white' : 'black'} */}
+        {/*     size={30} */}
+        {/*     icon={faAngleLeft} */}
+        {/*   /> */}
+        {/* </TouchableOpacity> */}
+        {/* <Logo variant={variant} /> */}
+        {/* <TouchableOpacity onPress={handleInfoButtonPressed}> */}
+        {/*   <FontAwesomeIcon */}
+        {/*     color={variant === 'white' ? 'white' : 'black'} */}
+        {/*     size={25} */}
+        {/*     icon={faInfoCircle} */}
+        {/*   /> */}
+        {/* </TouchableOpacity> */}
       </View>
     </>
   );

@@ -1,6 +1,6 @@
 import request from '@utils/request';
-import {NewAppointment} from '../hooks/useBookAppointment';
-import {AppointmentStatus} from '../types/appointmentStatus';
+import { NewAppointment } from '../hooks/useBookAppointment';
+import { AppointmentStatus } from '../types/appointmentStatus';
 
 export const getAllAppointments = async (apuId: number, mdsId?: number) => {
   const data = await request({
@@ -11,6 +11,8 @@ export const getAllAppointments = async (apuId: number, mdsId?: number) => {
       mdsId,
     },
   });
+
+  console.log(data);
 
   return {
     appointments: data.appointments.filter((x: any) => x.docter != null),

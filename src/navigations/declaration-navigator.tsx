@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
+import {HeaderBackButton} from '@react-navigation/elements';
 import {useTranslation} from 'react-i18next';
 
 import DeclarationGallery from '@src/features/Declarations/screens/DeclarationGallery.screen';

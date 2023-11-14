@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, ImageBackground, StyleSheet, Image} from 'react-native';
+import {View, ImageBackground, StyleSheet, Image, Text} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import {vs} from 'react-native-size-matters';
@@ -65,6 +65,8 @@ const DashboardScreen: React.FC<{navigation: NavigationProp<any, string>}> = ({
   //deleteCacheFolder();
 
   const userInsurance = INSURERS.find(x => x.id === user?.vzkId);
+
+  console.log(user);
 
   const [isChangePasswordModalOpen, setisChangePasswordModalOpen] =
     useState(false);
@@ -163,26 +165,26 @@ const DashboardScreen: React.FC<{navigation: NavigationProp<any, string>}> = ({
           setisChangePasswordModalOpen(false);
         }}
       />
-
-      <GenericPopUp
-        title={popUpTitle}
-        body={popUpBody}
-        bodyTwo={popUpBodyTwo}
-        isVisible={popUpVisible}
-        type={popUpType}
-        buttonType={buttonType}
-        onContinue={() => setPopUpVisibility(false)}
-        onLogout={() => {
-          setPopUpVisibility(false);
-          logoutUser();
-        }}
-      />
-
+      {/**/}
+      {/* <GenericPopUp */}
+      {/*   title={popUpTitle} */}
+      {/*   body={popUpBody} */}
+      {/*   bodyTwo={popUpBodyTwo} */}
+      {/*   isVisible={popUpVisible} */}
+      {/*   type={popUpType} */}
+      {/*   buttonType={buttonType} */}
+      {/*   onContinue={() => setPopUpVisibility(false)} */}
+      {/*   onLogout={() => { */}
+      {/*     setPopUpVisibility(false); */}
+      {/*     logoutUser(); */}
+      {/*   }} */}
+      {/* /> */}
+      {/**/}
       <ImageBackground
         style={styles.flex}
         source={require('@assets/BackgroundWhite.png')}>
         <SafeAreaView edges={['right', 'top', 'left']} style={styles.flex}>
-          <Header user={user!} />
+          {/* <Header user={user!} /> */}
           <View style={styles.scrollViewContainer}>
             <ScrollView style={styles.mainContianer}>
               <View style={styles.quickNavContainer}>

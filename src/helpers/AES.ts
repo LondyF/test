@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import {decimalToHex} from '@src/utils';
 import crypto from 'crypto';
 import Config from '../config';

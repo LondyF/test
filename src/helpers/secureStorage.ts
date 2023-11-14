@@ -16,7 +16,7 @@ export default class SecureStorage {
     }
 
     const randomBytes = crypto.randomBytes(16);
-    // eslint-disable-next-line no-undef
+
     const randomBytesString = Buffer.from(randomBytes).toString('base64');
     const hasSetCreds = await Keychain.setGenericPassword(
       ENCYPTION_KEY_ID,

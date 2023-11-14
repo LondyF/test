@@ -2,7 +2,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 import Config from '@src/config';
-import {getDeviceInfo} from '@utils/deviceInfo';
+import { getDeviceInfo } from '@utils/deviceInfo';
 
 import SecureStorage from './secureStorage';
 
@@ -17,7 +17,7 @@ export default class AuthCreds {
   static async storeAuthCreds(creds: Creds) {
     const currentTime = moment();
     const tokenExpireTime = currentTime
-      .add({seconds: creds.bearerExpSec})
+      .add({ seconds: creds.bearerExpSec })
       .toISOString();
     const tokenToStore: Creds = {
       bearer: creds.bearer,
@@ -82,6 +82,6 @@ export default class AuthCreds {
   static hasBearerExpired(bearerExpireTime: string) {
     const currentTime = moment();
 
-    return currentTime.add({minute: 2}).isAfter(bearerExpireTime);
+    return currentTime.add({ minute: 2 }).isAfter(bearerExpireTime);
   }
 }

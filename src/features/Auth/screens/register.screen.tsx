@@ -4,7 +4,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BarCodeReadEvent } from 'react-native-camera';
 import { useTranslation } from 'react-i18next';
-import OneSignal from 'react-native-onesignal';
+import { OneSignal } from 'react-native-onesignal';
 
 import { PageContainer, Typography, Loader } from '@components/index';
 import useToast from '@components/Toast/useToast';
@@ -89,7 +89,10 @@ export type Action =
   | { type: ActionKind; payload: Array<string> }
   | { type: ActionKind; payload: PayloadStep };
 
-const registerReducer = (state: RegisterState, action: Action): RegisterState => {
+const registerReducer = (
+  state: RegisterState,
+  action: Action,
+): RegisterState => {
   switch (action.type) {
     case ActionKind.SET_STEP: {
       return {
@@ -201,10 +204,11 @@ const initialState: RegisterState = {
 
 const RegisterScreen: React.FC = () => {
   const { t } = useTranslation();
-  const [user, storeAuthenticatedUser] = useAuthStore((state) => [
-    state.user,
-    state.storeAuthenticatedUser,
-  ]);
+  const user = useAuthStore(state => state.user);
+
+  const storeAuthenticatedUser = useAuthStore(
+    state => state.storeAuthenticatedUser,
+  );
   const toast = useToast();
   const [state, dispatch] = useReducer(registerReducer, initialState);
   const { data: insurers } = useFetchAllInsurers();
@@ -268,9 +272,12 @@ const RegisterScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const stepIndex = registrationTrackerSteps.findIndex((x) => x.step === state.currentStep);
-    const steps = stepIndex >= 0 ? registrationTrackerSteps : inAppRegistrationTrackerSteps;
-    const currentStepIndex = steps.findIndex((x) => x.step === state.currentStep);
+    const stepIndex = registrationTrackerSteps.findIndex(
+      x => x.step === state.currentStep,
+    );
+    const steps =
+      stepIndex >= 0 ? registrationTrackerSteps : inAppRegistrationTrackerSteps;
+    const currentStepIndex = steps.findIndex(x => x.step === state.currentStep);
 
     dispatch({
       type: ActionKind.SET_TRACKER_STEP,
@@ -279,7 +286,11 @@ const RegisterScreen: React.FC = () => {
         step: currentStepIndex,
       },
     });
-  }, [inAppRegistrationTrackerSteps, registrationTrackerSteps, state.currentStep]);
+  }, [
+    inAppRegistrationTrackerSteps,
+    registrationTrackerSteps,
+    state.currentStep,
+  ]);
 
   /*
     License
@@ -297,7 +308,10 @@ const RegisterScreen: React.FC = () => {
     if (licenseStatus === 'error') {
       const responseStatus = licenseError?.response?.data?.check?.status;
 
-      Alert.alert('Oops!', responseStatus?.msg ?? 'Error validating your license');
+      Alert.alert(
+        'Oops!',
+        responseStatus?.msg ?? 'Error validating your license',
+      );
       setStep(Steps.Start);
     }
   }, [licenseData, licenseError, licenseStatus]);
@@ -306,7 +320,7 @@ const RegisterScreen: React.FC = () => {
     SMS
   */
   useEffect(() => {
-    (async function () {
+    (async function() {
       if (submitSMSStatus === 'success') {
         const _user = {} as User;
 
@@ -395,7 +409,7 @@ const RegisterScreen: React.FC = () => {
       Alert.alert(
         'Oops!',
         responseStatus?.msg ??
-          'Something went wrong creating your account. Please try again later.',
+        'Something went wrong creating your account. Please try again later.',
       );
       setStep(Steps.EnterInsuranceInfo);
     }
@@ -416,15 +430,17 @@ const RegisterScreen: React.FC = () => {
       ? 'User successfully registed'
       : "User succesffuly registerd but hasn't been validated yet";
 
+    console.log(userToStore, isUserValidated);
     await SecureStorage.setItem('user', JSON.stringify(userToStore));
-    OneSignal.setExternalUserId(String(userToStore.apuId));
+    console.log('komt hier');
+    // OneSignal.login(String(userToStore.apuId));
 
     storeAuthenticatedUser(userToStore);
     dispatch({
       type: ActionKind.SET_BUSY,
       payload: true,
     });
-    toast(toastText, toastType);
+    // toast(toastText, toastType);
   }, [state.pin, state.user, storeAuthenticatedUser, toast]);
 
   useEffect(() => {
@@ -526,14 +542,18 @@ const RegisterScreen: React.FC = () => {
       case Steps.SetPin:
         return (
           <EnterPinStep
-            onPinSuccess={() => {}}
+            onPinSuccess={() => { }}
             onPinError={onPinError}
             pinValidator={validatePin}
           />
         );
       case Steps.EnterPersonalInfo:
         return (
-          <EnterPersonalInfoStep dispatch={dispatch} user={state.user!} checkSedula={checkSedula} />
+          <EnterPersonalInfoStep
+            dispatch={dispatch}
+            user={state.user!}
+            checkSedula={checkSedula}
+          />
         );
       case Steps.EnterContactInfo:
         return <EnterContactInfoStep user={state.user!} dispatch={dispatch} />;
@@ -557,7 +577,9 @@ const RegisterScreen: React.FC = () => {
       <ScanQRCodeModal
         isVisisble={state.isScanning}
         onScan={onQRScan}
-        onCancel={() => dispatch({ type: ActionKind.TOGGLE_SCANNER, payload: false })}
+        onCancel={() =>
+          dispatch({ type: ActionKind.TOGGLE_SCANNER, payload: false })
+        }
       />
       <PageContainer variant="blue">
         <KeyboardAwareScrollView
@@ -565,7 +587,7 @@ const RegisterScreen: React.FC = () => {
           keyboardDismissMode="interactive"
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.flexGrow}>
-          <Header />
+          {/* <Header /> */}
           <Typography
             align="center"
             variant="h2"

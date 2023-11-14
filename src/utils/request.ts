@@ -28,7 +28,8 @@ const hasConnectionAndHasInternet = async () => {
   return networkState.isConnected && networkState.isInternetReachable !== false;
 };
 
-const onRequestSuccess = (response: AxiosResponse | CachedItem) => response.data;
+const onRequestSuccess = (response: AxiosResponse | CachedItem) =>
+  response.data;
 
 const onRequestError = (error: any) => {
   throw error;
@@ -63,18 +64,20 @@ const request = async ({
 
     const response = !loadFromCache
       ? await client({
-          ...options,
-          ...defaultOptions,
-          baseURL: testURL ? testURL : client.defaults.baseURL,
-          data:
-            options.method === 'GET'
-              ? undefined
-              : {
-                  ...data,
-                  deviceId: deviceInfo.id,
-                },
-        })
+        ...options,
+        ...defaultOptions,
+        baseURL: testURL ? testURL : client.defaults.baseURL,
+        data:
+          options.method === 'GET'
+            ? undefined
+            : {
+              ...data,
+              deviceId: deviceInfo.id,
+            },
+      })
       : await Cache.getStoredCacheItem(options.url!, cacheKey);
+
+    console.log(response);
 
     if (!loadFromCache && storeInCache) {
       await Cache.storeCacheItem(options.url!, response.data, cacheKey);

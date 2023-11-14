@@ -1,6 +1,8 @@
 import React from 'react';
 import {Alert, Linking} from 'react-native';
-import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
+import {HeaderBackButton} from '@react-navigation/elements';
+
 import {useTranslation} from 'react-i18next';
 
 import AllAppointmentsScreen from '@src/features/Appointments/screens/allAppointments.screen';

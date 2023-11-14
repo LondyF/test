@@ -1,17 +1,17 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {s, vs} from 'react-native-size-matters';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { s, vs } from 'react-native-size-matters';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import QRCode from 'react-native-qrcode-svg';
 
-import {Prescription} from '@src/features/Prescription/prescription';
-import {LabRequest} from '@src/features/Laboratory/types/laboratory';
-import {INSURERS, TransactionTypes} from '@src/constants';
-import {Button, Typography} from '@src/components';
-import {Theme} from '@styles/styles';
+import { Prescription } from '@src/features/Prescription/prescription';
+import { LabRequest } from '@src/features/Laboratory/types/laboratory';
+import { INSURERS, TransactionTypes } from '@src/constants';
+import { Button, Typography } from '@src/components';
+import { Theme } from '@styles/styles';
 import useToast from '@components/Toast/useToast';
 import AES from '@helpers/AES';
 import useAuthStore from '@stores/useAuthStore';
@@ -25,10 +25,10 @@ import {
   useGetTransactionResult,
   useStartMandansaTransaction,
 } from '../hooks';
-import {TransactionResult, TransactionResultResponse} from '../identify';
+import { TransactionResult, TransactionResultResponse } from '../identify';
 import GenerateQRButton from '../components/generateQRButton';
 import InfoSection from '../components/infoSection';
-import {ToastTypes} from '@src/components/Toast/toastTypes';
+import { ToastTypes } from '@src/components/Toast/toastTypes';
 
 const AESEncryption = new AES();
 
@@ -47,17 +47,17 @@ interface Props {
   >;
 }
 
-const IdentifyScreen: React.FC<Props> = ({route}) => {
+const IdentifyScreen: React.FC<Props> = ({ route }) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const toast = useToast();
 
-  const {t} = useTranslation();
-  const {mutateAsync} = useStartPullTransactie();
-  const {mutateAsync: startMandansaTransaction} = useStartMandansaTransaction();
-  const {promptBiometrics} = useBiometrics();
-  const {mutateAsync: getTransactionResult} = useGetTransactionResult();
-  const {isInternetReachable, checkIfConnected} = useInternetConnection();
+  const { t } = useTranslation();
+  const { mutateAsync } = useStartPullTransactie();
+  const { mutateAsync: startMandansaTransaction } = useStartMandansaTransaction();
+  const { promptBiometrics } = useBiometrics();
+  const { mutateAsync: getTransactionResult } = useGetTransactionResult();
+  const { isInternetReachable, checkIfConnected } = useInternetConnection();
 
   const user = useAuthStore(state => state.user);
 
@@ -68,7 +68,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
 
   const interval = useRef<NodeJS.Timer>();
 
-  const isInTabStack = navigation.dangerouslyGetState().type === 'tab';
+  const isInTabStack = navigation.getState().type === 'tab';
 
   const isMandansa =
     route.params?.transactionType === TransactionTypes.Mandansa;
@@ -85,7 +85,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
   //TODO: Refactor this
   const getQRInfo = useCallback(
     (type: number) => {
-      const baseInfo = {type: {type: 'QR Code'}, patient: {naam: user?.naam}};
+      const baseInfo = { type: { type: 'QR Code' }, patient: { naam: user?.naam } };
       const data = route.params?.data as any;
 
       switch (type) {
@@ -184,14 +184,14 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
       const id = (route.params && route.params.id) || 0;
 
       if (await promptBiometrics(true, 'Identify')) {
-        let {qr, transactionId} = AESEncryption.generateQr(
+        let { qr, transactionId } = AESEncryption.generateQr(
           AESEncryption.generateNonce(),
           user!.apuId,
           id,
           AESEncryption.generateRandomTransactionId(),
           +!!isInternetReachable,
           (route.params && route.params.transactionType) ||
-            TransactionTypes.KaartControle,
+          TransactionTypes.KaartControle,
           mdsId,
           user?.device?.devId ?? 0,
         );
@@ -236,7 +236,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
     let timeLeft = duration;
     let minutes;
     let seconds;
-    const id = setInterval(function () {
+    const id = setInterval(function() {
       isTimerRunning = true;
       minutes = Math.trunc(timeLeft / 60);
       seconds = Math.trunc(timeLeft % 60);
@@ -264,7 +264,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
       return;
     }
 
-    var {transaktie} = await mutateAsync({
+    var { transaktie } = await mutateAsync({
       apuId: user!.apuId,
       uuId: transactionId,
     });
@@ -289,7 +289,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
 
     if (isSuccess) {
       navigation.navigate('TransactionResult', {
-        result: {...result.trnResult, vzkId: result.vzkId},
+        result: { ...result.trnResult, vzkId: result.vzkId },
       });
     }
   };
@@ -298,11 +298,11 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
     const isSuccess = result.status.status >= 0;
 
     if (isSuccess) {
-      const {mdsUser, mdsId} = result;
+      const { mdsUser, mdsId } = result;
 
       navigation.navigate('AllMandansas', {
         screen: 'AllMandansa',
-        params: {mdsUser, mdsId},
+        params: { mdsUser, mdsId },
       });
     }
   };
@@ -339,7 +339,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
                   <GenerateQRButton
                     onPress={() =>
                       route.params?.transactionType ===
-                      TransactionTypes.PermanenteTikkie
+                        TransactionTypes.PermanenteTikkie
                         ? generateMDSQRCodePressed()
                         : generateQRCodePressed()
                     }

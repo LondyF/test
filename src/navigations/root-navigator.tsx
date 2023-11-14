@@ -18,13 +18,15 @@ const RootStack: React.FC = () => {
     state.user,
   ]);
 
+  console.log(isAuthenticated);
+
   const hasToReuploadValidationPhoto =
     user?.validationStatus === ValidationStatus.VALIDATION_PHOTO_NEEDED;
 
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <RootNavigator.Navigator headerMode="none">
+      <RootNavigator.Navigator screenOptions={{headerShown: false}}>
         {!isAuthenticated ? (
           <RootNavigator.Screen name="Auth" component={AuthStack} />
         ) : (
