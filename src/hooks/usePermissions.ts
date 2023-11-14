@@ -1,8 +1,10 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Platform} from 'react-native';
 
-import ReactNativeBiometrics from 'react-native-biometrics';
+import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
+
+const biometrics = new ReactNativeBiometrics();
 
 export enum Permissions {
   camera,
@@ -59,10 +61,9 @@ const usePermissions = (
   const checkBiometricsPerms = useCallback(async (): Promise<
     'unavailable' | 'blocked' | 'denied' | 'granted' | 'limited'
   > => {
-    const {available, biometryType} =
-      await ReactNativeBiometrics.isSensorAvailable();
+    const {available, biometryType} = await biometrics.isSensorAvailable();
 
-    if (biometryType === ReactNativeBiometrics.FaceID) {
+    if (biometryType === BiometryTypes.FaceID) {
       const hasPerms = await check(permToRequest);
 
       if (hasPerms === 'denied') {
@@ -79,10 +80,9 @@ const usePermissions = (
       Special handling of requesting Biometrics Perms
   */
   const requestBiometricsPerms = async () => {
-    const {available, biometryType} =
-      await ReactNativeBiometrics.isSensorAvailable();
+    const {available, biometryType} = await biometrics.isSensorAvailable();
 
-    if (biometryType === ReactNativeBiometrics.FaceID) {
+    if (biometryType === BiometryTypes.FaceID) {
       return await request(permToRequest);
     }
 

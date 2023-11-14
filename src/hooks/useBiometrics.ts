@@ -8,6 +8,8 @@ import useAuthStore from '@stores/useAuthStore';
 import usePermissions, {Permissions} from './usePermissions';
 import usePin from './usePin';
 
+const biometrics = new ReactNativeBiometrics();
+
 const useBiometrics = () => {
   const [_, __, checkBiometricsPermissions] = usePermissions(
     Permissions.faceId,
@@ -20,10 +22,10 @@ const useBiometrics = () => {
     try {
       const hasFaceIdPermissions =
         (await checkBiometricsPermissions()) === RESULTS.GRANTED;
-
-      if (hasFaceIdPermissions && user?.biometricEnabled) {
-        var {available} = await ReactNativeBiometrics.isSensorAvailable();
-      }
+      const available =
+        hasFaceIdPermissions &&
+        user?.biometricEnabled &&
+        (await biometrics.isSensorAvailable()).available;
 
       return !!available && hasFaceIdPermissions;
     } catch (e) {
@@ -48,7 +50,7 @@ const useBiometrics = () => {
           return await authenticateUser(navigateBackScreen);
         }
 
-        var {success} = await ReactNativeBiometrics.simplePrompt({
+        var {success} = await biometrics.simplePrompt({
           promptMessage: title,
           cancelButtonText: 'cancel',
         });
