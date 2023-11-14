@@ -1,15 +1,15 @@
-import React, { useReducer, useEffect, useCallback } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import React, {useReducer, useEffect, useCallback} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { BarCodeReadEvent } from 'react-native-camera';
-import { useTranslation } from 'react-i18next';
-import { OneSignal } from 'react-native-onesignal';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {BarCodeReadEvent} from 'react-native-camera';
+import {useTranslation} from 'react-i18next';
+import {OneSignal} from 'react-native-onesignal';
 
-import { PageContainer, Typography, Loader } from '@components/index';
+import {PageContainer, Typography, Loader} from '@components/index';
 import useToast from '@components/Toast/useToast';
-import { ToastTypes } from '@components/Toast/toastTypes';
-import { arrayEquals } from '@src/utils';
+import {ToastTypes} from '@components/Toast/toastTypes';
+import {arrayEquals} from '@src/utils';
 import useFetchAllInsurers from '@hooks/useFetchAllInsurers';
 import useFetchAllDoctors from '@hooks/useFetchAllDoctors';
 import useRegisterUser from '@hooks/useRegisterUser';
@@ -17,7 +17,7 @@ import SecureStorage from '@helpers/secureStorage';
 import AuthCreds from '@helpers/authCreds';
 import useAuthStore from '@stores/useAuthStore';
 import useUploadPhotoOfId from '@hooks/useUploadPhotoOfId';
-import { getDeviceInfo } from '@utils/deviceInfo';
+import {getDeviceInfo} from '@utils/deviceInfo';
 import ScanQRCodeModal from '@src/features/Mandansa/components/scanQRCodeModal';
 
 import {
@@ -72,22 +72,22 @@ type RegisterState = {
   idUrl: String;
   pin: Array<string> | null;
   confirmPin: Array<string> | null;
-  trackerSteps: { step: Steps; title: string }[];
+  trackerSteps: {step: Steps; title: string}[];
   trackerStep: number;
 };
 
 type PayloadStep = {
   step: number;
-  steps: { step: Steps; title: string }[];
+  steps: {step: Steps; title: string}[];
 };
 
 export type Action =
-  | { type: ActionKind; payload: string }
-  | { type: ActionKind; payload: number }
-  | { type: ActionKind; payload: boolean }
-  | { type: ActionKind; payload: User }
-  | { type: ActionKind; payload: Array<string> }
-  | { type: ActionKind; payload: PayloadStep };
+  | {type: ActionKind; payload: string}
+  | {type: ActionKind; payload: number}
+  | {type: ActionKind; payload: boolean}
+  | {type: ActionKind; payload: User}
+  | {type: ActionKind; payload: Array<string>}
+  | {type: ActionKind; payload: PayloadStep};
 
 const registerReducer = (
   state: RegisterState,
@@ -203,7 +203,7 @@ const initialState: RegisterState = {
 };
 
 const RegisterScreen: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const user = useAuthStore(state => state.user);
 
   const storeAuthenticatedUser = useAuthStore(
@@ -211,8 +211,8 @@ const RegisterScreen: React.FC = () => {
   );
   const toast = useToast();
   const [state, dispatch] = useReducer(registerReducer, initialState);
-  const { data: insurers } = useFetchAllInsurers();
-  const { data: doctors } = useFetchAllDoctors();
+  const {data: insurers} = useFetchAllInsurers();
+  const {data: doctors} = useFetchAllDoctors();
 
   const {
     mutate: submitLicense,
@@ -246,19 +246,19 @@ const RegisterScreen: React.FC = () => {
 
   const registrationTrackerSteps = React.useMemo(
     () => [
-      { step: Steps.Start, title: t('register.validateLicense') },
-      { step: Steps.VerifyPhoneNumber, title: t('register.validatePhone') },
-      { step: Steps.SetPin, title: t('register.setPin') },
-      { step: Steps.SetPin, title: t('register.accountReady') },
+      {step: Steps.Start, title: t('register.validateLicense')},
+      {step: Steps.VerifyPhoneNumber, title: t('register.validatePhone')},
+      {step: Steps.SetPin, title: t('register.setPin')},
+      {step: Steps.SetPin, title: t('register.accountReady')},
     ],
     [t],
   );
 
   const inAppRegistrationTrackerSteps = React.useMemo(
     () => [
-      { step: Steps.EnterPersonalInfo, title: t('register.personalInfo') },
-      { step: Steps.EnterContactInfo, title: t('register.contactInfo') },
-      { step: Steps.EnterInsuranceInfo, title: t('register.insuranceInfo') },
+      {step: Steps.EnterPersonalInfo, title: t('register.personalInfo')},
+      {step: Steps.EnterContactInfo, title: t('register.contactInfo')},
+      {step: Steps.EnterInsuranceInfo, title: t('register.insuranceInfo')},
     ],
     [t],
   );
@@ -320,7 +320,7 @@ const RegisterScreen: React.FC = () => {
     SMS
   */
   useEffect(() => {
-    (async function() {
+    (async function () {
       if (submitSMSStatus === 'success') {
         const _user = {} as User;
 
@@ -333,7 +333,7 @@ const RegisterScreen: React.FC = () => {
 
         dispatch({
           type: ActionKind.SET_USER,
-          payload: { ..._user, device } as User,
+          payload: {..._user, device} as User,
         });
 
         /*
@@ -389,7 +389,7 @@ const RegisterScreen: React.FC = () => {
   */
   useEffect(() => {
     if (registerUserStatus === 'success') {
-      const { apuuser, licentie } = registerUserData!.access;
+      const {apuuser, licentie} = registerUserData!.access;
 
       dispatch({
         type: ActionKind.SET_USER,
@@ -409,7 +409,7 @@ const RegisterScreen: React.FC = () => {
       Alert.alert(
         'Oops!',
         responseStatus?.msg ??
-        'Something went wrong creating your account. Please try again later.',
+          'Something went wrong creating your account. Please try again later.',
       );
       setStep(Steps.EnterInsuranceInfo);
     }
@@ -493,7 +493,7 @@ const RegisterScreen: React.FC = () => {
     });
 
   const onQRScan = async (e: BarCodeReadEvent) => {
-    const { data } = e;
+    const {data} = e;
 
     dispatch({
       type: ActionKind.VALIDATE_LICENSE,
@@ -542,7 +542,7 @@ const RegisterScreen: React.FC = () => {
       case Steps.SetPin:
         return (
           <EnterPinStep
-            onPinSuccess={() => { }}
+            onPinSuccess={() => {}}
             onPinError={onPinError}
             pinValidator={validatePin}
           />
@@ -578,7 +578,7 @@ const RegisterScreen: React.FC = () => {
         isVisisble={state.isScanning}
         onScan={onQRScan}
         onCancel={() =>
-          dispatch({ type: ActionKind.TOGGLE_SCANNER, payload: false })
+          dispatch({type: ActionKind.TOGGLE_SCANNER, payload: false})
         }
       />
       <PageContainer variant="blue">

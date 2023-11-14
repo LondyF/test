@@ -11,7 +11,7 @@ export default class SecureStorage {
   static async _getEncryptionKey() {
     const hasExistingCreds = await Keychain.getGenericPassword();
 
-    if (hasExistingCreds) {
+    if (hasExistingCreds && hasExistingCreds.username === ENCYPTION_KEY_ID) {
       return hasExistingCreds.password;
     }
 
