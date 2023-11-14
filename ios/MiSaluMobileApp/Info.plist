@@ -14,6 +14,20 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Can we use your camera to scan QR codes and </string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Can we use face id to authenticate you?</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Can we use your location to calculate the distance between you and pharmacies?</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Can we use your location to calculate the distance between you and pharmacies?</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Can we use your location to calculate the distance between you and pharmacies?</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Can we use your microphone?</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Can we use your photo library so you can upload pictures such as a picture of your ID or a new profile picture?</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
