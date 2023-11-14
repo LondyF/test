@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useTranslation } from 'react-i18next';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useTranslation} from 'react-i18next';
 
 import {
   faUser,
@@ -13,7 +13,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome';
-import { EventArg } from '@react-navigation/core';
+import {EventArg} from '@react-navigation/core';
 
 import IdentifyScreen from '@src/features/Identify/screens/identify.screen';
 import UserProfileScreen from '@src/features/UserProfile/screens/userProfile.screen';
@@ -26,8 +26,8 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   const Theme = useTheme();
-  const { t } = useTranslation();
-  const { promptBiometrics } = useBiometrics();
+  const {t} = useTranslation();
+  const {promptBiometrics} = useBiometrics();
 
   const iconStyle: FontAwesomeIconStyle = {
     marginTop: 10,
@@ -35,15 +35,15 @@ const TabNavigator = () => {
   };
 
   const handleQRScannerTabListener = useCallback(
-    ({ navigation }) => ({
+    ({navigation}) => ({
       tabPress: async (e: EventArg<'tabPress', true>) => {
         e.preventDefault();
 
-        const { routes, index } = navigation.dangerouslyGetState();
+        const {routes, index} = navigation.dangerouslyGetState();
         const currentSelectedTab = routes[index].name;
 
         if (await promptBiometrics(true)) {
-          navigation.navigate('QRScannerAuthenticator', { currentSelectedTab });
+          navigation.navigate('QRScannerAuthenticator', {currentSelectedTab});
         }
       },
     }),
@@ -52,9 +52,10 @@ const TabNavigator = () => {
 
   return (
     <Tab.Navigator
-      tabBarOptions={{ activeTintColor: Theme.colors.primary }}
-      screenOptions={({ route: { name } }) => ({
-        tabBarIcon: ({ color }) => {
+      tabBarOptions={{activeTintColor: Theme.colors.primary}}
+      screenOptions={({route: {name}}) => ({
+        headerShown: false,
+        tabBarIcon: ({color}) => {
           return (
             <FontAwesomeIcon
               color={color}
@@ -62,10 +63,10 @@ const TabNavigator = () => {
                 name === 'Home'
                   ? faHomeAlt
                   : name === 'Identify'
-                    ? faQrcode
-                    : name === 'QRScannerAuthenticator'
-                      ? faKey
-                      : faUser
+                  ? faQrcode
+                  : name === 'QRScannerAuthenticator'
+                  ? faKey
+                  : faUser
               }
               size={18}
               style={iconStyle}
@@ -75,24 +76,24 @@ const TabNavigator = () => {
       })}
       initialRouteName="Dashboard">
       <Tab.Screen
-        name="Home"
-        options={{ tabBarLabel: t('tabs.home') }}
+        name="Home2"
+        options={{tabBarLabel: t('tabs.home')}}
         component={DashboardScreen}
       />
       <Tab.Screen
         name="Identify"
-        options={{ tabBarLabel: t('tabs.identify') }}
+        options={{tabBarLabel: t('tabs.identify')}}
         component={IdentifyScreen}
       />
       <Tab.Screen
         name="Profile"
-        options={{ tabBarLabel: t('tabs.me') }}
+        options={{tabBarLabel: t('tabs.me')}}
         component={UserProfileScreen}
       />
       <Tab.Screen
         name="QRScannerAuthenticator"
         listeners={handleQRScannerTabListener}
-        options={{ unmountOnBlur: true, tabBarLabel: 'Authenticate' }}
+        options={{unmountOnBlur: true, tabBarLabel: 'Authenticate'}}
         component={QRScannerAuthenticatorScreen}
       />
     </Tab.Navigator>

@@ -18,7 +18,7 @@ const RootStack: React.FC = () => {
     state.user,
   ]);
 
-  console.log(isAuthenticated);
+  console.log(isAuthenticated, 'isAuthenticated');
 
   const hasToReuploadValidationPhoto =
     user?.validationStatus === ValidationStatus.VALIDATION_PHOTO_NEEDED;

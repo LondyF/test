@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {
   View,
   Image,
@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { useFormik } from 'formik';
-import { faUser, faLock } from '@fortawesome/pro-solid-svg-icons';
-import { s, vs } from 'react-native-size-matters';
-import { useTranslation } from 'react-i18next';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { OneSignal } from 'react-native-onesignal';
+import {useFormik} from 'formik';
+import {faUser, faLock} from '@fortawesome/pro-solid-svg-icons';
+import {s, vs} from 'react-native-size-matters';
+import {useTranslation} from 'react-i18next';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {OneSignal} from 'react-native-onesignal';
 
-import { areObjectsSame } from '@src/utils';
-import { getDeviceInfo } from '@utils/deviceInfo';
+import {areObjectsSame} from '@src/utils';
+import {getDeviceInfo} from '@utils/deviceInfo';
 import {
   TextInput,
   Button,
@@ -24,8 +24,8 @@ import {
   PageContainer,
   Typography,
 } from '@components/index';
-import { ValidationStatus } from '@src/types/validationStatus';
-import { ToastTypes } from '@components/Toast/toastTypes';
+import {ValidationStatus} from '@src/types/validationStatus';
+import {ToastTypes} from '@components/Toast/toastTypes';
 import SecureStorage from '@helpers/secureStorage';
 import AuthToken from '@helpers/authCreds';
 import useToast from '@components/Toast/useToast';
@@ -41,7 +41,7 @@ import useResetPassword from '../hooks/useResetPassword';
 import useActivateTestMode from '@hooks/useActivateTestMode';
 
 const LoginScreen: React.FC = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const Toast = useToast();
   const storePopUpProps = useGenericPopUpStore(state => state.setPopUpProps);
   const [storedUser, storeAuthenticatedUser, hasRecentlyLoggedOut] =
@@ -53,10 +53,10 @@ const LoginScreen: React.FC = () => {
       ],
       (oldStore, newStore) => areObjectsSame(oldStore[0], newStore[0]),
     );
-  const { authenticateUser } = usePin(storedUser?.pin ?? '');
-  const { promptBiometrics } = useBiometrics();
-  const { isInternetReachable } = useInternetConnection();
-  const { mutate, status, error, data, isLoading } = useLoginUser();
+  const {authenticateUser} = usePin(storedUser?.pin ?? '');
+  const {promptBiometrics} = useBiometrics();
+  const {isInternetReachable} = useInternetConnection();
+  const {mutate, status, error, data, isLoading} = useLoginUser();
   const {
     mutate: resetPassword,
     error: resetPasswordError,
@@ -65,13 +65,13 @@ const LoginScreen: React.FC = () => {
     data: resetPasswordData,
   } = useResetPassword();
 
-  const { handleChange, handleSubmit, values, setFieldValue } = useFormik({
+  const {handleChange, handleSubmit, values, setFieldValue} = useFormik({
     initialValues: {
       email: storedUser?.account,
       password: '',
       biometricPassword: '',
     },
-    onSubmit: async ({ email, password, biometricPassword }) => {
+    onSubmit: async ({email, password, biometricPassword}) => {
       return mutate({
         email,
         password,
@@ -81,7 +81,7 @@ const LoginScreen: React.FC = () => {
     },
   });
 
-  const { ActivateTestModeWrapper } = useActivateTestMode();
+  const {ActivateTestModeWrapper} = useActivateTestMode();
 
   const loginUserWithBiometrics = useCallback(
     async () => {
@@ -101,7 +101,7 @@ const LoginScreen: React.FC = () => {
   const loginOfflineMode = async () => {
     try {
       if (await promptBiometrics(true)) {
-        // storeAuthenticatedUser({...storedUser});
+        storeAuthenticatedUser({...storedUser});
         Toast(t('login.loggedInOffline'), ToastTypes.WARNING);
       } else {
         Alert.alert('Oops!', t('login.failedAuthenticatingOffline'));
@@ -130,7 +130,7 @@ const LoginScreen: React.FC = () => {
   );
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       if (status === 'success') {
         const authenticatedUser = data.access.apuuser as User;
         const creds = data.access.auth;
@@ -153,7 +153,7 @@ const LoginScreen: React.FC = () => {
 
         OneSignal.login(String(authenticatedUser.apuId));
 
-        // storeAuthenticatedUser({ ...authenticatedUser, device });
+        storeAuthenticatedUser({...authenticatedUser, device});
         storeUserInSecureStorage(authenticatedUser);
 
         if (hasToShowPopUp) {
@@ -207,7 +207,7 @@ const LoginScreen: React.FC = () => {
     Alert.alert(t('common.areYouSure'), t('login.changePasswordExplanation'), [
       {
         text: t('common.continue'),
-        onPress: () => resetPassword({ apuId: storedUser?.apuId }),
+        onPress: () => resetPassword({apuId: storedUser?.apuId}),
       },
       {
         text: t('common.cancel'),

@@ -165,26 +165,24 @@ const DashboardScreen: React.FC<{navigation: NavigationProp<any, string>}> = ({
           setisChangePasswordModalOpen(false);
         }}
       />
-      {/**/}
-      {/* <GenericPopUp */}
-      {/*   title={popUpTitle} */}
-      {/*   body={popUpBody} */}
-      {/*   bodyTwo={popUpBodyTwo} */}
-      {/*   isVisible={popUpVisible} */}
-      {/*   type={popUpType} */}
-      {/*   buttonType={buttonType} */}
-      {/*   onContinue={() => setPopUpVisibility(false)} */}
-      {/*   onLogout={() => { */}
-      {/*     setPopUpVisibility(false); */}
-      {/*     logoutUser(); */}
-      {/*   }} */}
-      {/* /> */}
-      {/**/}
+      <GenericPopUp
+        title={popUpTitle}
+        body={popUpBody}
+        bodyTwo={popUpBodyTwo}
+        isVisible={popUpVisible}
+        type={popUpType}
+        buttonType={buttonType}
+        onContinue={() => setPopUpVisibility(false)}
+        onLogout={() => {
+          setPopUpVisibility(false);
+          logoutUser();
+        }}
+      />
       <ImageBackground
         style={styles.flex}
         source={require('@assets/BackgroundWhite.png')}>
         <SafeAreaView edges={['right', 'top', 'left']} style={styles.flex}>
-          {/* <Header user={user!} /> */}
+          <Header user={user!} />
           <View style={styles.scrollViewContainer}>
             <ScrollView style={styles.mainContianer}>
               <View style={styles.quickNavContainer}>
