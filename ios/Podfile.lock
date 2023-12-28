@@ -19,9 +19,8 @@ PODS:
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - ExpoSQLite (11.6.0):
+  - ExpoSQLite (11.3.3):
     - ExpoModulesCore
-    - sqlite3 (= 3.39.2)
   - FBLazyVector (0.72.6)
   - FBReactNativeSpec (0.72.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -570,9 +569,6 @@ PODS:
   - RNSVG (13.14.0):
     - React-Core
   - SocketRocket (0.6.1)
-  - sqlite3 (3.39.2):
-    - sqlite3/common (= 3.39.2)
-  - sqlite3/common (3.39.2)
   - TcpSockets (3.3.2):
     - React
   - Yoga (1.14.0)
@@ -593,6 +589,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - OneSignalXCFramework (< 6.0, >= 5.0.0)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -658,7 +655,6 @@ SPEC REPOS:
     - libevent
     - OneSignalXCFramework
     - SocketRocket
-    - sqlite3
 
 EXTERNAL SOURCES:
   boost:
@@ -815,7 +811,7 @@ SPEC CHECKSUMS:
   Expo: f446f9811b9dfc0abc05a1613966c8475bc6795e
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoModulesCore: 51cb2e7ab4c8da14be3f40b66d54c1781002e99d
-  ExpoSQLite: 64d51a9a529b581d9b2b716c3e0a376f438dba52
+  ExpoSQLite: 56580c3f3c60057b073acd093e1fdac03de2da6b
   FBLazyVector: 748c0ef74f2bf4b36cfcccf37916806940a64c32
   FBReactNativeSpec: 966f29e4e697de53a3b366355e8f57375c856ad9
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -874,15 +870,14 @@ SPEC CHECKSUMS:
   RNGestureHandler: 6e46dde1f87e5f018a54fe5d40cd0e0b942b49ee
   RNKeychain: a65256b6ca6ba6976132cc4124b238a5b13b3d9c
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
-  RNPermissions: 850447e3ca55c1419bf0bb28e2c083ea13ede873
+  RNPermissions: 45b3a9f49d79e500ff54726d72e165da6e8a45d0
   RNReanimated: ab2e96c6d5591c3dfbb38a464f54c8d17fb34a87
   RNScreens: 3c2d122f5e08c192e254c510b212306da97d2581
   RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  sqlite3: d115522c740c457b805c018b0296b5ba003da280
   TcpSockets: 14306fb79f9750ea7d2ddd02d8bed182abb01797
   Yoga: b76f1acfda8212aa16b7e26bcce3983230c82603
 
-PODFILE CHECKSUM: 5aa6126dd74135faab88db2065898d6195c1a23b
+PODFILE CHECKSUM: b4ffb9fd291cf29f1caae2f215de6ce159b21c6e
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.2
