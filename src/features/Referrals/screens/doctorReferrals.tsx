@@ -45,7 +45,7 @@ const DoctorReferrals: React.FC<Props> = ({route, navigation}) => {
 
   return (
     <Tab.Navigator
-      lazy={true}
+      screenOptions={{lazy: true}}
       tabBarOptions={{
         labelStyle: {
           textTransform: 'capitalize',

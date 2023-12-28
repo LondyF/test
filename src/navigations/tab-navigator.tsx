@@ -52,8 +52,8 @@ const TabNavigator = () => {
 
   return (
     <Tab.Navigator
-      tabBarOptions={{activeTintColor: Theme.colors.primary}}
       screenOptions={({route: {name}}) => ({
+        tabBarActiveTintColor: Theme.colors.primary,
         headerShown: false,
         tabBarIcon: ({color}) => {
           return (
