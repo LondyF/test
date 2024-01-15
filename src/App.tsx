@@ -21,10 +21,7 @@ import {
   doConversion,
   doesSQLiteDatabaseExist,
 } from '@services/conversion-service';
-import {
-  gestureHandlerRootHOC,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import config from './config';
 
 OneSignal.Debug.setLogLevel(6);

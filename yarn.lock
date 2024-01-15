@@ -4925,10 +4925,10 @@ expo-modules-core@1.5.11, expo-modules-core@^1.5.11:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
-expo-sqlite@^11.6.0:
-  version "11.6.0"
-  resolved "https://registry.yarnpkg.com/expo-sqlite/-/expo-sqlite-11.6.0.tgz#054229963e96aa2d3c913c61414c35858ca52939"
-  integrity sha512-R/CmBvY4JYit6e7nJiIplgvg9B5Us95ExmLNxiVsfYjwRqsvKvNlETxX6BpB4FahQleKAZVWOTAzs5o7kst5TA==
+expo-sqlite@~11.3.3:
+  version "11.3.3"
+  resolved "https://registry.yarnpkg.com/expo-sqlite/-/expo-sqlite-11.3.3.tgz#5b07e7ffd744d2d04fe2075ec6fac834c78a5f53"
+  integrity sha512-73n+mhwi5mO28oVVrDGYcjy28XeUjNtpXVPtEmc+sr/NQ0hKlkIf2PD3/gKsyNuI8O/twNCZxsAQdM32yHGr8A==
   dependencies:
     "@expo/websql" "^1.0.1"
 

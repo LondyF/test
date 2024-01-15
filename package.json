@@ -41,7 +41,7 @@
     "expo": "^49.0.0",
     "expo-file-system": "~15.4.4",
     "expo-modules-core": "^1.5.11",
-    "expo-sqlite": "^11.6.0",
+    "expo-sqlite": "~11.3.3",
     "formik": "^2.4.5",
     "https-browserify": "^0.0.1",
     "i18next": "^23.6.0",

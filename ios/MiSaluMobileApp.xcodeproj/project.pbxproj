@@ -13,12 +13,12 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1F9D82DF20D480FB6C667555 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F4276ABB6870DA3BEEB3F /* ExpoModulesProvider.swift */; };
-		48474F862B0E88410061182B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48474F852B0E88410061182B /* NotificationService.swift */; };
-		48474F8A2B0E88410061182B /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 48474F832B0E88410061182B /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4641809AEC6028E842D07DFD /* libPods-MiSaluMobileApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F7A1286F04A75FB9C0AE1E2 /* libPods-MiSaluMobileApp.a */; };
+		48FABE782B55D70900BB8F77 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FABE772B55D70900BB8F77 /* NotificationService.swift */; };
+		48FABE7C2B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 48FABE752B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6222623F3634827DE00E34A2 /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE2251FA5BA4CD75C42333C /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		BCC02A4CA77C4BE66F998A2F /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D86FEF5B88372C48E6C8C38B /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a */; };
-		E7F165828656E013B64322B6 /* libPods-MiSaluMobileApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3834B5B0CC0683ECFC178550 /* libPods-MiSaluMobileApp.a */; };
-		FA098A32D211C4478AD6030A /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25CDF1D2ABE2296E0C96745A /* libPods-OneSignalNotificationServiceExtension.a */; };
+		C45E6079EBB9ABEE7DAF8453 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7408766ED832CA8130C1491A /* libPods-OneSignalNotificationServiceExtension.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,11 +29,11 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = MiSaluMobileApp;
 		};
-		48474F882B0E88410061182B /* PBXContainerItemProxy */ = {
+		48FABE7A2B55D70900BB8F77 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 48474F822B0E88410061182B;
+			remoteGlobalIDString = 48FABE742B55D70900BB8F77;
 			remoteInfo = OneSignalNotificationServiceExtension;
 		};
 /* End PBXContainerItemProxy section */
@@ -45,7 +45,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				48474F8A2B0E88410061182B /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */,
+				48FABE7C2B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -62,24 +62,28 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MiSaluMobileApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MiSaluMobileApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MiSaluMobileApp/main.m; sourceTree = "<group>"; };
+		16F4075119ABB53E50E80CE2 /* Pods-MiSaluMobileApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp.debug.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp.debug.xcconfig"; sourceTree = "<group>"; };
 		187FA28B908BEDE30E888804 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		1BE81355BB8B93620D6C2012 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
-		25CDF1D2ABE2296E0C96745A /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		25EC4A272CBA38CC695950C7 /* Pods-MiSaluMobileApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp.debug.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp.debug.xcconfig"; sourceTree = "<group>"; };
-		2B96F4689FC1E712A9DA3178 /* Pods-MiSaluMobileApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp.release.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp.release.xcconfig"; sourceTree = "<group>"; };
-		3834B5B0CC0683ECFC178550 /* libPods-MiSaluMobileApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiSaluMobileApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3F3544442E12FEC4B40BAF32 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		43E8A7BE8DB2F9F8542B0E79 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		1C153AD39F74EC5C6B015171 /* Pods-MiSaluMobileApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp.release.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp.release.xcconfig"; sourceTree = "<group>"; };
 		48474F7E2B0E88040061182B /* MiSaluMobileApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MiSaluMobileApp.entitlements; path = MiSaluMobileApp/MiSaluMobileApp.entitlements; sourceTree = "<group>"; };
-		48474F832B0E88410061182B /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		48474F852B0E88410061182B /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		48474F872B0E88410061182B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48474F962B0E8F830061182B /* MiSaluMobileAppRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MiSaluMobileAppRelease.entitlements; path = MiSaluMobileApp/MiSaluMobileAppRelease.entitlements; sourceTree = "<group>"; };
+		48D2AF572B3DEE8A009B1ECE /* OneSignalCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignalCore.xcframework; path = Pods/OneSignalXCFramework/iOS_SDK/OneSignalSDK/OneSignal_Core/OneSignalCore.xcframework; sourceTree = "<group>"; };
+		48D2AF5B2B3DEE91009B1ECE /* OneSignalOutcomes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignalOutcomes.xcframework; path = Pods/OneSignalXCFramework/iOS_SDK/OneSignalSDK/OneSignal_Outcomes/OneSignalOutcomes.xcframework; sourceTree = "<group>"; };
+		48D2AF5E2B3DEE99009B1ECE /* OneSignalExtension.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OneSignalExtension.xcframework; path = Pods/OneSignalXCFramework/iOS_SDK/OneSignalSDK/OneSignal_Extension/OneSignalExtension.xcframework; sourceTree = "<group>"; };
+		48FABE752B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48FABE772B55D70900BB8F77 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		48FABE792B55D70900BB8F77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48FABE802B55D7D400BB8F77 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		4B9F4276ABB6870DA3BEEB3F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MiSaluMobileApp/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		7408766ED832CA8130C1491A /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EE2251FA5BA4CD75C42333C /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiSaluMobileApp-MiSaluMobileAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MiSaluMobileApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B7159B5121A602F6227F329C /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		D86FEF5B88372C48E6C8C38B /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiSaluMobileApp-MiSaluMobileAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F7A1286F04A75FB9C0AE1E2 /* libPods-MiSaluMobileApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiSaluMobileApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5DF53369911943740FE3018 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		A8D6E901CA7430E9264AD0A7 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DA870B2D03A89C9AE0884E96 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig"; path = "Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F3F9C86966E3E73232313A14 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCC02A4CA77C4BE66F998A2F /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a in Frameworks */,
+				6222623F3634827DE00E34A2 /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,15 +99,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7F165828656E013B64322B6 /* libPods-MiSaluMobileApp.a in Frameworks */,
+				4641809AEC6028E842D07DFD /* libPods-MiSaluMobileApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		48474F802B0E88410061182B /* Frameworks */ = {
+		48FABE722B55D70900BB8F77 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA098A32D211C4478AD6030A /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
+				C45E6079EBB9ABEE7DAF8453 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,19 +149,23 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				48D2AF5E2B3DEE99009B1ECE /* OneSignalExtension.xcframework */,
+				48D2AF5B2B3DEE91009B1ECE /* OneSignalOutcomes.xcframework */,
+				48D2AF572B3DEE8A009B1ECE /* OneSignalCore.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				3834B5B0CC0683ECFC178550 /* libPods-MiSaluMobileApp.a */,
-				D86FEF5B88372C48E6C8C38B /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a */,
-				25CDF1D2ABE2296E0C96745A /* libPods-OneSignalNotificationServiceExtension.a */,
+				9F7A1286F04A75FB9C0AE1E2 /* libPods-MiSaluMobileApp.a */,
+				7EE2251FA5BA4CD75C42333C /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a */,
+				7408766ED832CA8130C1491A /* libPods-OneSignalNotificationServiceExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		48474F842B0E88410061182B /* OneSignalNotificationServiceExtension */ = {
+		48FABE762B55D70900BB8F77 /* OneSignalNotificationServiceExtension */ = {
 			isa = PBXGroup;
 			children = (
-				48474F852B0E88410061182B /* NotificationService.swift */,
-				48474F872B0E88410061182B /* Info.plist */,
+				48FABE802B55D7D400BB8F77 /* OneSignalNotificationServiceExtension.entitlements */,
+				48FABE772B55D70900BB8F77 /* NotificationService.swift */,
+				48FABE792B55D70900BB8F77 /* Info.plist */,
 			);
 			path = OneSignalNotificationServiceExtension;
 			sourceTree = "<group>";
@@ -175,7 +183,7 @@
 				13B07FAE1A68108700A75B9A /* MiSaluMobileApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MiSaluMobileAppTests */,
-				48474F842B0E88410061182B /* OneSignalNotificationServiceExtension */,
+				48FABE762B55D70900BB8F77 /* OneSignalNotificationServiceExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -191,7 +199,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* MiSaluMobileApp.app */,
 				00E356EE1AD99517003FC87E /* MiSaluMobileAppTests.xctest */,
-				48474F832B0E88410061182B /* OneSignalNotificationServiceExtension.appex */,
+				48FABE752B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -199,12 +207,12 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				25EC4A272CBA38CC695950C7 /* Pods-MiSaluMobileApp.debug.xcconfig */,
-				2B96F4689FC1E712A9DA3178 /* Pods-MiSaluMobileApp.release.xcconfig */,
-				3F3544442E12FEC4B40BAF32 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig */,
-				43E8A7BE8DB2F9F8542B0E79 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig */,
-				B7159B5121A602F6227F329C /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
-				1BE81355BB8B93620D6C2012 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				16F4075119ABB53E50E80CE2 /* Pods-MiSaluMobileApp.debug.xcconfig */,
+				1C153AD39F74EC5C6B015171 /* Pods-MiSaluMobileApp.release.xcconfig */,
+				A8D6E901CA7430E9264AD0A7 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig */,
+				DA870B2D03A89C9AE0884E96 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig */,
+				A5DF53369911943740FE3018 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				F3F9C86966E3E73232313A14 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -241,13 +249,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MiSaluMobileAppTests" */;
 			buildPhases = (
-				933A4A1B429CD3B9C59136A4 /* [CP] Check Pods Manifest.lock */,
+				53AA792A297C89B8737B59D5 /* [CP] Check Pods Manifest.lock */,
 				DF2FB21D27201901FED1913F /* [Expo] Configure project */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				9D0B07C5140EFE92E96643DE /* [CP] Embed Pods Frameworks */,
-				2144011AEE8573394A451A5F /* [CP] Copy Pods Resources */,
+				B23ED8CF0E5EF9EC4DD1C330 /* [CP] Embed Pods Frameworks */,
+				51006BA7A430ADD23A1301EF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -263,7 +271,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MiSaluMobileApp" */;
 			buildPhases = (
-				A355B65A59E899F765E9B012 /* [CP] Check Pods Manifest.lock */,
+				99FCD06501633E513CBAF3E7 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				A15C789A69CC5907EDFF7E55 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -271,28 +279,27 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				48474F8E2B0E88410061182B /* Embed Foundation Extensions */,
-				E7FA430BAB7600C136D26961 /* [CP] Embed Pods Frameworks */,
-				67BC0D11A0BCE1D806A06241 /* [CP] Copy Pods Resources */,
+				869F89D6D05D4BC423914B4C /* [CP] Embed Pods Frameworks */,
+				E2D8AEF1700269FCD4DF55BB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				48474F892B0E88410061182B /* PBXTargetDependency */,
+				48FABE7B2B55D70900BB8F77 /* PBXTargetDependency */,
 			);
 			name = MiSaluMobileApp;
 			productName = MiSaluMobileApp;
 			productReference = 13B07F961A680F5B00A75B9A /* MiSaluMobileApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		48474F822B0E88410061182B /* OneSignalNotificationServiceExtension */ = {
+		48FABE742B55D70900BB8F77 /* OneSignalNotificationServiceExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 48474F8B2B0E88410061182B /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildConfigurationList = 48FABE7D2B55D70900BB8F77 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
 			buildPhases = (
-				E6B5D722A69C5521C161D017 /* [CP] Check Pods Manifest.lock */,
-				AE3446C6F8D61770318ED8C2 /* [Expo] Configure project */,
-				48474F7F2B0E88410061182B /* Sources */,
-				48474F802B0E88410061182B /* Frameworks */,
-				48474F812B0E88410061182B /* Resources */,
+				188EAA2AD9A1ADEB77D56296 /* [CP] Check Pods Manifest.lock */,
+				48FABE712B55D70900BB8F77 /* Sources */,
+				48FABE722B55D70900BB8F77 /* Frameworks */,
+				48FABE732B55D70900BB8F77 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -300,7 +307,7 @@
 			);
 			name = OneSignalNotificationServiceExtension;
 			productName = OneSignalNotificationServiceExtension;
-			productReference = 48474F832B0E88410061182B /* OneSignalNotificationServiceExtension.appex */;
+			productReference = 48FABE752B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -319,7 +326,7 @@
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
 					};
-					48474F822B0E88410061182B = {
+					48FABE742B55D70900BB8F77 = {
 						CreatedOnToolsVersion = 14.2;
 					};
 				};
@@ -339,7 +346,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* MiSaluMobileApp */,
 				00E356ED1AD99517003FC87E /* MiSaluMobileAppTests */,
-				48474F822B0E88410061182B /* OneSignalNotificationServiceExtension */,
+				48FABE742B55D70900BB8F77 /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -361,7 +368,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		48474F812B0E88410061182B /* Resources */ = {
+		48FABE732B55D70900BB8F77 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -387,159 +394,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios relative | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli')\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n";
 		};
-		2144011AEE8573394A451A5F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		67BC0D11A0BCE1D806A06241 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		933A4A1B429CD3B9C59136A4 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MiSaluMobileApp-MiSaluMobileAppTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9D0B07C5140EFE92E96643DE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A15C789A69CC5907EDFF7E55 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-MiSaluMobileApp/expo-configure-project.sh\"\n";
-		};
-		A355B65A59E899F765E9B012 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MiSaluMobileApp-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AE3446C6F8D61770318ED8C2 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-MiSaluMobileApp-OneSignalNotificationServiceExtension/expo-configure-project.sh\"\n";
-		};
-		DF2FB21D27201901FED1913F /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/expo-configure-project.sh\"\n";
-		};
-		E6B5D722A69C5521C161D017 /* [CP] Check Pods Manifest.lock */ = {
+		188EAA2AD9A1ADEB77D56296 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -561,7 +416,46 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E7FA430BAB7600C136D26961 /* [CP] Embed Pods Frameworks */ = {
+		51006BA7A430ADD23A1301EF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		53AA792A297C89B8737B59D5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MiSaluMobileApp-MiSaluMobileAppTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		869F89D6D05D4BC423914B4C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -576,6 +470,100 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		99FCD06501633E513CBAF3E7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MiSaluMobileApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A15C789A69CC5907EDFF7E55 /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-MiSaluMobileApp/expo-configure-project.sh\"\n";
+		};
+		B23ED8CF0E5EF9EC4DD1C330 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/Pods-MiSaluMobileApp-MiSaluMobileAppTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DF2FB21D27201901FED1913F /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-MiSaluMobileApp-MiSaluMobileAppTests/expo-configure-project.sh\"\n";
+		};
+		E2D8AEF1700269FCD4DF55BB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiSaluMobileApp/Pods-MiSaluMobileApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -619,11 +607,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		48474F7F2B0E88410061182B /* Sources */ = {
+		48FABE712B55D70900BB8F77 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48474F862B0E88410061182B /* NotificationService.swift in Sources */,
+				48FABE782B55D70900BB8F77 /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,17 +623,17 @@
 			target = 13B07F861A680F5B00A75B9A /* MiSaluMobileApp */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
-		48474F892B0E88410061182B /* PBXTargetDependency */ = {
+		48FABE7B2B55D70900BB8F77 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 48474F822B0E88410061182B /* OneSignalNotificationServiceExtension */;
-			targetProxy = 48474F882B0E88410061182B /* PBXContainerItemProxy */;
+			target = 48FABE742B55D70900BB8F77 /* OneSignalNotificationServiceExtension */;
+			targetProxy = 48FABE7A2B55D70900BB8F77 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3F3544442E12FEC4B40BAF32 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig */;
+			baseConfigurationReference = A8D6E901CA7430E9264AD0A7 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -673,7 +661,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 43E8A7BE8DB2F9F8542B0E79 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig */;
+			baseConfigurationReference = DA870B2D03A89C9AE0884E96 /* Pods-MiSaluMobileApp-MiSaluMobileAppTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -698,12 +686,13 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 25EC4A272CBA38CC695950C7 /* Pods-MiSaluMobileApp.debug.xcconfig */;
+			baseConfigurationReference = 16F4075119ABB53E50E80CE2 /* Pods-MiSaluMobileApp.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MiSaluMobileApp/MiSaluMobileApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0.1.51;
@@ -735,12 +724,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B96F4689FC1E712A9DA3178 /* Pods-MiSaluMobileApp.release.xcconfig */;
+			baseConfigurationReference = 1C153AD39F74EC5C6B015171 /* Pods-MiSaluMobileApp.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MiSaluMobileApp/MiSaluMobileAppRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0.1.51;
@@ -768,9 +758,9 @@
 			};
 			name = Release;
 		};
-		48474F8C2B0E88410061182B /* Debug */ = {
+		48FABE7E2B55D70900BB8F77 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B7159B5121A602F6227F329C /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			baseConfigurationReference = A5DF53369911943740FE3018 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -778,9 +768,11 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 0.1.51;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = L4TNJU92JY;
@@ -800,7 +792,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.55;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -817,9 +809,9 @@
 			};
 			name = Debug;
 		};
-		48474F8D2B0E88410061182B /* Release */ = {
+		48FABE7F2B55D70900BB8F77 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BE81355BB8B93620D6C2012 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			baseConfigurationReference = F3F9C86966E3E73232313A14 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -827,10 +819,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 0.1.51;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = L4TNJU92JY;
@@ -846,7 +840,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.55;
+				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sqlapius.iSalu.OneSignalNotificationServiceExtension;
@@ -931,10 +925,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -1004,10 +995,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -1035,11 +1023,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		48474F8B2B0E88410061182B /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+		48FABE7D2B55D70900BB8F77 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				48474F8C2B0E88410061182B /* Debug */,
-				48474F8D2B0E88410061182B /* Release */,
+				48FABE7E2B55D70900BB8F77 /* Debug */,
+				48FABE7F2B55D70900BB8F77 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
