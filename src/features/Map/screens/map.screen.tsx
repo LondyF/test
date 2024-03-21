@@ -49,12 +49,14 @@ const MapScreen: React.FC<Props> = ({route}) => {
   const user = useAuthStore(state => state.user);
   let {getUserLocation} = useUserLocation();
   let {
-    isLoading: isLoadingDirections,
+    isPending: isLoadingDirections,
     data: directionsResponse,
     mutateAsync: mutateDirectionsAsync,
   } = useFetchDirections();
   const dataItems = useMemo(() => route.params.data || [], [route.params.data]);
   const isSingleMapItem = dataItems.length === 1;
+
+  console.log('hier ben ik', directionsResponse?.status);
 
   let markersRefs: any = {};
   const mapRef = useRef<MapView>(null);
@@ -166,6 +168,8 @@ const MapScreen: React.FC<Props> = ({route}) => {
   };
 
   const testa = () => {
+    console.log('HAALLLLLOOOOO=========================', directionsResponse);
+
     if (
       directionsResponse?.status === 'OK' &&
       directionsResponse?.routes.length > 0

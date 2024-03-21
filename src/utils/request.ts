@@ -1,11 +1,11 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 
 import Config from '@src/config';
-import Cache, { CachedItem } from '@helpers/cache';
+import Cache, {CachedItem} from '@helpers/cache';
 import AuthToken from '@helpers/authCreds';
 import SecureStorage from '@helpers/secureStorage';
-import { getDeviceInfo } from './deviceInfo';
+import {getDeviceInfo} from './deviceInfo';
 
 interface RequestArgs extends AxiosRequestConfig {
   storeInCache?: boolean;
@@ -59,25 +59,24 @@ const request = async ({
     const testURL = await SecureStorage.getItem(Config.TEST_MODE_STORAGE_KEY);
     const loadFromCache = !(await hasConnectionAndHasInternet());
     const cacheKey = data?.apuId + (data?.mdsId ?? 0);
+    console.log(testURL);
 
     console.log(Config);
 
     const response = !loadFromCache
       ? await client({
-        ...options,
-        ...defaultOptions,
-        baseURL: testURL ? testURL : client.defaults.baseURL,
-        data:
-          options.method === 'GET'
-            ? undefined
-            : {
-              ...data,
-              deviceId: deviceInfo.id,
-            },
-      })
+          ...options,
+          ...defaultOptions,
+          baseURL: testURL ? testURL : client.defaults.baseURL,
+          data:
+            options.method === 'GET'
+              ? undefined
+              : {
+                  ...data,
+                  deviceId: deviceInfo.id,
+                },
+        })
       : await Cache.getStoredCacheItem(options.url!, cacheKey);
-
-    console.log(response);
 
     if (!loadFromCache && storeInCache) {
       await Cache.storeCacheItem(options.url!, response.data, cacheKey);
@@ -89,6 +88,8 @@ const request = async ({
 
     return onRequestSuccess(response);
   } catch (error) {
+    console.log(error.response);
+
     throw onRequestError(error);
   }
 };

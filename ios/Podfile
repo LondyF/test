@@ -13,7 +13,7 @@ end
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
-platform :ios, '13.0'
+platform :ios, '13.4'
 prepare_react_native_project!
 
 setup_permissions([
@@ -50,10 +50,13 @@ target 'MiSaluMobileApp' do
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)
-    rescue => e
+    rescue => ew
       Pod::UI.warn e
     end
   end
+
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -86,6 +89,20 @@ target 'MiSaluMobileApp' do
       end
     end
 
+    # targetsToFix = ["React-Core-AccessibilityResources", "EXConstants-EXConstants"];
+    # installer.generated_projects.each do |project|
+    #   project.targets.each do |target|
+    #     if targetsToFix.include? target.name
+    #       puts "Set development team for target #{target.name}"
+    #       target.build_configurations.each do |config|
+    #         config.build_settings["DEVELOPMENT_TEAM"] = "L4TNJU92JY"
+    #         config.build_settings["CODE_SIGN_IDENTITY"] = "Apple Distribution";
+    #         config.build_settings["CODE_SIGN_STYLE"] = "Manual";
+    #       end
+    #     end
+    #   end
+    # end
+
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
@@ -99,3 +116,6 @@ end
 target 'OneSignalNotificationServiceExtension' do
   pod 'OneSignalXCFramework', '>= 5.0.0', '< 6.0'
 end
+
+
+
