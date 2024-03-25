@@ -1,12 +1,12 @@
-import {AxiosError} from 'axios';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {ToastTypes} from '@src/components/Toast/toastTypes';
+import { ToastTypes } from '@src/components/Toast/toastTypes';
 import useToast from '@src/components/Toast/useToast';
 
-import {changeAppointmentStatus} from '../services/appointments-services';
-import {GetAllAppointmentsResponse} from '../types/appointments';
-import {AppointmentStatus} from '../types/appointmentStatus';
+import { changeAppointmentStatus } from '../services/appointments-services';
+import { GetAllAppointmentsResponse } from '../types/appointments';
+import { AppointmentStatus } from '../types/appointmentStatus';
 
 export type values = {
   appointmentStatus: AppointmentStatus;
@@ -19,15 +19,16 @@ const useChangeAppointmentStatus = (apuId: number) => {
   const queryClient = useQueryClient();
   const Toast = useToast();
   return useMutation<{}, AxiosError, values>({
-    mutationFn: ({...values}: values) =>
+    mutationFn: ({ ...values }: values) =>
       changeAppointmentStatus(
         values.appointmentStatus,
         values.appointmentId,
         values.vesId,
+        values.reasonText,
       ),
 
     onMutate: async values => {
-      await queryClient.cancelQueries({queryKey: ['appointments']});
+      await queryClient.cancelQueries({ queryKey: ['appointments'] });
       const snapshotOfPreviousAppointments =
         queryClient.getQueryData<GetAllAppointmentsResponse>([
           'appointments',
@@ -59,11 +60,11 @@ const useChangeAppointmentStatus = (apuId: number) => {
       };
     },
     onError() {
-      queryClient.invalidateQueries({queryKey: ['appointments', apuId]});
+      queryClient.invalidateQueries({ queryKey: ['appointments', apuId] });
       Toast('something went wrong', ToastTypes.ERROR);
     },
     onSuccess() {
-      queryClient.invalidateQueries({queryKey: ['appointments', apuId]});
+      queryClient.invalidateQueries({ queryKey: ['appointments', apuId] });
       Toast('Successfully updated appointment', ToastTypes.SUCCESS);
     },
   });

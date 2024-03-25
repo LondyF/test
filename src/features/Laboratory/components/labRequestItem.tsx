@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   appointmentIcon: {
-    marginRight: 30,
+    marginRight: 40,
   },
   statusMsg: {
     marginTop: 5,
