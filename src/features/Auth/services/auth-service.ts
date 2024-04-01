@@ -155,3 +155,25 @@ export const changePassword = async (
       newpw2: newPasswordConfirm,
     },
   });
+
+export const getOnfidoSDKToken = async (apuId: number) =>
+  await request({
+    url: '/auth-rn1/auth/onfido_token',
+    method: 'POST',
+    storeInCache: false,
+    requiresAuth: false,
+    data: {
+      apuId,
+    },
+  });
+
+export const startOnfidoChecks = async (apuId: number) =>
+  await request({
+    url: '/auth-rn1/auth/onfido_check',
+    method: 'POST',
+    storeInCache: false,
+    requiresAuth: false,
+    data: {
+      apuId,
+    },
+  });

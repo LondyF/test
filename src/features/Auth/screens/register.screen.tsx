@@ -29,6 +29,7 @@ import {
   EnterPersonalInfoStep,
   EnterInsuranceInfoStep,
   EnterContactInfoStep,
+  OnfidoDocumentVerificationStep,
 } from './steps';
 import ProgressTracker from '../components/progressTracker';
 import Header from '../components/header';
@@ -44,6 +45,7 @@ export enum Steps {
   EnterContactInfo,
   uploadId,
   EnterInsuranceInfo,
+  OnfidoDocumentVerification,
   SetPin,
   IsBusy,
 }
@@ -338,9 +340,15 @@ const RegisterScreen: React.FC = () => {
 
         /*
         If user hasn't uploaded a photo from his ID yet we push the user to that step.
-        Otherwise we simply continue the registerig pr  ocess.
+        Otherwise we simply continue the registerig process.
       */
-        setStep(state.user?.needPhotoId === 1 ? Steps.uploadId : Steps.SetPin);
+        setStep(
+          state.user?.needPhotoId === 1
+            ? state.user.vzkId === 301
+              ? Steps.uploadId
+              : Steps.OnfidoDocumentVerification
+            : Steps.SetPin,
+        );
       }
 
       if (submitSMSStatus === 'error') {
@@ -350,7 +358,13 @@ const RegisterScreen: React.FC = () => {
         setStep(Steps.VerifyPhoneNumber);
       }
     })();
-  }, [submitSMSData, submitSMSError, submitSMSStatus, state.user?.needPhotoId]);
+  }, [
+    submitSMSData,
+    submitSMSError,
+    submitSMSStatus,
+    state.user?.needPhotoId,
+    state.user?.vzkId,
+  ]);
 
   /*
     UploadId
@@ -441,7 +455,7 @@ const RegisterScreen: React.FC = () => {
       payload: true,
     });
     // toast(toastText, toastType);
-  }, [state.pin, state.user, storeAuthenticatedUser, toast]);
+  }, [state.pin, state.user, storeAuthenticatedUser]);
 
   useEffect(() => {
     if (state.pin == null || state.confirmPin == null) {
@@ -511,8 +525,6 @@ const RegisterScreen: React.FC = () => {
     switch (state.currentStep) {
       case Steps.Start:
         return <StartStep dispatch={dispatch} />;
-      // return <EnterPersonalInfoStep dispatch={dispatch} user={state.user!} />;
-
       case Steps.EnterLicenseManually:
         return (
           <EnterLicenseManuallyStep
@@ -540,6 +552,7 @@ const RegisterScreen: React.FC = () => {
           />
         );
       case Steps.SetPin:
+        console.log(state.user);
         return (
           <EnterPinStep
             onPinSuccess={() => {}}
@@ -565,6 +578,15 @@ const RegisterScreen: React.FC = () => {
             user={state.user!}
             dispatch={dispatch}
             registerUser={registerUser}
+          />
+        );
+
+      case Steps.OnfidoDocumentVerification:
+        return (
+          <OnfidoDocumentVerificationStep
+            dispatch={dispatch}
+            apuId={state.user!.apuId}
+            lang={state.user!.language}
           />
         );
       default:

@@ -15,7 +15,6 @@
 		1F9D82DF20D480FB6C667555 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9F4276ABB6870DA3BEEB3F /* ExpoModulesProvider.swift */; };
 		4641809AEC6028E842D07DFD /* libPods-MiSaluMobileApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F7A1286F04A75FB9C0AE1E2 /* libPods-MiSaluMobileApp.a */; };
 		48FABE782B55D70900BB8F77 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FABE772B55D70900BB8F77 /* NotificationService.swift */; };
-		48FABE7C2B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 48FABE752B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6222623F3634827DE00E34A2 /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE2251FA5BA4CD75C42333C /* libPods-MiSaluMobileApp-MiSaluMobileAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C45E6079EBB9ABEE7DAF8453 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7408766ED832CA8130C1491A /* libPods-OneSignalNotificationServiceExtension.a */; };
@@ -29,28 +28,7 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = MiSaluMobileApp;
 		};
-		48FABE7A2B55D70900BB8F77 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 48FABE742B55D70900BB8F77;
-			remoteInfo = OneSignalNotificationServiceExtension;
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		48474F8E2B0E88410061182B /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				48FABE7C2B55D70900BB8F77 /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* MiSaluMobileAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MiSaluMobileAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -278,14 +256,12 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				48474F8E2B0E88410061182B /* Embed Foundation Extensions */,
 				869F89D6D05D4BC423914B4C /* [CP] Embed Pods Frameworks */,
 				E2D8AEF1700269FCD4DF55BB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				48FABE7B2B55D70900BB8F77 /* PBXTargetDependency */,
 			);
 			name = MiSaluMobileApp;
 			productName = MiSaluMobileApp;
@@ -623,11 +599,6 @@
 			target = 13B07F861A680F5B00A75B9A /* MiSaluMobileApp */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
-		48FABE7B2B55D70900BB8F77 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 48FABE742B55D70900BB8F77 /* OneSignalNotificationServiceExtension */;
-			targetProxy = 48FABE7A2B55D70900BB8F77 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -694,7 +665,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 16F4075119ABB53E50E80CE2 /* Pods-MiSaluMobileApp.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MiSaluMobileApp/MiSaluMobileApp.entitlements;
@@ -732,7 +702,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C153AD39F74EC5C6B015171 /* Pods-MiSaluMobileApp.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = MiSaluMobileApp/MiSaluMobileAppRelease.entitlements;
@@ -931,10 +900,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -1004,10 +970,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

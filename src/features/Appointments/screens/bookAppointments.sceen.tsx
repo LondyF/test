@@ -250,7 +250,7 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
 
       Toast(status.msg, ToastTypes.SUCCESS);
       navigation.goBack();
-      queryClient.invalidateQueries(['appointments', user?.apuId]);
+      queryClient.invalidateQueries({queryKey: ['appointments', user?.apuId]});
     } catch (e) {
       console.log(bookAppointmentError);
     }

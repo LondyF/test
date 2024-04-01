@@ -85,7 +85,7 @@ const AllMandansaAuthorizedRepsScreen: React.FC<Props> = ({
 
       await changeMandansaStatus({relation});
 
-      queryClient.invalidateQueries('mandansa');
+      queryClient.invalidateQueries({queryKey: ['mandansa']});
     } catch (e) {
       //@ts-ignore
       toast(e.response.data.mandansa.status.msg, ToastTypes.ERROR);
@@ -114,7 +114,7 @@ const AllMandansaAuthorizedRepsScreen: React.FC<Props> = ({
               relation,
             });
 
-            queryClient.invalidateQueries(['mandansa', apuId]);
+            queryClient.invalidateQueries({queryKey: ['mandansa', apuId]});
           },
         },
       ],

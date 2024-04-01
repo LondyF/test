@@ -209,7 +209,7 @@ const AllMandansaPowerOfAttorneysScreen: React.FC = () => {
               relation,
             });
 
-            queryClient.invalidateQueries(['mandansa', apuId]);
+            queryClient.invalidateQueries({queryKey: ['mandansa', apuId]});
           },
         },
       ],

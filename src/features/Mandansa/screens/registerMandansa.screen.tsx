@@ -278,7 +278,7 @@ const RegisterMandansaScreen: React.FC = () => {
   */
   useEffect(() => {
     if (uploadIdStatus === 'success') {
-      queryClient.invalidateQueries('mandansa');
+      queryClient.invalidateQueries({queryKey: ['mandansa']});
       Alert.alert('Success', t('registerMandansa.successfullyCreated'));
       goBack();
     }

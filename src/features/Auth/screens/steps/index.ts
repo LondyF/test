@@ -6,6 +6,7 @@ import UploadIdStep from './uploadId.step';
 import EnterPersonalInfoStep from './enterPersonalInfo.step';
 import EnterContactInfoStep from './enterContactInfo.step';
 import EnterInsuranceInfoStep from './enterInsuranceInformation.step';
+import OnfidoDocumentVerificationStep from './onfidoDocumentVerification.step';
 
 export {
   StartStep,
@@ -16,4 +17,5 @@ export {
   EnterPersonalInfoStep,
   EnterContactInfoStep,
   EnterInsuranceInfoStep,
+  OnfidoDocumentVerificationStep,
 };

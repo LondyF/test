@@ -26,7 +26,7 @@ export const LANGUAGES: Array<Language> = [
   },
 ];
 
-export const INSURERS: Array<Insurer> = [
+export const INSURERS = [
   {
     name: 'S.V.B',
     id: 301,
@@ -51,7 +51,7 @@ export const INSURERS: Array<Insurer> = [
     logo: require('@assets/MiSaluLogoSmall.png'),
     banner: require('@assets/svb_balk.png'),
   },
-];
+] as const;
 
 export enum Insurers {
   Fatum = 300,
@@ -77,7 +77,7 @@ export const COUNTRIES: Array<Country> = [
   },
 ];
 
-export const GENDERS: Array<{ name: string; short: string }> = [
+export const GENDERS: Array<{name: string; short: string}> = [
   {
     name: 'Male',
     short: 'M',

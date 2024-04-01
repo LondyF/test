@@ -6,10 +6,12 @@ import {
   Text,
   ViewStyle,
   TextStyle,
+  ActivityIndicator,
 } from 'react-native';
 
 import useTheme from '@src/hooks/useTheme';
-import { Theme } from '@src/styles/styles';
+import {Theme} from '@src/styles/styles';
+import {colors} from '@src/styles';
 
 export type ButtonProps = TouchableOpacityProps & {
   variant?: 'primary' | 'secondary' | 'transparent' | 'outline';
@@ -18,15 +20,18 @@ export type ButtonProps = TouchableOpacityProps & {
   buttonStyle?: ViewStyle;
   textStyle?: TextStyle;
   customTextComponent?: JSX.Element | null;
+  loading?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   customTextComponent = null,
+  loading = false,
   ...restProps
 }) => {
   const appTheme = useTheme();
-  const styles = makeStyles(appTheme, restProps.disabled);
+  const styles = makeStyles(appTheme, loading || restProps.disabled);
+
   return (
     <TouchableOpacity
       style={[
@@ -43,31 +48,37 @@ const Button: React.FC<ButtonProps> = ({
         restProps.buttonStyle,
       ]}
       {...restProps}>
-      {customTextComponent === null ? (
-        <Text
-          style={[
-            styles.baseText,
-            {
-              ...(variant === 'primary'
-                ? styles.primaryText
-                : variant === 'secondary'
-                ? styles.secondaryText
-                : variant === 'outline'
-                ? styles.outlineText
-                : styles.transparentText),
-            },
-            restProps.textStyle,
-          ]}>
-          {restProps.text}
-        </Text>
+      {loading ? (
+        <ActivityIndicator color={colors.primary} />
       ) : (
-        <>{customTextComponent}</>
+        <>
+          {customTextComponent === null ? (
+            <Text
+              style={[
+                styles.baseText,
+                {
+                  ...(variant === 'primary'
+                    ? styles.primaryText
+                    : variant === 'secondary'
+                    ? styles.secondaryText
+                    : variant === 'outline'
+                    ? styles.outlineText
+                    : styles.transparentText),
+                },
+                restProps.textStyle,
+              ]}>
+              {restProps.text}
+            </Text>
+          ) : (
+            <>{customTextComponent}</>
+          )}
+        </>
       )}
     </TouchableOpacity>
   );
 };
 
-const makeStyles = (theme: Theme, isDisabled: boolean) =>
+const makeStyles = (theme: Theme, isDisabled?: boolean) =>
   StyleSheet.create({
     baseButton: {
       borderRadius: 5,
@@ -75,6 +86,7 @@ const makeStyles = (theme: Theme, isDisabled: boolean) =>
       paddingRight: 15,
       paddingTop: 12,
       paddingBottom: 12,
+      minWidth: 100,
       justifyContent: 'center',
       alignItems: 'center',
     },

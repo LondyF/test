@@ -126,7 +126,9 @@ const ReuploadValidationPhoto: React.FC<Props> = ({route}) => {
         validationStatus: ValidationStatus.PENDING,
       });
     } else {
-      queryClient.invalidateQueries(['mandansa', storedUser!.apuId]);
+      queryClient.invalidateQueries({
+        queryKey: ['mandansa', storedUser!.apuId],
+      });
       goBack();
     }
   };

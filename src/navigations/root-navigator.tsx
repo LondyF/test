@@ -4,11 +4,14 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {ValidationStatus} from '@src/types/validationStatus';
 import ReuploadValidationPhoto from '@src/features/Auth/screens/reuploadValidationPhoto.screen';
+import ReuploadValidationPhotoOnfido from '@src/features/Auth/screens/reuploadValidationPhotoOnfido.screen';
+
 import useAuthStore from '@stores/useAuthStore';
 
 import AuthStack from './auth-navigator';
 import AppStack from './app-navigator';
 import {StatusBar} from 'react-native';
+import {INSURERS} from '@src/constants';
 
 const RootNavigator = createStackNavigator();
 
@@ -18,8 +21,8 @@ const RootStack: React.FC = () => {
     state.user,
   ]);
 
-  console.log(isAuthenticated, 'isAuthenticated');
-
+  const isGGCInsured =
+    user?.vzkId === INSURERS.find(x => x.name === 'Fatum')?.id || false;
   const hasToReuploadValidationPhoto =
     user?.validationStatus === ValidationStatus.VALIDATION_PHOTO_NEEDED;
 
@@ -36,7 +39,11 @@ const RootStack: React.FC = () => {
             ) : (
               <RootNavigator.Screen
                 name="ReuploadValidationPhoto"
-                component={ReuploadValidationPhoto}
+                component={
+                  !isGGCInsured
+                    ? ReuploadValidationPhoto
+                    : ReuploadValidationPhotoOnfido
+                }
               />
             )}
           </>
