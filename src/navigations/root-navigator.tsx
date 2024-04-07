@@ -21,8 +21,7 @@ const RootStack: React.FC = () => {
     state.user,
   ]);
 
-  const isGGCInsured =
-    user?.vzkId === INSURERS.find(x => x.name === 'Fatum')?.id || false;
+  const showOnfidoScreen = user?.needPhotoId === 2;
   const hasToReuploadValidationPhoto =
     user?.validationStatus === ValidationStatus.VALIDATION_PHOTO_NEEDED;
 
@@ -40,7 +39,7 @@ const RootStack: React.FC = () => {
               <RootNavigator.Screen
                 name="ReuploadValidationPhoto"
                 component={
-                  !isGGCInsured
+                  !showOnfidoScreen
                     ? ReuploadValidationPhoto
                     : ReuploadValidationPhotoOnfido
                 }

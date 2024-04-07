@@ -344,9 +344,9 @@ const RegisterScreen: React.FC = () => {
       */
         setStep(
           state.user?.needPhotoId === 1
-            ? state.user.vzkId === 301
-              ? Steps.uploadId
-              : Steps.OnfidoDocumentVerification
+            ? Steps.uploadId
+            : state.user?.needPhotoId === 2
+            ? Steps.OnfidoDocumentVerification
             : Steps.SetPin,
         );
       }
