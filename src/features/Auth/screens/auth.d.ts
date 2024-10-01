@@ -58,3 +58,10 @@ interface ResetPassword {
 interface ResetPasswordResponse {
   access: ResetPassword;
 }
+
+interface ValidationMessageReponse {
+  msg: string;
+  msgInfo: string;
+  msgNr: number;
+  btnOnfido: number;
+}

@@ -39,7 +39,7 @@ const TabNavigator = () => {
       tabPress: async (e: EventArg<'tabPress', true>) => {
         e.preventDefault();
 
-        const {routes, index} = navigation.dangerouslyGetState();
+        const {routes, index} = navigation.getState();
         const currentSelectedTab = routes[index].name;
 
         if (await promptBiometrics(true)) {

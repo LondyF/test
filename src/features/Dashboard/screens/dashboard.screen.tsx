@@ -218,6 +218,7 @@ const makeStyles = (theme: Theme) => {
       alignItems: 'flex-start',
     },
     scrollViewContainer: {
+      marginTop: 15,
       flex: vs(0.68),
     },
     mainContianer: {

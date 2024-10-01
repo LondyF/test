@@ -15,10 +15,10 @@ import Onfido, {
   OnfidoTheme,
 } from '@onfido/react-native-sdk';
 import {ValidationStatus} from '@src/types/validationStatus';
+import useValidationMessage from '../hooks/useValidationMessage';
 
 const ReuploadValidationPhotoOnfido: React.FC = () => {
   const {t} = useTranslation();
-
   const [user, resetAuthentication, setAuthenticatedUser] = useAuthStore(
     state => [
       state.user,
@@ -27,14 +27,20 @@ const ReuploadValidationPhotoOnfido: React.FC = () => {
     ],
   );
 
-  const {data} = useFetchOnfidoSDKToken(user?.apuId);
+  const [startOnfidoButtonPressed, setStartOnfidoButtonPressed] =
+    React.useState(false);
+
+  const {data: validationMessageData} = useValidationMessage(user!.apuId);
+
+  const {data} = useFetchOnfidoSDKToken(user?.apuId, startOnfidoButtonPressed);
+
   const {
     mutate: startOnfidoCheck,
     isSuccess,
     isPending,
   } = useStartOnfidoChecks();
 
-  const handleStartOnfidoSDK = async () => {
+  const handleStartOnfidoSDK = React.useCallback(async () => {
     try {
       await Onfido.start({
         sdkToken: data?.sdk_token,
@@ -53,7 +59,6 @@ const ReuploadValidationPhotoOnfido: React.FC = () => {
       });
 
       startOnfidoCheck(user!.apuId, {
-        onSuccess: () => {},
         onError: error => {
           // Rethrow the error to be handled by outer catch
           throw error;
@@ -71,8 +76,15 @@ const ReuploadValidationPhotoOnfido: React.FC = () => {
 
       Alert.alert('Oops!', 'Something went wrong, please try again later');
     } finally {
+      setStartOnfidoButtonPressed(false);
     }
-  };
+  }, [data?.sdk_token, startOnfidoCheck, user]);
+
+  React.useEffect(() => {
+    if (startOnfidoButtonPressed && data?.sdk_token) {
+      handleStartOnfidoSDK();
+    }
+  }, [startOnfidoButtonPressed, handleStartOnfidoSDK, data?.sdk_token]);
 
   const handleContinueToApp = () => {
     setAuthenticatedUser({
@@ -94,7 +106,7 @@ const ReuploadValidationPhotoOnfido: React.FC = () => {
             variant="h2"
             fontWeight="bold"
             color="white"
-            text={t('reuploadValidation.photoUploaded')}
+            text={t('reuploadValidation.photoUploadedOnfido')}
           />
           <Typography
             variant="b1"
@@ -102,13 +114,13 @@ const ReuploadValidationPhotoOnfido: React.FC = () => {
             fontWeight="600"
             align="center"
             textStyle={styles.successExplainationText}
-            text={t('reuploadValidation.photoUploadedSuccess')}
+            text={t('reuploadValidation.photoUploadedSuccessOnfido')}
           />
           <Button
             buttonStyle={styles.continueButton}
             onPress={handleContinueToApp}
             variant="secondary"
-            text={t('reuploadValidation.continueToApp')}
+            text={t('reuploadValidation.continueToAppOnfido')}
           />
         </View>
       ) : (
@@ -124,32 +136,46 @@ const ReuploadValidationPhotoOnfido: React.FC = () => {
             <Typography
               variant="h2"
               color="white"
-              text={t('reuploadValidation.uploadDocumentTitle')}
+              text={t('reuploadValidation.uploadDocumentTitleOnfido')}
               fontWeight="bold"
               textStyle={styles.title}
             />
             <Typography
-              variant="b1"
+              variant="h4"
               fontWeight="600"
               textStyle={styles.rejectionExplanation}
               color="white"
-              text={t('reuploadValidation.photoRejected', {
-                naam: `${user?.firstName} ${user?.naam}`,
-                idNumber: user?.idNummer,
-              })}
+              text={validationMessageData?.msgInfo ?? ''}
             />
             <Typography
               variant="b1"
               fontWeight="600"
               color="white"
-              text={t('reuploadValidation.uploadNewPictureBelow')}
+              text={validationMessageData?.msg ?? ''}
             />
+            <Typography
+              variant="b1"
+              fontWeight="600"
+              color="white"
+              fontStyle="italic"
+              fontSize={10}
+              textStyle={styles.messageNr}
+              text={'Message Nr: ' + validationMessageData?.msgNr ?? ''}
+            />
+            {validationMessageData?.btnOnfido === 1 && (
+              <Button
+                loading={isPending || startOnfidoButtonPressed}
+                variant="secondary"
+                onPress={() => setStartOnfidoButtonPressed(true)}
+                text={t('reuploadValidation.uploadFotoOnfido')}
+                buttonStyle={styles.uploadButton}
+              />
+            )}
             <Button
-              loading={isPending}
-              variant="secondary"
-              onPress={handleStartOnfidoSDK}
-              text={t('reuploadValidation.uploadFoto')}
-              buttonStyle={styles.uploadButton}
+              onPress={handleContinueToApp}
+              buttonStyle={{marginTop: 20}}
+              variant="transparent"
+              text={t('reuploadValidation.skipOnfido')}
             />
           </View>
         </View>
@@ -169,12 +195,15 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: '#8b0000',
   },
+  messageNr: {
+    marginTop: 10,
+  },
   title: {
     marginTop: 80,
     marginBottom: 30,
   },
   rejectionExplanation: {
-    marginBottom: 30,
+    marginBottom: 20,
   },
   uploadButton: {
     marginTop: 30,

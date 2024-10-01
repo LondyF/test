@@ -76,7 +76,7 @@ const OnfidoDocumentVerification: React.FC<Props> = ({apuId, dispatch}) => {
   return (
     <View style={styles.container}>
       <Typography
-        text={t('register.onfidoVerficationTitle')}
+        text={t('register.onfidoTitle')}
         variant="b1"
         fontWeight="bold"
         align="center"
@@ -85,7 +85,7 @@ const OnfidoDocumentVerification: React.FC<Props> = ({apuId, dispatch}) => {
       <Button
         onPress={handleStartOnfidoSDK}
         variant="secondary"
-        text={t('register.onfidoVerficationstartButton')}
+        text={t('register.onfidoStartButton')}
         buttonStyle={styles.button}
         loading={isPending}
       />
@@ -97,7 +97,7 @@ const OnfidoDocumentVerification: React.FC<Props> = ({apuId, dispatch}) => {
           })
         }
         variant="transparent"
-        text={t('register.skip')}
+        text={t('register.onfidoSkip')}
       />
     </View>
   );

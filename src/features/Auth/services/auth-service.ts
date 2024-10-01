@@ -177,3 +177,25 @@ export const startOnfidoChecks = async (apuId: number) =>
       apuId,
     },
   });
+
+export const finishRegistration = async (apuId: number) =>
+  await request({
+    url: '/auth-rn1/pin/registratie',
+    method: 'POST',
+    storeInCache: false,
+    requiresAuth: false,
+    data: {
+      apuId,
+    },
+  });
+
+export const getValidationMessage = async (apuId: number) =>
+  await request({
+    url: '/auth-rn1/msg/onfido',
+    method: 'POST',
+    storeInCache: false,
+    requiresAuth: false,
+    data: {
+      apuId,
+    },
+  });

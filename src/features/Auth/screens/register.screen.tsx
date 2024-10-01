@@ -36,6 +36,7 @@ import Header from '../components/header';
 import useValidateLicense from '../hooks/useValidateLicense';
 import useValidatePhoneNumber from '../hooks/useValidatePhoneNumber';
 import useCheckSedula from '../hooks/useCheckSedula';
+import useFinishRegistration from '../hooks/useFinishRegistration';
 
 export enum Steps {
   Start,
@@ -245,6 +246,7 @@ const RegisterScreen: React.FC = () => {
     status: checkSedulaStatus,
     error: checkSedulaError,
   } = useCheckSedula();
+  const {mutate: finishRegistration} = useFinishRegistration();
 
   const registrationTrackerSteps = React.useMemo(
     () => [
@@ -438,16 +440,13 @@ const RegisterScreen: React.FC = () => {
       ...state.user!,
       pin: state.pin?.join('') ?? '',
     };
-    const isUserValidated = userToStore.isGevalideerd === 1;
-    const toastType = isUserValidated ? ToastTypes.SUCCESS : ToastTypes.WARNING;
-    const toastText = isUserValidated
-      ? 'User successfully registed'
-      : "User succesffuly registerd but hasn't been validated yet";
 
-    console.log(userToStore, isUserValidated);
+    console.log(userToStore);
+
     await SecureStorage.setItem('user', JSON.stringify(userToStore));
-    console.log('komt hier');
-    // OneSignal.login(String(userToStore.apuId));
+
+    OneSignal.login(String(userToStore.apuId));
+    finishRegistration(userToStore.apuId);
 
     storeAuthenticatedUser(userToStore);
     dispatch({
@@ -455,7 +454,7 @@ const RegisterScreen: React.FC = () => {
       payload: true,
     });
     // toast(toastText, toastType);
-  }, [state.pin, state.user, storeAuthenticatedUser]);
+  }, [state.pin, state.user, storeAuthenticatedUser, finishRegistration]);
 
   useEffect(() => {
     if (state.pin == null || state.confirmPin == null) {

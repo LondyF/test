@@ -36,8 +36,8 @@ const AllLabResultsScreen: React.FC<Props> = ({
 
   const labResults = useMemo(
     () =>
-      data?.labUitslagen.data.reduce((acc: LabResult[], curr) => {
-        const result = curr.uitslagen.data.map(results => ({
+      data?.labUitslagen?.data.reduce((acc: LabResult[], curr) => {
+        const result = curr.uitslagen?.data.map(results => ({
           ...results,
           lab: curr.uitslagen.lab,
         }));
