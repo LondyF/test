@@ -29,7 +29,7 @@ const ChangePasswordScreen: React.FC = () => {
     mutate,
     isError: isChangePasswordError,
     error: changePasswordError,
-    isLoading,
+    isPending,
     isSuccess,
   } = useChangePassword();
 
@@ -87,7 +87,7 @@ const ChangePasswordScreen: React.FC = () => {
   return (
     <PageContainer variant="blue">
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-        {!isLoading ? (
+        {!isPending ? (
           <>
             <View style={styles.flex}>
               <TouchableOpacity

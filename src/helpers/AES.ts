@@ -83,6 +83,8 @@ export default class AES {
     var magic = Buffer.from(Config.ENCRYPTION_MAGIC).toString('hex');
     var version = Buffer.from(Config.ENCRYPTION_VERSION, 'hex').toString('hex');
 
+    console.log('nonce', nonce);
+
     var _ownerId = decimalToHex(ownerId, 16);
     var _mdsId = decimalToHex(mdsId, 8);
     var _alternativeData = decimalToHex(alternativeData, 8);
@@ -101,6 +103,8 @@ export default class AES {
       _reserved +
       magic +
       version;
+
+    console.log(hexString);
 
     const cipher = crypto.createCipheriv(
       'aes-128-gcm',

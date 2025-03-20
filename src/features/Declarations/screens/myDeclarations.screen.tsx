@@ -41,7 +41,7 @@ const MyDeclarations = () => {
   const {showActionSheetWithOptions} = useActionSheet();
   const {t} = useTranslation();
   const user = useAuthStore(state => state.user);
-  const {data, isError, isFetching, error, refetch, isLoading} =
+  const {data, isError, isFetching, error, refetch, isPending} =
     useFetchDeclarations(user?.apuId || -1);
   const {navigate, goBack} = useNavigation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
@@ -151,7 +151,7 @@ const MyDeclarations = () => {
     );
   };
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <Loader
         textColor={theme.colors.primary}

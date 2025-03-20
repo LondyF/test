@@ -25,7 +25,7 @@ const MyMedications = () => {
   const theme = useTheme();
   const {t} = useTranslation();
 
-  const {data, isLoading, refetch, isFetching, isError, error} =
+  const {data, isPending, refetch, isFetching, isError, error} =
     useFetchMyMedications(user?.apuId || -1);
 
   const keyExtractor = (_: Medicine, index: number) => `${index}`;
@@ -88,7 +88,7 @@ const MyMedications = () => {
     );
   };
 
-  if (isLoading || (isError && isFetching)) {
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         containerStyle={styles.container}

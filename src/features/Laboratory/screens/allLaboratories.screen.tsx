@@ -30,7 +30,7 @@ const AllLaboratoriesScreen: React.FC = () => {
   const {navigate} = useNavigation();
   const {t} = useTranslation();
 
-  const {data, isLoading, isError, error, isFetching, refetch, status} =
+  const {data, isPending, isError, error, isFetching, refetch, status} =
     useFetchLaboratories(apuId!);
   const {calculateDistanceFromUser} = useUserLocation();
   const [filteredLabs, setFilteredLabs] = useState<Laboratory[]>([]);
@@ -105,7 +105,7 @@ const AllLaboratoriesScreen: React.FC = () => {
     }
   };
 
-  if (isLoading || (isError && isFetching)) {
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         containerStyle={styles.containerLoader}

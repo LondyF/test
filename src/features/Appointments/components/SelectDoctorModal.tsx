@@ -49,7 +49,7 @@ const SelectDoctorModal: React.FC<SelectDoctorModalProps> = ({
   let areDoctorsEstablishmentsAvailable =
     loadedSelectItems && availabeDoctorEstablishmentsItems[0].value !== -999;
 
-  let showError = !(areDoctorsEstablishmentsAvailable && areDoctorsAvailable);
+  let showError = !areDoctorsEstablishmentsAvailable && !areDoctorsAvailable;
 
   const styles = makeStyles(theme);
 
@@ -98,6 +98,8 @@ const SelectDoctorModal: React.FC<SelectDoctorModalProps> = ({
     }
   };
 
+  console.log('selectedDoctorId', selectedDoctorId);
+
   const renderSelectInputs = () => {
     return (
       <>
@@ -120,9 +122,12 @@ const SelectDoctorModal: React.FC<SelectDoctorModalProps> = ({
               labelStyle={styles.blackColor}
               bottomBorderStyle={styles.selectInputBorder}
               onValueChange={value => {
-                setSelectedDoctorEstablishmentId(value);
+                if (value) {
+                  setSelectedDoctorEstablishmentId(Number(value));
+                }
               }}
               value={selectedDoctorEstablishmentId}
+              itemKey={selectedDoctorEstablishmentId}
               items={availabeDoctorEstablishmentsItems}
               icon={faHospital}
               iconStyle={styles.blackColor}
@@ -131,9 +136,14 @@ const SelectDoctorModal: React.FC<SelectDoctorModalProps> = ({
               label={t('bookAppointment.doctor')}
               labelStyle={styles.blackColor}
               bottomBorderStyle={styles.selectInputBorder}
-              onValueChange={value => setSelectedDoctorId(value)}
-              items={availabeDoctorItems}
+              itemKey={selectedDoctorId}
               value={selectedDoctorId}
+              onValueChange={value => {
+                if (value) {
+                  setSelectedDoctorId(Number(value));
+                }
+              }}
+              items={availabeDoctorItems}
               icon={faUserNurse}
               iconStyle={styles.blackColor}
             />

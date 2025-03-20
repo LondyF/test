@@ -80,11 +80,11 @@ android {
 
     namespace "com.misalumobileapp"
     defaultConfig {
-        applicationId "com.misalumobileapp"
+        applicationId "net.sqlapius.iSQSalu"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 35
-        versionName "36"
+        versionCode 38
+        versionName "36.2"
         missingDimensionStrategy 'react-native-camera', 'general' 
 
     }

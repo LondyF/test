@@ -23,7 +23,7 @@ const AllDoctorReferrals: React.FC<Props> = ({mdsId}) => {
   const user = useAuthStore(state => state.user);
 
   const {t} = useTranslation();
-  const {isLoading, data, isError, error, isFetching, refetch} =
+  const {isPending, data, isError, error, isFetching, refetch} =
     useFetchAllDoctorReferrals(user!.apuId, mdsId);
 
   const renderItem = ({item, index}: {index: number; item: Referral}) => (
@@ -100,7 +100,7 @@ const AllDoctorReferrals: React.FC<Props> = ({mdsId}) => {
 
   const keyExtractor = (_: Referral, index: number) => `${index}`;
 
-  if (isLoading || (isError && isFetching)) {
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         containerStyle={styles.container}

@@ -27,7 +27,7 @@ const AllPharmaciesScreen: React.FC = () => {
 
   const {t} = useTranslation();
   const {navigate} = useNavigation();
-  const {data, isLoading, status} = useFetchPharmacies(apuId!);
+  const {data, isPending, status} = useFetchPharmacies(apuId!);
   const {calculateDistanceFromUser} = useUserLocation();
   const [filteredBotikas, setFilteredBotikas] = useState<Pharmacy[]>([]);
 
@@ -95,7 +95,7 @@ const AllPharmaciesScreen: React.FC = () => {
 
   return (
     <View style={[{...styles.flex}, {paddingBottom: insets.bottom}]}>
-      {!isLoading ? (
+      {!isPending ? (
         <View style={styles.flex}>
           <View style={styles.container}>
             <View style={styles.searchInput}>

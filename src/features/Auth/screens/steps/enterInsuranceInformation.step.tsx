@@ -103,7 +103,11 @@ const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
         <SelectInput
           containerStyle={styles.alignStretch}
           bottomBorderStyle={styles.selectBorderBottomStyle}
-          onValueChange={value => setSelectedInsurerId(value)}
+          onValueChange={value => {
+            if (value) {
+              setSelectedInsurerId(value);
+            }
+          }}
           label={t('register.insurer')}
           labelStyle={styles.selectLabelStyle}
           inputIOSStyle={styles.colorWhite}
@@ -115,7 +119,11 @@ const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
         <SelectInput
           containerStyle={styles.alignStretch}
           bottomBorderStyle={styles.selectBorderBottomStyle}
-          onValueChange={value => setSelectedDoctorId(value)}
+          onValueChange={value => {
+            if (value) {
+              setSelectedDoctorId(value);
+            }
+          }}
           label={t('register.familyDoctor')}
           labelStyle={styles.selectLabelStyle}
           inputIOSStyle={styles.colorWhite}

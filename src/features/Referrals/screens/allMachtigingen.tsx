@@ -22,7 +22,7 @@ const AllMachtigingen: React.FC<Props> = ({mdsId}) => {
   const styles = makeStyles(theme);
 
   const {t} = useTranslation();
-  const {isLoading, data, isError, error, isFetching, refetch} =
+  const {isPending, data, isError, error, isFetching, refetch} =
     useFetchAllMachtigingen(apuId!, mdsId);
 
   const renderItem = ({item, index}: {index: number; item: Referral}) => (
@@ -84,7 +84,7 @@ const AllMachtigingen: React.FC<Props> = ({mdsId}) => {
 
   const keyExtractor = (_: Referral, index: number) => `${index}`;
 
-  if (isLoading || (isError && isFetching)) {
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         containerStyle={styles.container}

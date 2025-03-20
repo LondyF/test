@@ -54,7 +54,7 @@ const NewDeclarationScreen: React.FC<IProps> = ({
   const Toast = useToast();
 
   const {showActionSheetWithOptions} = useActionSheet();
-  const {mutateAsync, isLoading} = useSaveDeclaration();
+  const {mutateAsync, isPending} = useSaveDeclaration();
   const [hasCameraPermissions] = usePermissions(Permissions.camera);
 
   const [showModal, setShowModal] = useState(true);
@@ -210,7 +210,7 @@ const NewDeclarationScreen: React.FC<IProps> = ({
     }
   };
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <Loader
         textColor={appTheme.colors.primary}

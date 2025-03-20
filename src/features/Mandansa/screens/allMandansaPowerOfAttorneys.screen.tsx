@@ -55,7 +55,7 @@ const AllMandansaPowerOfAttorneysScreen: React.FC = () => {
   const {checkIfConnected} = useInternetConnection();
   const {t} = useTranslation();
   const {navigate, goBack} = useNavigation();
-  const {isLoading, data, error, isError, refetch, isFetching} =
+  const {isPending, data, error, isError, refetch, isFetching} =
     useFetchMandansas(apuId!);
   const {mutateAsync: changeMandansaStatus} = useChangeMandansaStatus();
   const {mutateAsync} = useScanMandansaQR();
@@ -279,7 +279,7 @@ const AllMandansaPowerOfAttorneysScreen: React.FC = () => {
     );
   };
 
-  if (isLoading || (isError && isFetching)) {
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         containerStyle={styles.container}

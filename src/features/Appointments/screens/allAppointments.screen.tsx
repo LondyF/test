@@ -64,7 +64,7 @@ const AllAppointmentsScreen: React.FC<AllAppointmentsScreenProps> = ({
   const user = useAuthStore(state => state.user);
   const appTheme = useTheme();
   const styles = makeStyles(appTheme);
-  const {data, isLoading, refetch, isFetching, isError, error} =
+  const {data, isPending, refetch, isFetching, isError, error} =
     useFetchAllAppointments(user!.apuId, route.params?.mdsId);
   const {mutate} = useChangeAppointmentStatus(user!.apuId);
   const {checkIfConnected} = useInternetConnection();
@@ -227,7 +227,7 @@ const AllAppointmentsScreen: React.FC<AllAppointmentsScreenProps> = ({
   };
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isPending) {
       if (!firstUpdate.current && selectedWeek.current == null) {
         const startOfWeek = moment().startOf('isoWeek').toDate();
         const endOfWeek = moment().endOf('isoWeek').toDate();
@@ -240,7 +240,7 @@ const AllAppointmentsScreen: React.FC<AllAppointmentsScreenProps> = ({
         );
       }
     }
-  }, [getAppointmentsBetweenDates, isLoading]);
+  }, [getAppointmentsBetweenDates, isPending]);
 
   const goToNextAppointment = () => {
     if (data && data.appointments.length > 0 && !showAllAppointments) {
@@ -275,7 +275,7 @@ const AllAppointmentsScreen: React.FC<AllAppointmentsScreenProps> = ({
     });
   };
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <Loader
         textColor={appTheme.colors.primary}

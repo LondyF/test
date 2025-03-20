@@ -69,12 +69,12 @@ const RegisterMandansaScreen: React.FC = () => {
   } = useUploadPhotoOfId();
   const {
     data: doctors,
-    isLoading: isLoadingDoctors,
+    isPending: isLoadingDoctors,
     isError: isErrorLoadingDoctors,
   } = useFetchAllDoctors();
   const {
     data: insurers,
-    isLoading: isLoadingInsurers,
+    isPending: isLoadingInsurers,
     isError: isErrorLoadingInsurers,
   } = useFetchAllInsurers();
   const {
@@ -82,7 +82,7 @@ const RegisterMandansaScreen: React.FC = () => {
     status: registerUserStatus,
     data: registerUserData,
     error: registerUserError,
-    isLoading: isCreatingAccount,
+    isPending: isCreatingAccount,
   } = useRegisterUser();
 
   const user = useAuthStore(state => state.user);
@@ -375,7 +375,11 @@ const RegisterMandansaScreen: React.FC = () => {
                     />
                     <SelectInput
                       label={t('registerMandansa.gender')}
-                      onValueChange={value => setSelectedGender(value)}
+                      onValueChange={value => {
+                        if (value) {
+                          setSelectedGender(value);
+                        }
+                      }}
                       icon={faVenusMars}
                       items={GENDERS_OPTIONS}
                       bottomBorderStyle={styles.bottomBorderStyle}
@@ -435,7 +439,11 @@ const RegisterMandansaScreen: React.FC = () => {
                     />
                     <SelectInput
                       label={t('registerMandansa.doctor')}
-                      onValueChange={value => setSelectedDoctorId(value)}
+                      onValueChange={value => {
+                        if (value) {
+                          setSelectedDoctorId(value);
+                        }
+                      }}
                       icon={faVenusMars}
                       items={doctorsOptions!}
                       bottomBorderStyle={styles.bottomBorderStyle}
@@ -445,7 +453,11 @@ const RegisterMandansaScreen: React.FC = () => {
                     />
                     <SelectInput
                       label={t('registerMandansa.insurer')}
-                      onValueChange={value => setSelectedInsurerId(value)}
+                      onValueChange={value => {
+                        if (value) {
+                          setSelectedInsurerId(value);
+                        }
+                      }}
                       icon={faVenusMars}
                       items={insurersOptions!}
                       bottomBorderStyle={styles.bottomBorderStyle}

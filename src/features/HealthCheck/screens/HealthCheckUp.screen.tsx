@@ -33,9 +33,9 @@ const HealthCheckUpScreen = () => {
   const {checkIfConnected} = useInternetConnection();
 
   const {t} = useTranslation();
-  const {data, isLoading, isError, error, refetch} =
+  const {data, isPending, isError, error, refetch} =
     useFetchHealthCheckUpQuestions(user?.apuId || 0);
-  const {mutateAsync, isLoading: IsSavingAnswers} =
+  const {mutateAsync, isPending: IsSavingAnswers} =
     useSaveHealthCheckUpAnswers();
   const [questions, setQuestions] = useState<any>();
   const [PreviousAnswers, setPreviousAnswers] = useState<any>();
@@ -110,7 +110,7 @@ const HealthCheckUpScreen = () => {
     return <ErrorView error={error} goBack={goBack} reload={() => null} />;
   }
 
-  if (isLoading || IsSavingAnswers) {
+  if (isPending || IsSavingAnswers) {
     return (
       <View style={styles.flex}>
         <Loader
@@ -148,7 +148,11 @@ const HealthCheckUpScreen = () => {
                       <SelectInput
                         value={answers && answers[index].answerId}
                         labelStyle={styles.inputLabelStyle}
-                        onValueChange={value => setUserAnswers(value, id)}
+                        onValueChange={value => {
+                          if (value) {
+                            setUserAnswers(value, id);
+                          }
+                        }}
                         label={question}
                         items={questions && questions[index]}
                       />

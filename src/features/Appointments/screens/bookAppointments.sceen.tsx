@@ -40,7 +40,7 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
 
   const {
     data: availableDoctorEstablishmentsData,
-    isLoading: isLoadingAvailableDoctorEstablishments,
+    isPending: isLoadingAvailableDoctorEstablishments,
   } = useFetchAvailableDoctorsEstablishments(user?.apuId ?? -1);
 
   const [showModal, setShowModal] = useState<boolean>(true);
@@ -60,12 +60,8 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
   const [availabeDoctorItems, setAvailabeDoctorItems] = useState<Item[]>([]);
   const [selectedDoctorId, setSelectedDoctorId] = useState<number>(0);
 
-  const {
-    mutateAsync: bookAppointmentAsync,
-    data: bookAppointmentData,
-    error: bookAppointmentError,
-    isSuccess,
-  } = useBookAppointment();
+  const {mutateAsync: bookAppointmentAsync, error: bookAppointmentError} =
+    useBookAppointment();
   const {t} = useTranslation();
 
   const {handleChange, handleSubmit, values, errors} = useFormik({
@@ -81,8 +77,8 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
   });
 
   const {
-    data,
-    isLoading: isLoadingAvailableSpots,
+    data = [],
+    isPending: isLoadingAvailableSpots,
     isFetching,
     refetch: fetchAvailableSpots,
   } = useFetchAvailableSpots(
@@ -100,6 +96,7 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
         return {
           label: x.naam,
           value: x.vesId,
+          key: x.vesId,
         };
       });
     }
@@ -108,6 +105,7 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
       {
         label: t('bookAppointment.noAvailableEstablishments'),
         value: -999,
+        key: -999,
       },
     ];
   }, [availableDoctorEstablishmentsData, t]);
@@ -115,6 +113,8 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
   const getAvailableDoctorsOptions = useCallback(() => {
     if (
       availableDoctorEstablishmentsData &&
+      selectedDoctorEstablishmentId !== -999 &&
+      selectedDoctorEstablishmentId !== 0 &&
       availableDoctorEstablishmentsData.allSpots
     ) {
       return availableDoctorEstablishmentsData.allSpots
@@ -153,6 +153,7 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
   useEffect(() => {
     if (!isLoadingAvailableDoctorEstablishments) {
       let availableDoctors = getAvailableDoctorsOptions();
+
       setAvailabeDoctorItems(availableDoctors!);
       if (availableDoctors && availableDoctors.length > 0) {
         setSelectedDoctorId(availableDoctors![0].value);

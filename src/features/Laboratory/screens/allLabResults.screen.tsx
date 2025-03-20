@@ -25,7 +25,7 @@ const AllLabResultsScreen: React.FC<Props> = ({
   const [forceRefreshCache, setForceRefreshCache] = useState(false);
 
   const {t} = useTranslation();
-  const {isLoading, isError, error, data, refetch, isFetching} =
+  const {isPending, isError, error, data, refetch, isFetching} =
     useFetchAllLabResults(apuId!, mdsId, forceRefreshCache);
 
   const theme = useTheme();
@@ -61,7 +61,9 @@ const AllLabResultsScreen: React.FC<Props> = ({
     );
   };
 
-  if (isLoading || (isError && isFetching)) {
+  console.log(isPending);
+
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         containerStyle={styles.container}

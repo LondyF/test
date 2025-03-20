@@ -61,7 +61,7 @@ const AllMandansaAuthorizedRepsScreen: React.FC<Props> = ({
 
   const {mutateAsync: changeMandansaStatus} = useChangeMandansaStatus();
   const {checkIfConnected} = useInternetConnection();
-  const {isLoading, data, isError, refetch, error, isFetching} =
+  const {isPending, data, isError, refetch, error, isFetching} =
     useFetchMandansas(apuId!);
   const {primary, darkGray} = theme.colors;
 
@@ -170,7 +170,7 @@ const AllMandansaAuthorizedRepsScreen: React.FC<Props> = ({
     );
   };
 
-  if (isLoading || (isError && isFetching)) {
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         textColor={primary}

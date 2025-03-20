@@ -15,10 +15,10 @@ const BotikaNaWarda = () => {
   const user = useAuthStore(state => state.user);
   const appTheme = useTheme();
 
-  const {data, isLoading, isError} = useFetchBotikaNaWarda(user?.apuId || -1);
+  const {data, isPending, isError} = useFetchBotikaNaWarda(user?.apuId || -1);
   const {navigate} = useNavigation();
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <View style={styles.container}>
         <Loader

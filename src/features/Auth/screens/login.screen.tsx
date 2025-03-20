@@ -56,12 +56,12 @@ const LoginScreen: React.FC = () => {
   const {authenticateUser} = usePin(storedUser?.pin ?? '');
   const {promptBiometrics} = useBiometrics();
   const {isInternetReachable} = useInternetConnection();
-  const {mutate, status, error, data, isLoading} = useLoginUser();
+  const {mutate, status, error, data, isPending} = useLoginUser();
   const {
     mutate: resetPassword,
     error: resetPasswordError,
     status: resetPasswordStatus,
-    isLoading: isSendingResetPasswordMail,
+    isPending: isSendingResetPasswordMail,
     data: resetPasswordData,
   } = useResetPassword();
 
@@ -233,7 +233,7 @@ const LoginScreen: React.FC = () => {
           <Text style={styles.welcomeText}>{t('login.welcomeBack')}</Text>
         </View>
         <View style={styles.fill}>
-          {isLoading || isSendingResetPasswordMail ? (
+          {isPending || isSendingResetPasswordMail ? (
             <Loader
               containerStyle={styles.loader}
               text={

@@ -37,11 +37,11 @@ const UserBankInfoModal: React.FC<IProps> = ({closeModal}) => {
   const {t} = useTranslation();
   const {
     data,
-    isLoading: isLoadingUserBankInfo,
+    isPending: isLoadingUserBankInfo,
     isFetching,
   } = useFetchUserBankInfo(user?.apuId || -1);
-  const {data: FetchedBanks, isLoading: isLoadingBanks} = useFetchAllBanks();
-  const {mutateAsync, isLoading: IsSavingBankInfo} = useSaveUserBankInfo();
+  const {data: FetchedBanks, isPending: isLoadingBanks} = useFetchAllBanks();
+  const {mutateAsync, isPending: IsSavingBankInfo} = useSaveUserBankInfo();
 
   const [banks, setBanks] = useState<Item[]>([]);
   const [selectedBank, setSelectedBank] = useState<number>(0);
@@ -138,7 +138,11 @@ const UserBankInfoModal: React.FC<IProps> = ({closeModal}) => {
             label="bank"
             labelStyle={styles.blackColor}
             bottomBorderStyle={styles.selectInputBorder}
-            onValueChange={value => setSelectedBank(value)}
+            onValueChange={value => {
+              if (value) {
+                setSelectedBank(value);
+              }
+            }}
             value={selectedBank}
             items={banks}
             icon={faPiggyBank}

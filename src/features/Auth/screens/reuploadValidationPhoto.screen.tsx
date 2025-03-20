@@ -50,7 +50,7 @@ const ReuploadValidationPhoto: React.FC<Props> = ({route}) => {
   const {
     mutate: uploadPhoto,
     error: uploadPhotoError,
-    isLoading,
+    isPending,
     isSuccess,
     isError: isUploadPhotoError,
   } = useUploadPhotoOfId();
@@ -151,7 +151,7 @@ const ReuploadValidationPhoto: React.FC<Props> = ({route}) => {
 
   return (
     <PageContainer variant="blue">
-      {!isLoading ? (
+      {!isPending ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.container}>

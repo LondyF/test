@@ -38,7 +38,7 @@ const AllNotifications: React.FC<AllNotificationsProps> = ({navigation}) => {
   const styles = makeStyles(theme);
   const apuId = useAuthStore(state => state.user?.apuId);
 
-  const {isLoading, isFetching, data, refetch} = useFetchNotifications(apuId!);
+  const {isPending, isFetching, data, refetch} = useFetchNotifications(apuId!);
   const {mutate} = useDeleteNotification(apuId!);
   const {primary} = theme.colors;
 
@@ -175,7 +175,7 @@ const AllNotifications: React.FC<AllNotificationsProps> = ({navigation}) => {
           text={t('notifications.allNotifications')}
         />
       </TouchableOpacity>
-      {isLoading || isFetching ? (
+      {isPending || isFetching ? (
         <Loader
           containerStyle={styles.flex}
           textColor={primary}

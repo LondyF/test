@@ -8,7 +8,7 @@ const useFetchAvailableSpots = (
   mdwId: number,
 ) => {
   return useQuery<GetAvailableSpotsResponse>({
-    queryKey: ['freeSpots'],
+    queryKey: ['freeSpots', vesId, mdwId],
     queryFn: () => fetchAvailableSpots(apuId, vesId, mdwId),
     enabled: false,
   });

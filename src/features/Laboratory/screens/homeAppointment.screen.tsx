@@ -42,16 +42,16 @@ const HomeAppointment: React.FC<Props> = ({route}) => {
   const {goBack} = useNavigation();
 
   const user = useAuthStore(state => state.user);
-  const {data, isLoading, error, refetch, isError} = useFetchHomeAppointment(
+  const {data, isPending, error, refetch, isError} = useFetchHomeAppointment(
     user?.apuId || 0,
     labRequest.avaId,
     route.params.mdsId,
   );
-  const {mutateAsync, isLoading: isBookingAppointment} =
+  const {mutateAsync, isPending: isBookingAppointment} =
     useBookHomeAppointment();
 
   useEffect(() => {
-    if (!isLoading && data) {
+    if (!isPending && data) {
       setAvailableLabs(
         data?.labs?.map<Item>(lab => ({
           label: lab.naamFull,
@@ -59,7 +59,7 @@ const HomeAppointment: React.FC<Props> = ({route}) => {
         })),
       );
     }
-  }, [data, isLoading]);
+  }, [data, isPending]);
 
   const {handleSubmit, values, errors, handleChange} = useFormik({
     enableReinitialize: true,
@@ -112,7 +112,7 @@ const HomeAppointment: React.FC<Props> = ({route}) => {
     },
   });
 
-  if (isLoading || isBookingAppointment) {
+  if (isPending || isBookingAppointment) {
     return (
       <Loader
         textColor={appTheme.colors.primary}
@@ -144,7 +144,11 @@ const HomeAppointment: React.FC<Props> = ({route}) => {
             labelStyle={styles.blackColor}
             bottomBorderStyle={styles.bottomBorderStyle}
             label={t('labRequests.availableLabs')}
-            onValueChange={value => setSelectedLab(value)}
+            onValueChange={value => {
+              if (value) {
+                setSelectedLab(value);
+              }
+            }}
             items={availableLabs}
           />
           <TextInput

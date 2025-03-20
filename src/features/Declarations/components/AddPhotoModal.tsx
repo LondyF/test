@@ -43,7 +43,7 @@ const AddPhotoModal: React.FC<IProps> = ({
   const {
     data: fetchedScanTypes,
     isError: IsErrorLoadingScanTypes,
-    isLoading: IsLoadingScanTypes,
+    isPending: IsLoadingScanTypes,
     refetch: refetchScanTypes,
   } = useFetchAllDeclarationScanTypes();
   const [scanTypes, setScanTypes] = useState<Array<Item>>([]);
@@ -159,7 +159,11 @@ const AddPhotoModal: React.FC<IProps> = ({
               bottomBorderStyle={styles.scanTypeInputBorderBottom}
               value={selectedScanTypeId}
               icon={faUserNurse}
-              onValueChange={value => setSelectedScanTypeId(value)}
+              onValueChange={value => {
+                if (value) {
+                  setSelectedScanTypeId(value);
+                }
+              }}
               items={scanTypes || []}
             />
             <TextInput

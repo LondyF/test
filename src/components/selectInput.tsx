@@ -1,8 +1,11 @@
-import { IconDefinition } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon, FontAwesomeIconStyle } from '@fortawesome/react-native-fontawesome';
+import {IconDefinition} from '@fortawesome/pro-solid-svg-icons';
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
-import { StyleSheet, Text, View, TextStyle, ViewStyle } from 'react-native';
-import RNPickerSelect, { PickerSelectProps } from 'react-native-picker-select';
+import {StyleSheet, Text, View, TextStyle, ViewStyle} from 'react-native';
+import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select';
 
 interface SelectInputProps extends PickerSelectProps {
   labelStyle?: TextStyle;
@@ -37,17 +40,27 @@ const SelectInput: React.FC<SelectInputProps> = ({
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.labelStyle, labelStyle]}>{label}</Text>
       <View style={styles.inputIconWrapper}>
-        {icon && <FontAwesomeIcon style={[styles.iconStyle, iconStyle]} size={16} icon={icon} />}
+        {icon && (
+          <FontAwesomeIcon
+            style={[styles.iconStyle, iconStyle]}
+            size={16}
+            icon={icon}
+          />
+        )}
         <View style={styles.flex}>
           <RNPickerSelect
             {...props}
             value={value}
             itemKey={itemKey}
             useNativeAndroidPickerStyle={false}
-            placeholder={{}}
             style={{
-              inputAndroid: { padding: 0, fontSize: 16, color: 'black', ...inputAndroidStyle },
-              inputIOS: { fontSize: 16, paddingVertical: 3, ...inputIOSStyle },
+              inputAndroid: {
+                padding: 0,
+                fontSize: 16,
+                color: 'black',
+                ...inputAndroidStyle,
+              },
+              inputIOS: {fontSize: 16, paddingVertical: 3, ...inputIOSStyle},
               inputAndroidContainer: styles.inputContainer,
               inputIOSContainer: styles.inputContainer,
             }}

@@ -29,7 +29,7 @@ const AllPrescriptionsScreen: React.FC<Props> = ({
 
   const {t} = useTranslation();
   const [isMandansa, setIsMandansa] = useState(false);
-  const {data, isLoading, refetch, error, isFetching, isError} =
+  const {data, isPending, refetch, error, isFetching, isError} =
     useFetchPrescriptions(apuId!, route.params?.mdsId);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const AllPrescriptionsScreen: React.FC<Props> = ({
     colors: {primary},
   } = Theme;
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <Loader
         textColor={primary}

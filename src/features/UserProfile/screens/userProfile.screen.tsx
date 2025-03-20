@@ -68,8 +68,8 @@ const UserProfileScreen: React.FC = () => {
 
   const {t, i18n} = useTranslation();
   const {navigate} = useNavigation();
-  const {mutateAsync, isLoading: IsSavingProfile} = useSaveUserProfile();
-  const {mutateAsync: uploadProfilePic, isLoading} = useUploadProiflePicture();
+  const {mutateAsync, isPending: IsSavingProfile} = useSaveUserProfile();
+  const {mutateAsync: uploadProfilePic, isPending} = useUploadProiflePicture();
   const {data: doctorsLOV} = useFetchAllDoctors();
   const {showActionSheetWithOptions} = useActionSheet();
   const {checkIfConnected} = useInternetConnection();
@@ -337,7 +337,7 @@ const UserProfileScreen: React.FC = () => {
                 onPress={showChangeProfilePicOptions}
                 style={styles.profilePictureContainer}>
                 <View style={styles.profilePicture}>
-                  {isLoading ? (
+                  {isPending ? (
                     <View style={styles.profilePicLoaderContainer}>
                       <ActivityIndicator color={appTheme.colors.primary} />
                     </View>
@@ -453,7 +453,11 @@ const UserProfileScreen: React.FC = () => {
                         containerStyle={styles.additionalInsuranceInput}
                         label={t('profile.additionalInsurance')}
                         value={selectedInsurers}
-                        onValueChange={value => setSelectedInsurers(value)}
+                        onValueChange={value => {
+                          if (value) {
+                            setSelectedInsurers(value);
+                          }
+                        }}
                         disabled={user?.vzkId !== Insurers.SVB || !isEditing}
                         bottomBorderStyle={{
                           borderBottomColor: !(
@@ -478,7 +482,11 @@ const UserProfileScreen: React.FC = () => {
                       label={t('profile.familyDoctor')}
                       value={selectedDoctors}
                       disabled={!isEditing}
-                      onValueChange={value => setSelectedDoctors(value)}
+                      onValueChange={value => {
+                        if (value) {
+                          setSelectedDoctors(value);
+                        }
+                      }}
                       icon={faUserNurse}
                       bottomBorderStyle={{
                         borderBottomColor: editableInputColor,
@@ -506,7 +514,11 @@ const UserProfileScreen: React.FC = () => {
                       label={t('profile.language')}
                       disabled={!isEditing}
                       value={selectedLanguage}
-                      onValueChange={value => setSelectedLang(value)}
+                      onValueChange={value => {
+                        if (value) {
+                          setSelectedLang(value);
+                        }
+                      }}
                       icon={faFlag}
                       bottomBorderStyle={{
                         borderBottomColor: editableInputColor,

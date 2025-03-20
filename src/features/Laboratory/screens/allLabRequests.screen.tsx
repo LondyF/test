@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
@@ -26,7 +26,7 @@ const AllLabRequestsScreen: React.FC<Props> = ({mdsId, navigation}) => {
 
   const {t} = useTranslation();
   const {goBack} = useNavigation();
-  const {isLoading, isError, error, data, refetch, isFetching} =
+  const {isPending, isError, error, data, refetch, isFetching} =
     useFetchAllLabRequests(apuId!, mdsId, forceRefreshCache);
 
   const {primary} = theme.colors;
@@ -55,7 +55,7 @@ const AllLabRequestsScreen: React.FC<Props> = ({mdsId, navigation}) => {
     navigation.navigate('HomeAppointment', {labRequest, mdsId: mdsId});
   };
 
-  if (isLoading || (isError && isFetching)) {
+  if (isPending || (isError && isFetching)) {
     return (
       <Loader
         containerStyle={styles.container}
