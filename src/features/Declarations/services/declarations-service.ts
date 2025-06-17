@@ -1,5 +1,6 @@
 import request from '@src/utils/request';
 import {DeclarationPhoto} from '../screens/NewDeclaration.screen';
+import {DeclarationLine} from '../types/declarations';
 
 export const fetchUserBankInfo = (apuId: number) =>
   request({
@@ -30,10 +31,11 @@ export const saveUserBankInfo = async (
 
 export const fetchAllDeclaration = async (apuId: number) =>
   await request({
-    url: '/app-rn1/catalog/all',
+    url: '/app-declaration1/session',
     method: 'POST',
     data: {
       apuId,
+      fase: 'GET',
     },
   });
 
@@ -72,4 +74,117 @@ export const saveDeclaration = async (
     },
   });
   return response;
+};
+
+export const createDeclarationSession = async ({
+  apuId,
+  vkcId,
+  sqArtId,
+  bedrag,
+  datum,
+  lndKde,
+  currency,
+  imageBase64 = '',
+}: {
+  apuId: number;
+  vkcId: number;
+  sqArtId: number;
+  bedrag: number;
+  datum: string;
+  lndKde: string;
+  currency: string;
+  imageBase64?: string;
+}) => {
+  return await request({
+    url: '/app-declaration1/session',
+    method: 'POST',
+    data: {
+      fase: 'SAVE',
+      apuId,
+      sesId: '',
+      vkcId,
+      sqArtId,
+      bedrag,
+      datum,
+      currency,
+      lndKde,
+      fotoB64: imageBase64,
+    },
+  });
+};
+
+export const fetchDepartments = async ({apuId}: {apuId: number}) =>
+  await request({
+    url: '/app-lov/vakgroepen',
+    method: 'POST',
+    data: {
+      apuId,
+    },
+  });
+
+export const fetchProviders = async ({vkcId}: {vkcId: number}) =>
+  await request({
+    url: '/app-lov/zorgverleners',
+    method: 'POST',
+    data: {
+      vkcId,
+    },
+  });
+
+export const fetchProcedure = async ({
+  sqArtId,
+  vkcId,
+  apuId,
+}: {
+  sqArtId: number;
+  vkcId: number;
+  apuId: number;
+}) =>
+  await request({
+    url: '/app-lov/verrichtingen',
+    method: 'POST',
+    data: {
+      apuId,
+      sqArtId,
+      vkcId,
+    },
+  });
+
+export const fetchDeclarationSession = async ({
+  sesId,
+  apuId,
+}: {
+  sesId: string;
+  apuId: number;
+}) => {
+  return await request({
+    url: '/app-declaration1/session',
+    method: 'POST',
+    data: {
+      fase: 'GET',
+      sesId,
+      apuId,
+    },
+  });
+};
+
+export const addDeclarationLines = async ({
+  sesId,
+  apuId,
+  lines: regels,
+}: {
+  sesId: string;
+  apuId: number;
+  lines: DeclarationLine[];
+}) => {
+  return await request({
+    url: '/app-declaration1/session',
+    method: 'POST',
+    data: {
+      fase: 'SAVE',
+      sesId,
+      apuId,
+      regels,
+    },
+  });
 };

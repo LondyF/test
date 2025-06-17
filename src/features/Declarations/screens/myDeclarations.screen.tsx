@@ -31,6 +31,7 @@ import useInternetConnection from '@hooks/useInternetConnection';
 import UserBankInfoModal from '../components/UserBankInfoModal';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
 import {Declaration} from '../types/declarations';
+import moment from 'moment';
 
 const {
   colors: {darkGray, gray},
@@ -79,10 +80,17 @@ const MyDeclarations = () => {
     index: number;
     item: Declaration;
   }) => {
+    const date = moment(declaration?.datum, true);
+    const isValidDate = date.isValid();
+    const formattedDate = isValidDate ? date.format('DD MMM YYYY') : '-';
     return (
       <ListItem style={styles.listItemContainer} index={index}>
         <TouchableOpacity
-          onPress={() => navigate('DeclarationGallery', {declaration})}
+          onPress={() =>
+            navigate('Declaration', {
+              sesId: declaration.sesId,
+            })
+          }
           style={styles.itemContainer}>
           <View style={styles.textContainer}>
             <View style={styles.headerTextContainer}>
@@ -90,15 +98,7 @@ const MyDeclarations = () => {
                 variant="h3"
                 color={darkGray}
                 fontWeight="bold"
-                text={`${declaration.naam} - `}
-              />
-              <Typography
-                textStyle={styles.statusText}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                variant="h3"
-                color={darkGray}
-                text={`Status: ${declaration.status} `}
+                text={formattedDate}
               />
             </View>
             <View style={styles.extraInfoContainer}>
@@ -110,19 +110,19 @@ const MyDeclarations = () => {
               <Typography
                 variant="h4"
                 color={gray}
-                text={convertISOdate(declaration.datum)}
+                // text={convertISOdate(declaration.datum)}
               />
               <Typography
                 variant="h4"
                 color={gray}
-                text={`${declaration.bedragTot} ANG`}
+                // text={`${declaration.bedragTot} ANG`}
               />
             </View>
           </View>
           <View style={styles.photosAmountContainer}>
             <View style={styles.photosAmountCircle}>
               <Typography
-                text={declaration.fotos.length.toString()}
+                text={declaration?.regels?.length ?? 0}
                 fontWeight="bold"
                 variant="b1"
                 fontSize={18}
@@ -174,7 +174,7 @@ const MyDeclarations = () => {
         keyExtractor={keyExtractor}
         contentContainerStyle={styles.flatListContent}
         renderItem={renderItem}
-        data={data && data.catalog.data.filter(x => x.fotos.length > 0)}
+        data={data?.reverse()}
         ListEmptyComponent={renderListEmptyComponent}
         onRefresh={refetch}
         refreshing={isFetching}

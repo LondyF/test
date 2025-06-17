@@ -1,5 +1,9 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInputProps as ReactNativeTextInputProps,
+} from 'react-native';
 
 import {TextField} from 'rn-material-ui-textfield';
 import {
@@ -12,7 +16,9 @@ type TextInputProps = {
   icon?: IconDefinition;
   iconStyle?: FontAwesomeIconStyle;
   mainColor: string;
-};
+  label?: string;
+  error?: string;
+} & ReactNativeTextInputProps;
 
 const TextInput: React.FC<TextInputProps> = ({
   icon,

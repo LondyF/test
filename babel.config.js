@@ -28,6 +28,7 @@ module.exports = {
           '@helpers': './src/helpers',
           '@stores': './src/stores',
           '@services': './src/services',
+          '@features': './src/features',
           '@hooks': './src/hooks',
         },
       },

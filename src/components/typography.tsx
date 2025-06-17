@@ -1,12 +1,12 @@
 import React from 'react';
-import { Text, ColorValue, TextStyle, TextProps } from 'react-native';
+import {Text, ColorValue, TextStyle, TextProps} from 'react-native';
 
-import { Theme } from '@styles/index';
-import { FontVariant } from '@src/styles/styles';
+import {Theme} from '@styles/index';
+import {FontVariant} from '@src/styles/styles';
 
 export interface TypographyProps extends TextProps {
   variant: FontVariant;
-  text: String;
+  text?: string;
   color?: ColorValue;
   textStyle?: TextStyle;
   fontWeight?: TextStyle['fontWeight'];

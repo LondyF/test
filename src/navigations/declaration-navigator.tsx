@@ -5,8 +5,11 @@ import {HeaderBackButton} from '@react-navigation/elements';
 import {useTranslation} from 'react-i18next';
 
 import DeclarationGallery from '@src/features/Declarations/screens/DeclarationGallery.screen';
-import NewDeclarationScreen from '@src/features/Declarations/screens/NewDeclaration.screen';
+// import NewDeclarationScreen from '@features/Declarations/screens/NewDeclaration.screen';
 import MyDeclarations from '@src/features/Declarations/screens/myDeclarations.screen';
+
+import NewDeclarationScreen from '@features/Declarations/screens/NewDecalaration2.screen';
+import DeclarationScreen from '@features/Declarations/screens/Declaration.screen';
 
 const DeclarationNavigator = createStackNavigator();
 
@@ -31,7 +34,13 @@ const DeclarationStack: React.FC = () => {
       />
       <DeclarationNavigator.Screen
         name="NewDeclaration"
+        options={{title: 'New Declaration', headerShown: false}}
         component={NewDeclarationScreen}
+      />
+      <DeclarationNavigator.Screen
+        name="Declaration"
+        options={{title: 'New Declaration', headerShown: false}}
+        component={DeclarationScreen}
       />
     </DeclarationNavigator.Navigator>
   );

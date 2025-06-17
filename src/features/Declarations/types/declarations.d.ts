@@ -27,15 +27,37 @@ export interface Photo {
   type: Type;
 }
 
-export interface Declaration {
-  datum: Date;
-  naam: string;
-  status: string;
-  datumBtl?: Date;
-  bedragTot: number;
-  bedragBtl: number;
+export interface DeclarationLine {
   aantal: number;
-  fotos: Photo[];
+  kode: string;
+  tekst: string;
+  bedrag: number;
+  betaald: number | null;
+}
+
+export interface Declaration {
+  StatusIco: number;
+  StatusInfo: unknown;
+  artNaam: string;
+  bedrag: number;
+  betaald: number;
+  datum: Date;
+  foto: string;
+  lndKde: string;
+  nummer: number;
+  regels: DeclarationLine[];
+  scaId: number;
+  sesId: string;
+  sqArtId: number;
+  status: number;
+  vkcId: number;
+  vkcNaam: string;
+}
+
+export interface Procedure {
+  id: number;
+  naam: string;
+  kode: string;
 }
 
 export interface GetAllDeclarations {
@@ -44,7 +66,7 @@ export interface GetAllDeclarations {
 }
 
 export interface GetAllDeclariontsReponse {
-  catalog: GetAllDeclarations;
+  data: Declaration[];
 }
 
 export interface SaveDeclarationResponse {

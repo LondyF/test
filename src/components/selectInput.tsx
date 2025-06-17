@@ -4,8 +4,16 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome';
 import React from 'react';
-import {StyleSheet, Text, View, TextStyle, ViewStyle} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextStyle,
+  ViewStyle,
+  ActivityIndicator,
+} from 'react-native';
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select';
+import Typography from './typography';
 
 interface SelectInputProps extends PickerSelectProps {
   labelStyle?: TextStyle;
@@ -19,6 +27,8 @@ interface SelectInputProps extends PickerSelectProps {
   itemKey?: string | number;
   value?: any;
   label: string;
+  error?: string;
+  loading?: boolean;
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -33,23 +43,37 @@ const SelectInput: React.FC<SelectInputProps> = ({
   value,
   label,
   onValueChange,
+  error,
+  loading = false,
   ...props
 }) => {
   const styles = makeStyles(icon !== undefined);
+
+  const isErrored = error && error?.length > 0;
+
+  const Icon = loading ? (
+    <ActivityIndicator
+      style={[styles.iconStyle, iconStyle]}
+      size="small"
+      color="#c7c5c5"
+    />
+  ) : icon ? (
+    <FontAwesomeIcon
+      style={[styles.iconStyle, iconStyle]}
+      size={16}
+      icon={icon}
+    />
+  ) : null;
+
   return (
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.labelStyle, labelStyle]}>{label}</Text>
       <View style={styles.inputIconWrapper}>
-        {icon && (
-          <FontAwesomeIcon
-            style={[styles.iconStyle, iconStyle]}
-            size={16}
-            icon={icon}
-          />
-        )}
+        {Icon}
         <View style={styles.flex}>
           <RNPickerSelect
             {...props}
+            disabled={loading || props.disabled}
             value={value}
             itemKey={itemKey}
             useNativeAndroidPickerStyle={false}
@@ -68,7 +92,16 @@ const SelectInput: React.FC<SelectInputProps> = ({
           />
         </View>
       </View>
-      <View style={[styles.bottomBorder, bottomBorderStyle]} />
+      <View
+        style={[
+          styles.bottomBorder,
+          bottomBorderStyle,
+          isErrored ? styles.errorBorderBottom : {},
+        ]}
+      />
+      {isErrored && (
+        <Typography variant="b1" text={error} textStyle={styles.errorText} />
+      )}
     </View>
   );
 };
@@ -101,10 +134,16 @@ const makeStyles = (hasIcon: boolean) =>
       borderBottomColor: '#c7c5c5',
       marginTop: 3,
     },
-
+    errorBorderBottom: {
+      borderBottomColor: '#d50000',
+    },
     inputIconWrapper: {
       flexDirection: 'row',
       alignItems: 'center',
+    },
+    errorText: {
+      color: '#d50000',
+      marginTop: 5,
     },
   });
 
