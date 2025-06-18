@@ -9,7 +9,7 @@ import {
 } from '@gorhom/bottom-sheet';
 
 import * as Yup from 'yup';
-import {Button, SelectInput, TextInput, Typography} from '@src/components';
+import {Button, TextInput, Typography} from '@src/components';
 import {faFileInvoiceDollar, faReceipt} from '@fortawesome/pro-solid-svg-icons';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -37,8 +37,14 @@ const BottomSheetBackdrop = (props: BottomSheetBackdropProps) => {
   );
 };
 
+type PresentInput = {
+  procedure: string;
+  amount: number;
+  unitPrice: number;
+};
+
 export type AddDeclarationLineSheetRef = {
-  present: () => void;
+  present: (input?: PresentInput) => void;
   dismiss: () => void;
 };
 
@@ -57,7 +63,7 @@ type AddDeclarationLineSheetProps = {
 
 type ContentProps = {
   insets: EdgeInsets;
-  procedureOptions: {label: string; value: number}[];
+  procedureOptions: {label: string; value: string}[];
   isPending: boolean;
   values: NewLineValues;
   errors: Partial<Record<keyof NewLineValues, string>>;
@@ -70,6 +76,7 @@ type ContentProps = {
   handleSubmit: () => void;
   currencyFormatter: (value: number) => string;
   total: number;
+  isEditingExistingLine: boolean;
 };
 
 const Content: React.FC<ContentProps> = ({
@@ -83,6 +90,7 @@ const Content: React.FC<ContentProps> = ({
   handleSubmit,
   currencyFormatter,
   total,
+  isEditingExistingLine,
 }) => {
   const styles = createStyles(insets);
   const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
@@ -97,7 +105,11 @@ const Content: React.FC<ContentProps> = ({
     <BottomSheetView style={styles.sheet}>
       <Typography
         variant="h3"
-        text="Add new invoice line"
+        text={
+          isEditingExistingLine
+            ? 'Edit declaration line'
+            : 'Add new declaration line'
+        }
         fontWeight="300"
         textStyle={styles.title}
       />
@@ -105,11 +117,16 @@ const Content: React.FC<ContentProps> = ({
         search
         value={values.procedure}
         autoScroll={false}
+        disable={isEditingExistingLine}
+        dropdownPosition="top"
         data={procedureOptions}
         labelField="label"
         valueField="value"
         onChange={value => setFieldValue('procedure', value.value)}
-        style={styles.selectInputBorder}
+        style={[
+          styles.selectInputBorder,
+          isEditingExistingLine && {opacity: 0.5},
+        ]}
         maxHeight={250}
         searchPlaceholder="Search..."
         flatListProps={{
@@ -180,7 +197,7 @@ const Content: React.FC<ContentProps> = ({
 
       <Button
         variant="primary"
-        text="Add line"
+        text={isEditingExistingLine ? 'Update line' : 'Add line'}
         onPress={() => handleSubmit()}
         buttonStyle={styles.addLineButton}
       />
@@ -196,8 +213,21 @@ const AddDeclarationLineSheet = React.forwardRef<
 
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
+  const [isEditingExistingLine, setIsEditingExistingLine] =
+    React.useState<boolean>(false);
+
   React.useImperativeHandle(ref, () => ({
-    present: () => bottomSheetModalRef.current?.present(),
+    present: options => {
+      if (options) {
+        setFieldValue('procedure', options.procedure);
+        setFieldValue('amount', options.amount || 1);
+        setFieldValue('unitPrice', options.unitPrice);
+
+        setIsEditingExistingLine(true);
+      }
+
+      bottomSheetModalRef.current?.present();
+    },
     dismiss: () => bottomSheetModalRef.current?.dismiss(),
   }));
 
@@ -211,7 +241,7 @@ const AddDeclarationLineSheet = React.forwardRef<
     useFormik<NewLineValues>({
       validateOnChange: false,
       validationSchema: Yup.object().shape({
-        procedure: Yup.number().required('Procedure is required'),
+        procedure: Yup.string().required('Procedure is required'),
         unitPrice: Yup.number()
           .typeError('Unit price must be a number')
           .required('Unit price is required')
@@ -227,14 +257,16 @@ const AddDeclarationLineSheet = React.forwardRef<
       },
       onSubmit: submittedValues => {
         const procedure = procedures?.find(
-          prcd => prcd.id === Number(submittedValues.procedure),
+          prcd => prcd.kode === submittedValues.procedure,
         );
+
         onSubmit({
           aantal: submittedValues.amount,
-          bedrag: Number(submittedValues.unitPrice! * submittedValues.amount),
+          bedrag: submittedValues.unitPrice || 0,
           betaald: null,
           kode: procedure?.kode || '',
           tekst: procedure?.naam || '',
+          // @ts-ignore: backend issue
           naam: procedure?.naam || '',
         });
 
@@ -246,7 +278,7 @@ const AddDeclarationLineSheet = React.forwardRef<
   const procedureOptions =
     procedures?.map(procedure => ({
       label: procedure.naam,
-      value: procedure.id,
+      value: procedure.kode,
     })) || [];
 
   const total = values.unitPrice ? values.unitPrice * (values.amount || 0) : 0;
@@ -254,17 +286,22 @@ const AddDeclarationLineSheet = React.forwardRef<
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
-      onDismiss={() => resetForm()}
+      onDismiss={() => {
+        resetForm();
+        setIsEditingExistingLine(false);
+      }}
       enableDynamicSizing
       enablePanDownToClose
       backdropComponent={BottomSheetBackdrop}>
       <Content
+        isEditingExistingLine={isEditingExistingLine}
         insets={insets}
         procedureOptions={procedureOptions}
         isPending={isPending}
         values={values}
         errors={errors}
         setFieldValue={setFieldValue}
+        // @ts-ignore
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         currencyFormatter={currencyFormatter}

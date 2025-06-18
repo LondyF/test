@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Alert,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
@@ -44,12 +45,21 @@ const currency = 'XCG';
 const formatCurrency = (amount: number) => {
   return Number(amount).toLocaleString('nl-NL', {
     style: 'currency',
+    currencyDisplay: 'code',
     currency,
     minimumFractionDigits: 2,
   });
 };
 
-const DeclarationLineItem = ({item}: {item: DeclarationLine}) => {
+const DeclarationLineItem = ({
+  item,
+  onPress,
+  onLongPress,
+}: {
+  item: DeclarationLine;
+  onPress: (item: DeclarationLine) => void;
+  onLongPress: (item: DeclarationLine) => void;
+}) => {
   const {tekst, bedrag, aantal: aantalFromItem} = item;
 
   const theme = useTheme();
@@ -60,40 +70,35 @@ const DeclarationLineItem = ({item}: {item: DeclarationLine}) => {
   const styles = createStyle(theme);
 
   return (
-    <TouchableOpacity style={styles.declarationLineItem}>
-      <View style={styles.relativeContainer}>
-        {/* Main content */}
-        <View style={styles.flex}>
-          <Typography
-            variant="h5"
-            text={tekst}
-            fontWeight="500"
-            color="white"
-            textStyle={{marginBottom: 2}}
-            numberOfLines={1}
-          />
-          <Typography
-            variant="h6"
-            text={`${aantal}x ${formatCurrency(bedrag)}`}
-            fontWeight="500"
-            color="rgba(255, 255, 255, 0.63)"
-            textStyle={{marginBottom: 5}}
-          />
-        </View>
+    <TouchableOpacity
+      style={styles.declarationLineItem}
+      onPress={() => onPress(item)}
+      onLongPress={() => onLongPress(item)}>
+      <View style={styles.flex}>
         <Typography
-          variant="h4"
-          text={formatCurrency(total)}
+          variant="h5"
+          text={tekst}
           fontWeight="500"
           color="white"
+          textStyle={{marginBottom: 2}}
           numberOfLines={1}
+        />
+        <Typography
+          variant="h6"
+          text={`${aantal}x ${formatCurrency(bedrag)}`}
+          fontWeight="500"
+          color="rgba(255, 255, 255, 0.63)"
           textStyle={{marginBottom: 5}}
         />
-
-        {/* Delete Button */}
-        <TouchableOpacity style={styles.deleteButton} onPress={() => null}>
-          <Ionicons name="trash" size={20} color="white" />
-        </TouchableOpacity>
       </View>
+      <Typography
+        variant="h4"
+        text={formatCurrency(total)}
+        fontWeight="500"
+        color="white"
+        numberOfLines={1}
+        textStyle={{marginBottom: 5}}
+      />
     </TouchableOpacity>
   );
 };
@@ -152,7 +157,6 @@ const DeclarationScreen = ({route}: Props) => {
   const declarationSubmittedSheetRef =
     React.useRef<DeclarationSubmittedSheetRef>(null);
 
-  // callbacks
   const handlePresentModalPress = React.useCallback(() => {
     addLineSheetRef.current?.present();
   }, []);
@@ -164,10 +168,22 @@ const DeclarationScreen = ({route}: Props) => {
     [],
   );
 
-  const handleAddLine = (newLine: DeclarationLine) => {
-    setDeclarationLines(prevLines => [newLine, ...prevLines]);
+  const handleSubmitLine = (newLine: DeclarationLine) => {
+    const existingLineIndex = declarationLines.findIndex(
+      line => line.kode === newLine.kode,
+    );
 
-    toast('Line added successfully', ToastTypes.SUCCESS);
+    if (existingLineIndex >= 0) {
+      const updatedLines = [...declarationLines];
+
+      updatedLines[existingLineIndex] = newLine;
+
+      setDeclarationLines(updatedLines);
+      toast('Line updated successfully', ToastTypes.SUCCESS);
+    } else {
+      setDeclarationLines(prevLines => [newLine, ...prevLines]);
+      toast('Line added successfully', ToastTypes.SUCCESS);
+    }
   };
 
   const handleSubmit = () => {
@@ -179,7 +195,6 @@ const DeclarationScreen = ({route}: Props) => {
       },
       {
         onSuccess: (declarations: Declaration[]) => {
-          console.log(declaration, 'declaration after submit');
           declarationSubmittedSheetRef.current?.present(declarations[0]);
         },
         onError: error => {
@@ -192,9 +207,43 @@ const DeclarationScreen = ({route}: Props) => {
     );
   };
 
+  const handleItemPress = React.useCallback((item: DeclarationLine) => {
+    addLineSheetRef.current?.present({
+      procedure: item.kode,
+      unitPrice: item.bedrag,
+      amount: item.aantal,
+    });
+  }, []);
+
+  const handleDeleteLine = React.useCallback(
+    (line: DeclarationLine) => {
+      Alert.alert(
+        `Are you sure you want to delete ${line.tekst}?`,
+        'This will delete the line permanently.',
+        [
+          {
+            text: 'delete',
+            style: 'destructive',
+            onPress: () => {
+              setDeclarationLines(prevLines =>
+                prevLines.filter(item => item.kode !== line.kode),
+              );
+              toast('Line deleted successfully', ToastTypes.SUCCESS);
+            },
+          },
+          {
+            text: 'Cancel',
+            onPress: () => null,
+          },
+        ],
+      );
+    },
+    [setDeclarationLines, toast],
+  );
+
   const totalDeclared =
     declarationLines?.reduce(
-      (acc, line) => acc + (line.bedrag * (line.aantal ?? 0) ?? 0),
+      (acc, line) => acc + (line.bedrag * (line?.aantal || 0) || 0),
       0,
     ) ?? 0;
 
@@ -202,6 +251,8 @@ const DeclarationScreen = ({route}: Props) => {
   const paid = totalDeclared;
   const leftToPay = declarationAmount - paid;
   const hasOverflown = leftToPay < 0;
+  const isBelowExpected =
+    totalDeclared > 0 && leftToPay > 0 && totalDeclared < declarationAmount;
 
   const renderEmptyList = React.useCallback(() => {
     return <EmptyList isLoading={isPending} />;
@@ -271,10 +322,6 @@ const DeclarationScreen = ({route}: Props) => {
               text="Left to be declared"
               fontWeight="500"
             />
-            {/* <AmountProgressBar
-              currentAmount={declaration?.betaald ?? 0}
-              totalAmount={declaration?.bedrag ?? 0}
-            /> */}
             <View style={styles.detailsContainer}>
               <Typography
                 variant="h2"
@@ -350,7 +397,13 @@ const DeclarationScreen = ({route}: Props) => {
                 <FlatList
                   data={declarationLines}
                   ListEmptyComponent={renderEmptyList}
-                  renderItem={props => <DeclarationLineItem {...props} />}
+                  renderItem={props => (
+                    <DeclarationLineItem
+                      {...props}
+                      onPress={handleItemPress}
+                      onLongPress={handleDeleteLine}
+                    />
+                  )}
                   contentContainerStyle={styles.flatlistContentContainer}
                   keyExtractor={keyExtractor}
                 />
@@ -365,13 +418,18 @@ const DeclarationScreen = ({route}: Props) => {
                 <Button
                   variant="primary"
                   text="Submit declaration"
-                  disabled={isPending || declarationLines.length === 0}
+                  disabled={
+                    isPending ||
+                    declarationLines.length === 0 ||
+                    hasOverflown ||
+                    isBelowExpected
+                  }
                   buttonStyle={styles.flex}
                   loading={isPending}
                   onPress={handleSubmit}
                 />
               </View>
-              {hasOverflown && (
+              {(hasOverflown || isBelowExpected) && (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -385,10 +443,15 @@ const DeclarationScreen = ({route}: Props) => {
                     color="#FF8F00"
                     style={{marginTop: 10, marginBottom: 5}}
                   />
+
                   <Typography
                     variant="b1"
                     fontSize={12}
-                    text="Declartion lines have exceeded the total amount of the declaration."
+                    text={
+                      hasOverflown
+                        ? 'Declaration lines have exceeded the total amount of the declaration.'
+                        : 'Total declared amount is below the expected amount.'
+                    }
                     color="black"
                     fontStyle="italic"
                     textStyle={{marginTop: 5}}
@@ -402,7 +465,7 @@ const DeclarationScreen = ({route}: Props) => {
           ref={addLineSheetRef}
           apuId={user?.apuId!}
           declaration={declaration}
-          onSubmit={handleAddLine}
+          onSubmit={handleSubmitLine}
           currencyFormatter={formatCurrency}
         />
         <DeclarationSubmittedSheet
