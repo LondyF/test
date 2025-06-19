@@ -17,7 +17,7 @@ const StepIndicator = ({
   currentStep: number;
   style: ViewStyle;
 }) => {
-  const steps = ['Sent', 'Approved', 'Refund'];
+  const steps = ['Sent', 'Pending Info', 'Approved', 'Refund'];
 
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -80,6 +80,7 @@ const createStyles = (theme: Theme) =>
     label: {
       fontSize: 12,
       fontWeight: '500',
+      textAlign: 'center',
     },
     activeText: {
       color: theme.colors.primary,

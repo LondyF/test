@@ -37,19 +37,10 @@ import {faChevronLeft} from '@fortawesome/pro-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faWarning} from '@fortawesome/pro-light-svg-icons';
 
+import {formatCurrency} from '../utils';
+
 const LINEAR_BACKGROUND_COLORS = ['#50329F', '#8F76CF', '#AE98E7', '#FFFFFF'];
 const LINEAR_BACKGROUND_LOCATIONS = [0, 0.17, 0.31, 1];
-
-const currency = 'XCG';
-
-const formatCurrency = (amount: number) => {
-  return Number(amount).toLocaleString('nl-NL', {
-    style: 'currency',
-    currencyDisplay: 'code',
-    currency,
-    minimumFractionDigits: 2,
-  });
-};
 
 const DeclarationLineItem = ({
   item,
