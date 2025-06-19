@@ -45,6 +45,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   onValueChange,
   error,
   loading = false,
+  style,
   ...props
 }) => {
   const styles = makeStyles(icon !== undefined);
@@ -87,6 +88,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
               inputIOS: {fontSize: 16, paddingVertical: 3, ...inputIOSStyle},
               inputAndroidContainer: styles.inputContainer,
               inputIOSContainer: styles.inputContainer,
+              ...style,
             }}
             onValueChange={onValueChange}
           />

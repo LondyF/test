@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Image,
+  Alert,
 } from 'react-native';
 import {
   Asset,
@@ -27,6 +28,7 @@ import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {useFormik} from 'formik';
 import {
   faCalendar,
+  faChevronLeft,
   faHome,
   faReceipt,
   faUser,
@@ -40,17 +42,30 @@ import {ToastTypes} from '@src/components/Toast/toastTypes';
 import useFetchDepartments from '../hooks/useFetchDepartments';
 import useCreateDeclarationSession from '../hooks/useCreateDeclarationSession';
 import useFetchProviders from '../hooks/useFetchProviders';
+import LinearGradient from 'react-native-linear-gradient';
+import DatePicker from 'react-native-date-picker';
+import useFetchCountries from '@src/hooks/useFetchCountries';
 
 type Props = {
   navigation: NavigationProp<{}>;
 };
 
+const LINEAR_BACKGROUND_COLORS = ['#50329F', '#8F76CF', '#AE98E7', '#50329F'];
+const LINEAR_BACKGROUND_LOCATIONS = [0, 0.17, 0.31, 0.99];
+
 const NewDeclarationScreen = ({}: Props) => {
   const theme = useTheme();
   const user = useAuthStore(state => state.user);
-  const {navigate} = useNavigation();
+  const [isDateModalopen, setIsDateModalOpen] = useState(false);
+  const {navigate, goBack} = useNavigation();
   const styles = makeStyles(theme);
   const toast = useToast();
+
+  const inputStyles = {
+    inputAndroidStyle: {...styles.inputStyle},
+    inputIOSStyle: {...styles.inputStyle},
+    style: {placeholder: {...styles.inputStyle}},
+  };
 
   const {mutate, isPending} = useCreateDeclarationSession();
 
@@ -77,7 +92,7 @@ const NewDeclarationScreen = ({}: Props) => {
         selectedProviderId: 0,
         currency: 'XCG',
         country: 'CW',
-        date: moment(new Date()).format('DD MMM YYYY'),
+        date: moment().format('DD MMM YYYY'),
         image: {} as Asset,
       },
       onSubmit: async submittedValues => {
@@ -109,6 +124,7 @@ const NewDeclarationScreen = ({}: Props) => {
 
   const {data: departmentsData} = useFetchDepartments(user?.apuId!);
   const {data: providersData} = useFetchProviders(values.selectedDepartmentId);
+  const {data: countriesData} = useFetchCountries({apuId: user?.apuId!});
 
   const departmentsOptions =
     departmentsData?.map(department => ({
@@ -122,9 +138,17 @@ const NewDeclarationScreen = ({}: Props) => {
       value: provider.id,
     })) || [];
 
-  const countryOptions = [{label: 'Curaçao', value: 'CW'}];
+  const countryOptions =
+    countriesData?.map(country => ({
+      label: country.naam,
+      value: country.id,
+    })) || [];
 
-  const currencyOptions = [{label: 'Carribean Guilder', value: 'XCG'}];
+  const currencyOptions =
+    countriesData?.map(country => ({
+      label: country.valuta,
+      value: country.valuta,
+    })) || [];
 
   const handlePhotoPress = () => {
     const photoOptions: CameraOptions | ImageLibraryOptions = {
@@ -143,147 +167,210 @@ const NewDeclarationScreen = ({}: Props) => {
     });
   };
 
+  const closeDateModal = () => {
+    setIsDateModalOpen(false);
+  };
+
+  const openDateModal = () => {
+    setIsDateModalOpen(true);
+  };
+
+  const setDateValue = (date: Date) => {
+    setFieldValue('date', moment(date).format('DD MMM YYYY'));
+    closeDateModal();
+  };
+
+  const convertStringToDate = (dateString: string) => {
+    return moment(dateString, 'DD MMM YYYY').toDate();
+  };
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.flex}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.flex}>
-            <KeyboardAwareScrollView
-              style={styles.container}
-              keyboardShouldPersistTaps="handled">
-              <Typography variant="h2" text="Invoice" />
-              <View style={styles.imageUploadWrapper}>
-                <TouchableOpacity
-                  style={styles.imageUploadContainer}
-                  onPress={handlePhotoPress}>
-                  {values.image ? (
-                    <Image
-                      source={{uri: values.image?.uri}}
-                      style={styles.image}
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faPlusCircle}
-                      color={theme.colors.primary}
-                      size={40}
+    <LinearGradient
+      colors={LINEAR_BACKGROUND_COLORS}
+      locations={LINEAR_BACKGROUND_LOCATIONS}
+      style={styles.linearGradient}>
+      <SafeAreaView style={{flex: 1}}>
+        <DatePicker
+          modal
+          open={isDateModalopen}
+          date={convertStringToDate(values.date)}
+          mode="date"
+          onConfirm={setDateValue}
+          onCancel={closeDateModal}
+        />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.flex}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.flex}>
+              <KeyboardAwareScrollView
+                style={styles.container}
+                keyboardShouldPersistTaps="handled">
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Button
+                    variant="transparent"
+                    text=""
+                    style={{minWidth: 0, padding: 10, paddingLeft: 0}}
+                    hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                    customTextComponent={
+                      <FontAwesomeIcon
+                        icon={faChevronLeft}
+                        size={20}
+                        color="white"
+                      />
+                    }
+                    onPress={() => {
+                      goBack();
+                    }}
+                  />
+                  <Typography
+                    color="white"
+                    variant="h2"
+                    text="New Declaration"
+                  />
+                </View>
+                <View style={styles.imageUploadWrapper}>
+                  <TouchableOpacity
+                    style={styles.imageUploadContainer}
+                    onPress={handlePhotoPress}>
+                    {Object.keys(values.image).length !== 0 ? (
+                      <Image
+                        source={{uri: values.image?.uri}}
+                        style={styles.image}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faPlusCircle}
+                        color={theme.colors.primary}
+                        size={40}
+                      />
+                    )}
+                  </TouchableOpacity>
+                  {errors.image && (
+                    <Typography
+                      variant="b1"
+                      textStyle={styles.errorText}
+                      text={errors.image as string}
                     />
                   )}
-                </TouchableOpacity>
-                {errors.image && (
-                  <Typography
-                    variant="b1"
-                    textStyle={styles.errorText}
-                    text={errors.image as string}
+                </View>
+                <View style={styles.hr} />
+                <Typography variant="h2" color="white" text="Info" />
+                <TextInput
+                  label="Total Amount"
+                  mainColor="white"
+                  value={values.totalAmount}
+                  onChangeText={handleChange('totalAmount')}
+                  icon={faReceipt}
+                  autoCapitalize="none"
+                  keyboardType="numeric"
+                  error={errors.totalAmount}
+                />
+                <SelectInput
+                  label={'Department'}
+                  onValueChange={value => {
+                    if (value) {
+                      setFieldValue('selectedDepartmentId', Number(value));
+                    }
+                  }}
+                  items={departmentsOptions}
+                  value={values.selectedDepartmentId}
+                  iconStyle={styles.colorBlack}
+                  bottomBorderStyle={styles.bottomBlack}
+                  labelStyle={styles.colorBlack}
+                  itemKey={values.selectedDepartmentId}
+                  error={errors.selectedDepartmentId}
+                  icon={faHome}
+                  {...inputStyles}
+                />
+                <SelectInput
+                  label={'Provider'}
+                  onValueChange={value => {
+                    if (value) {
+                      setFieldValue('selectedProviderId', Number(value));
+                    }
+                  }}
+                  items={providersOptions}
+                  value={values.selectedProviderId}
+                  itemKey={values.selectedProviderId}
+                  iconStyle={styles.colorBlack}
+                  bottomBorderStyle={styles.bottomBlack}
+                  labelStyle={styles.colorBlack}
+                  icon={faUser}
+                  error={errors.selectedProviderId}
+                  {...inputStyles}
+                />
+                <TouchableOpacity onPress={openDateModal}>
+                  <TextInput
+                    label="Date"
+                    disabled
+                    mainColor="white"
+                    value={values.date}
+                    icon={faCalendar}
+                    autoCapitalize="none"
                   />
-                )}
+                </TouchableOpacity>
+                <SelectInput
+                  label={'Country'}
+                  onValueChange={value => {
+                    if (value) {
+                      setFieldValue('country', value);
+                      setFieldValue(
+                        'currency',
+                        countriesData?.find(country => country.id === value)
+                          ?.valuta,
+                      );
+                    }
+                  }}
+                  items={countryOptions}
+                  value={values.country}
+                  itemKey={values.selectedProviderId}
+                  iconStyle={styles.colorBlack}
+                  bottomBorderStyle={styles.bottomBlack}
+                  labelStyle={styles.colorBlack}
+                  icon={faUser}
+                  error={errors.country}
+                  {...inputStyles}
+                />
+                <SelectInput
+                  label={'Currency'}
+                  onValueChange={value => {
+                    if (value) {
+                      setFieldValue('currency', value);
+                    }
+                  }}
+                  items={currencyOptions}
+                  value={values.currency}
+                  itemKey={values.selectedProviderId}
+                  iconStyle={styles.colorBlack}
+                  bottomBorderStyle={styles.bottomBlack}
+                  labelStyle={styles.colorBlack}
+                  icon={faUser}
+                  error={errors.country}
+                  disabled
+                  {...inputStyles}
+                />
+              </KeyboardAwareScrollView>
+              <View style={styles.bottomContainer}>
+                <Button
+                  loading={isPending}
+                  variant="primary"
+                  text="Submit"
+                  onPress={() => handleSubmit()}
+                  buttonStyle={styles.buttonStyle}
+                  textStyle={styles.buttonTextStyle}
+                />
               </View>
-              <Button
-                buttonStyle={styles.buttonStyle}
-                textStyle={styles.buttonTextStyle}
-                variant="outline"
-                text="Change Photo"
-                onPress={() => {}}
-              />
-              <View style={styles.hr} />
-              <Typography variant="h2" text="Info" />
-              <TextInput
-                label="Total Amount"
-                mainColor="black"
-                value={values.totalAmount}
-                onChangeText={handleChange('totalAmount')}
-                icon={faReceipt}
-                autoCapitalize="none"
-                keyboardType="numeric"
-                error={errors.totalAmount}
-              />
-              <SelectInput
-                label={'Department'}
-                onValueChange={value => {
-                  if (value) {
-                    setFieldValue('selectedDepartmentId', Number(value));
-                  }
-                }}
-                items={departmentsOptions}
-                value={values.selectedDepartmentId}
-                iconStyle={styles.colorBlack}
-                bottomBorderStyle={styles.bottomBlack}
-                labelStyle={styles.colorBlack}
-                itemKey={values.selectedDepartmentId}
-                error={errors.selectedDepartmentId}
-                icon={faHome}
-              />
-              <SelectInput
-                label={'Provider'}
-                onValueChange={value => {
-                  if (value) {
-                    setFieldValue('selectedProviderId', Number(value));
-                  }
-                }}
-                items={providersOptions}
-                value={values.selectedProviderId}
-                itemKey={values.selectedProviderId}
-                iconStyle={styles.colorBlack}
-                bottomBorderStyle={styles.bottomBlack}
-                labelStyle={styles.colorBlack}
-                icon={faUser}
-                error={errors.selectedProviderId}
-              />
-              <TextInput
-                label="Date"
-                mainColor="black"
-                value={values.date}
-                onChangeText={handleChange('date')}
-                icon={faCalendar}
-                autoCapitalize="none"
-              />
-              <SelectInput
-                label={'Country'}
-                onValueChange={value => {
-                  if (value) {
-                    setFieldValue('country', value);
-                  }
-                }}
-                items={countryOptions}
-                value={values.country}
-                itemKey={values.selectedProviderId}
-                iconStyle={styles.colorBlack}
-                bottomBorderStyle={styles.bottomBlack}
-                labelStyle={styles.colorBlack}
-                icon={faUser}
-                error={errors.country}
-              />
-              <SelectInput
-                label={'Currency'}
-                onValueChange={value => {
-                  if (value) {
-                    setFieldValue('currency', value);
-                  }
-                }}
-                items={currencyOptions}
-                value={values.currency}
-                itemKey={values.selectedProviderId}
-                iconStyle={styles.colorBlack}
-                bottomBorderStyle={styles.bottomBlack}
-                labelStyle={styles.colorBlack}
-                icon={faUser}
-                error={errors.country}
-              />
-            </KeyboardAwareScrollView>
-            <View style={styles.bottomContainer}>
-              <Button
-                loading={isPending}
-                variant="primary"
-                text="Submit"
-                onPress={() => handleSubmit()}
-                buttonStyle={styles.buttonStyle}
-              />
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -291,6 +378,9 @@ const makeStyles = (theme: Theme) =>
   StyleSheet.create({
     flex: {
       flex: 1,
+    },
+    inputStyle: {
+      color: 'white',
     },
     container: {
       flex: 1,
@@ -312,6 +402,8 @@ const makeStyles = (theme: Theme) =>
     },
     buttonStyle: {
       borderColor: theme.colors.primary,
+      backgroundColor: 'white',
+      color: 'black',
     },
     buttonTextStyle: {
       color: theme.colors.primary,
@@ -326,16 +418,15 @@ const makeStyles = (theme: Theme) =>
       bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: 'white',
       padding: 15,
       borderTopWidth: 1,
       borderColor: '#ccc',
     },
     colorBlack: {
-      color: 'black',
+      color: 'white',
     },
     bottomBlack: {
-      borderBottomColor: 'black',
+      borderBottomColor: 'white',
     },
     image: {
       width: '100%',
@@ -346,6 +437,13 @@ const makeStyles = (theme: Theme) =>
     errorText: {
       color: '#d50000',
       marginTop: 5,
+    },
+    linearGradient: {
+      flex: 1,
+      paddingLeft: 15,
+      paddingRight: 15,
+      borderRadius: 5,
+      padding: 20,
     },
   });
 

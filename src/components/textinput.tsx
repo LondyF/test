@@ -18,6 +18,7 @@ type TextInputProps = {
   mainColor: string;
   label?: string;
   error?: string;
+  disabled?: boolean;
 } & ReactNativeTextInputProps;
 
 const TextInput: React.FC<TextInputProps> = ({

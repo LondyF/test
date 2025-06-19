@@ -46,3 +46,12 @@ export const fetchAllDeclarationScanTypes = async () =>
       lovId: 199,
     },
   });
+
+export const fetchCountries = async ({apuId}: {apuId: number}) =>
+  await request({
+    url: '/app-lov/landkodes',
+    method: 'POST',
+    data: {
+      apuId,
+    },
+  });
