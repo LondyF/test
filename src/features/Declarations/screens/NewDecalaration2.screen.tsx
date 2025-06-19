@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Image,
   Alert,
+  Text,
 } from 'react-native';
 import {
   Asset,
@@ -28,6 +29,7 @@ import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {useFormik} from 'formik';
 import {
   faCalendar,
+  faCamera,
   faChevronLeft,
   faHome,
   faReceipt,
@@ -244,11 +246,28 @@ const NewDeclarationScreen = ({}: Props) => {
                         style={styles.image}
                       />
                     ) : (
-                      <FontAwesomeIcon
-                        icon={faPlusCircle}
-                        color={theme.colors.primary}
-                        size={40}
-                      />
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}>
+                        <View style={styles.imageIconContainer}>
+                          <FontAwesomeIcon
+                            icon={faCamera}
+                            color={theme.colors.primary}
+                            size={30}
+                          />
+                        </View>
+                        <Typography
+                          color="white"
+                          align="center"
+                          text="Add Photo"
+                          fontWeight="bold"
+                          variant="h2"
+                          textStyle={{marginTop: 10}}
+                        />
+                      </View>
                     )}
                   </TouchableOpacity>
                   {errors.image && (
@@ -390,15 +409,24 @@ const makeStyles = (theme: Theme) =>
       marginBottom: 20,
     },
     imageUploadContainer: {
-      borderWidth: 5,
-      borderStyle: 'dashed',
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
       borderColor: theme.colors.primary,
-      borderRadius: 5,
+      borderRadius: 20,
       height: 250,
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 20,
       overflow: 'hidden',
+    },
+
+    imageIconContainer: {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      height: 60,
+      width: 60,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 20,
     },
     buttonStyle: {
       borderColor: theme.colors.primary,
