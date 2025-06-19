@@ -12,7 +12,13 @@ import {Declaration} from '../types/declarations';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
 import {formatCurrency} from '../utils';
 
-const DeclarationsList = ({apuId, status}: {apuId: number; status: number}) => {
+const DeclarationsList = ({
+  apuId,
+  status,
+}: {
+  apuId: number;
+  status: number[];
+}) => {
   const navigation = useNavigation();
   const {
     colors: {darkGray, gray, primary},
@@ -107,7 +113,7 @@ const DeclarationsList = ({apuId, status}: {apuId: number; status: number}) => {
 
   const filteredData = React.useMemo(() => {
     if (data) {
-      return data.filter(declaration => declaration.status === status);
+      return data.filter(declaration => status.includes(declaration.status));
     }
     return [];
   }, [data, status]);

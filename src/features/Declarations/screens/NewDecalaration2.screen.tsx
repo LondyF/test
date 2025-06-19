@@ -93,7 +93,7 @@ const NewDeclarationScreen = ({}: Props) => {
         selectedDepartmentId: 0,
         selectedProviderId: 0,
         currency: 'XCG',
-        country: 'CW',
+        country: 'CUR',
         date: moment().format('DD MMM YYYY'),
         image: {} as Asset,
       },
@@ -143,7 +143,7 @@ const NewDeclarationScreen = ({}: Props) => {
   const countryOptions =
     countriesData?.map(country => ({
       label: country.naam,
-      value: country.id,
+      value: country.iso,
     })) || [];
 
   const currencyOptions =
@@ -341,7 +341,7 @@ const NewDeclarationScreen = ({}: Props) => {
                       setFieldValue('country', value);
                       setFieldValue(
                         'currency',
-                        countriesData?.find(country => country.id === value)
+                        countriesData?.find(country => country.iso === value)
                           ?.valuta,
                       );
                     }
@@ -403,7 +403,6 @@ const makeStyles = (theme: Theme) =>
     },
     container: {
       flex: 1,
-      padding: 20,
     },
     imageUploadWrapper: {
       marginBottom: 20,

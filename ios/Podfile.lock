@@ -416,6 +416,8 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
+  - react-native-date-picker (5.0.13):
+    - React-Core
   - react-native-geolocation-service (5.3.1):
     - React
   - react-native-google-maps (1.7.1):
@@ -636,6 +638,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -756,6 +759,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-biometrics"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-date-picker:
+    :path: "../node_modules/react-native-date-picker"
   react-native-geolocation-service:
     :path: "../node_modules/react-native-geolocation-service"
   react-native-google-maps:
@@ -881,6 +886,7 @@ SPEC CHECKSUMS:
   React-logger: dc3a2b174d79c2da635059212747d8d929b54e06
   react-native-biometrics: 352e5a794bfffc46a0c86725ea7dc62deb085bdc
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
+  react-native-date-picker: b64721d6278b52708457292c218196b383b553b1
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-google-maps: dd12cdd86b8e3fedbbb671676aedaa2f656e2ccd
   react-native-image-picker: 51fdb07f7ef722988c8a219e1416153760a25e4d

@@ -10,7 +10,6 @@ import {useTranslation} from 'react-i18next';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {FloatingActionButton, Loader} from '@src/components';
-import {Theme} from '@src/styles';
 import useAuthStore from '@stores/useAuthStore';
 import useTheme from '@hooks/useTheme';
 import useInternetConnection from '@hooks/useInternetConnection';
@@ -91,7 +90,7 @@ const MyDeclarations = () => {
           }}
           name="PendingDeclarations"
           children={() => (
-            <DeclarationsList status={1} apuId={user?.apuId || -1} />
+            <DeclarationsList status={[1, 2, 3, 4]} apuId={user?.apuId || -1} />
           )}
         />
         <Tab.Screen
@@ -100,7 +99,7 @@ const MyDeclarations = () => {
           }}
           name="ApprovedDeclarations"
           children={() => (
-            <DeclarationsList status={2} apuId={user?.apuId || -1} />
+            <DeclarationsList status={5} apuId={user?.apuId || -1} />
           )}
         />
         <Tab.Screen
@@ -109,7 +108,7 @@ const MyDeclarations = () => {
           }}
           name="RejectedDeclarations"
           children={() => (
-            <DeclarationsList status={3} apuId={user?.apuId || -1} />
+            <DeclarationsList status={[6]} apuId={user?.apuId || -1} />
           )}
         />
       </Tab.Navigator>
