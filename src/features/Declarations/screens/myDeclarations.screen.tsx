@@ -1,50 +1,33 @@
 import React, {useState} from 'react';
 
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 
 import {faPlus} from '@fortawesome/pro-solid-svg-icons';
 import Modal from 'react-native-modal';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
-import {
-  Button,
-  ErrorView,
-  FloatingActionButton,
-  ListItem,
-  Loader,
-  Typography,
-} from '@src/components';
+import {FloatingActionButton, Loader} from '@src/components';
 import {Theme} from '@src/styles';
-import {convertISOdate} from '@utils/utils';
 import useAuthStore from '@stores/useAuthStore';
 import useTheme from '@hooks/useTheme';
 import useInternetConnection from '@hooks/useInternetConnection';
 
 import UserBankInfoModal from '../components/UserBankInfoModal';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
-import {Declaration} from '../types/declarations';
-import moment from 'moment';
+import DeclarationsList from '../components/DeclarationsList';
 
-const {
-  colors: {darkGray, gray},
-} = Theme;
+const Tab = createMaterialTopTabNavigator();
 
 const MyDeclarations = () => {
   const {checkIfConnected} = useInternetConnection();
   const {showActionSheetWithOptions} = useActionSheet();
   const {t} = useTranslation();
   const user = useAuthStore(state => state.user);
-  const {data, isError, isFetching, error, refetch, isPending} =
-    useFetchDeclarations(user?.apuId || -1);
-  const {navigate, goBack} = useNavigation();
+  const {isPending} = useFetchDeclarations(user?.apuId || -1);
+  const {navigate} = useNavigation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const theme = useTheme();
 
@@ -71,86 +54,6 @@ const MyDeclarations = () => {
     });
   };
 
-  const keyExtractor = (_: Declaration, index: number) => `${index}`;
-
-  const renderItem = ({
-    index,
-    item: declaration,
-  }: {
-    index: number;
-    item: Declaration;
-  }) => {
-    const date = moment(declaration?.datum, true);
-    const isValidDate = date.isValid();
-    const formattedDate = isValidDate ? date.format('DD MMM YYYY') : '-';
-    return (
-      <ListItem style={styles.listItemContainer} index={index}>
-        <TouchableOpacity
-          onPress={() =>
-            navigate('Declaration', {
-              sesId: declaration.sesId,
-            })
-          }
-          style={styles.itemContainer}>
-          <View style={styles.textContainer}>
-            <View style={styles.headerTextContainer}>
-              <Typography
-                variant="h3"
-                color={darkGray}
-                fontWeight="bold"
-                text={formattedDate}
-              />
-            </View>
-            <View style={styles.extraInfoContainer}>
-              <Typography
-                variant="h4"
-                color={gray}
-                text={t('declarations.declared')}
-              />
-              <Typography
-                variant="h4"
-                color={gray}
-                // text={convertISOdate(declaration.datum)}
-              />
-              <Typography
-                variant="h4"
-                color={gray}
-                // text={`${declaration.bedragTot} ANG`}
-              />
-            </View>
-          </View>
-          <View style={styles.photosAmountContainer}>
-            <View style={styles.photosAmountCircle}>
-              <Typography
-                text={declaration?.regels?.length ?? 0}
-                fontWeight="bold"
-                variant="b1"
-                fontSize={18}
-                color="white"
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </ListItem>
-    );
-  };
-
-  const renderListEmptyComponent = () => {
-    if (isError) {
-      return <ErrorView goBack={goBack} reload={refetch} error={error} />;
-    }
-    return (
-      <View style={styles.noDeclarationsFoundContainer}>
-        <Typography
-          textStyle={styles.noDeclarationsFoundText}
-          text="Geen declaraties gevonden"
-          variant="h4"
-        />
-        <Button onPress={() => refetch()} variant="primary" text="refresh" />
-      </View>
-    );
-  };
-
   if (isPending) {
     return (
       <Loader
@@ -170,16 +73,51 @@ const MyDeclarations = () => {
           <UserBankInfoModal closeModal={() => setModalVisible(false)} />
         </KeyboardAvoidingView>
       </Modal>
-      <FlatList
-        keyExtractor={keyExtractor}
-        contentContainerStyle={styles.flatListContent}
-        renderItem={renderItem}
-        data={data?.reverse()}
-        ListEmptyComponent={renderListEmptyComponent}
-        onRefresh={refetch}
-        refreshing={isFetching}
+      <Tab.Navigator
+        tabBarOptions={{
+          labelStyle: {
+            textTransform: 'capitalize',
+            fontWeight: 'bold',
+          },
+          indicatorStyle: {
+            backgroundColor: theme.colors.primary,
+          },
+          activeTintColor: theme.colors.primary,
+          inactiveTintColor: theme.colors.lightGray,
+        }}>
+        <Tab.Screen
+          options={{
+            title: 'Pending',
+          }}
+          name="PendingDeclarations"
+          children={() => (
+            <DeclarationsList status={1} apuId={user?.apuId || -1} />
+          )}
+        />
+        <Tab.Screen
+          options={{
+            title: 'Approved',
+          }}
+          name="ApprovedDeclarations"
+          children={() => (
+            <DeclarationsList status={2} apuId={user?.apuId || -1} />
+          )}
+        />
+        <Tab.Screen
+          options={{
+            title: 'Rejected',
+          }}
+          name="RejectedDeclarations"
+          children={() => (
+            <DeclarationsList status={3} apuId={user?.apuId || -1} />
+          )}
+        />
+      </Tab.Navigator>
+      <FloatingActionButton
+        buttonColor={theme.colors.primary}
+        icon={faPlus}
+        onPress={showOptions}
       />
-      <FloatingActionButton icon={faPlus} onPress={showOptions} />
     </View>
   );
 };
@@ -189,54 +127,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  flatListContent: {
-    flexGrow: 1,
-  },
-  listItemContainer: {
-    paddingVertical: 15,
-  },
-  itemContainer: {
-    paddingHorizontal: Theme.spacing.horizontalPadding,
-    paddingVertical: 15,
-    flexDirection: 'row',
-  },
-  textContainer: {
-    flex: 0.85,
-  },
-  extraInfoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  headerTextContainer: {
-    flexDirection: 'row',
-  },
-  photosAmountCircle: {
-    width: 30,
-    height: 30,
-    borderRadius: 30,
-    backgroundColor: 'orange',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  photosAmountContainer: {
-    flex: 0.15,
-    alignItems: 'flex-end',
-  },
-  statusText: {
-    flexShrink: 1,
-  },
-  noDeclarationsFoundText: {
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  noDeclarationsFoundContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
 });
 
 export default MyDeclarations;
-
-// 3324
