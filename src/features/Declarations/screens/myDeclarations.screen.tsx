@@ -99,7 +99,7 @@ const MyDeclarations = () => {
           }}
           name="ApprovedDeclarations"
           children={() => (
-            <DeclarationsList status={5} apuId={user?.apuId || -1} />
+            <DeclarationsList status={[5]} apuId={user?.apuId || -1} />
           )}
         />
         <Tab.Screen

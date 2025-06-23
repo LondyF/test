@@ -9,8 +9,6 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Image,
-  Alert,
-  Text,
 } from 'react-native';
 import {
   Asset,
@@ -25,7 +23,6 @@ import {Button, Typography, TextInput, SelectInput} from '@src/components';
 import {Theme} from '@styles/styles';
 import useTheme from '@hooks/useTheme';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {useFormik} from 'formik';
 import {
   faCalendar,
@@ -92,7 +89,7 @@ const NewDeclarationScreen = ({}: Props) => {
         totalAmount: '',
         selectedDepartmentId: 0,
         selectedProviderId: 0,
-        currency: 'XCG',
+        currency: 'Xcg',
         country: 'CUR',
         date: moment().format('DD MMM YYYY'),
         image: {} as Asset,
@@ -264,7 +261,7 @@ const NewDeclarationScreen = ({}: Props) => {
                           align="center"
                           text="Add Photo"
                           fontWeight="bold"
-                          variant="h2"
+                          variant="h5"
                           textStyle={{marginTop: 10}}
                         />
                       </View>
