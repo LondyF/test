@@ -17,6 +17,21 @@ import useInternetConnection from '@hooks/useInternetConnection';
 import UserBankInfoModal from '../components/UserBankInfoModal';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
 import DeclarationsList from '../components/DeclarationsList';
+import {DeclarationStatus} from '../types/declarations';
+
+const ActionRequiredBadge = ({apuId}: {apuId: number}) => {
+  const {data} = useFetchDeclarations(apuId);
+
+  const hasActionRequired = data?.some(
+    declaration => declaration.status === DeclarationStatus.ACTION_REQUIRED,
+  );
+
+  if (!hasActionRequired) {
+    return null;
+  }
+
+  return <View style={styles.awaitingActionBadge} />;
+};
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -73,16 +88,16 @@ const MyDeclarations = () => {
         </KeyboardAvoidingView>
       </Modal>
       <Tab.Navigator
-        tabBarOptions={{
-          labelStyle: {
+        screenOptions={{
+          tabBarLabelStyle: {
             textTransform: 'capitalize',
             fontWeight: 'bold',
           },
-          indicatorStyle: {
+          tabBarIndicatorStyle: {
             backgroundColor: theme.colors.primary,
           },
-          activeTintColor: theme.colors.primary,
-          inactiveTintColor: theme.colors.lightGray,
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.lightGray,
         }}>
         <Tab.Screen
           options={{
@@ -90,25 +105,41 @@ const MyDeclarations = () => {
           }}
           name="PendingDeclarations"
           children={() => (
-            <DeclarationsList status={[1, 2, 3, 4]} apuId={user?.apuId || -1} />
+            <DeclarationsList
+              status={[
+                DeclarationStatus.DRAFT,
+                DeclarationStatus.IN_PROGRESS,
+                DeclarationStatus.SUBMITTED,
+              ]}
+              apuId={user?.apuId || -1}
+            />
           )}
         />
         <Tab.Screen
           options={{
-            title: 'Approved',
+            title: 'Awaiting Action',
+            tabBarBadge: () => (
+              <ActionRequiredBadge apuId={user?.apuId || -1} />
+            ),
           }}
-          name="ApprovedDeclarations"
+          name="ActionRequiredDeclarations"
           children={() => (
-            <DeclarationsList status={[5]} apuId={user?.apuId || -1} />
+            <DeclarationsList
+              status={[DeclarationStatus.ACTION_REQUIRED]}
+              apuId={user?.apuId || -1}
+            />
           )}
         />
         <Tab.Screen
           options={{
-            title: 'Rejected',
+            title: 'Completed',
           }}
-          name="RejectedDeclarations"
+          name="CompletedDeclarations"
           children={() => (
-            <DeclarationsList status={[6]} apuId={user?.apuId || -1} />
+            <DeclarationsList
+              status={[DeclarationStatus.COMPLETED]}
+              apuId={user?.apuId || -1}
+            />
           )}
         />
       </Tab.Navigator>
@@ -125,6 +156,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  awaitingActionBadge: {
+    width: 8,
+    height: 8,
+    backgroundColor: 'orange',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 12,
+    right: 6,
   },
 });
 

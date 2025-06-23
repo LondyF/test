@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronRight} from '@fortawesome/pro-solid-svg-icons';
+import {faWarning} from '@fortawesome/pro-light-svg-icons';
 
 import {Button, ErrorView, ListItem, Typography} from '@src/components';
 import {Theme} from '@src/styles';
@@ -11,13 +12,14 @@ import useTheme from '@src/hooks/useTheme';
 import {Declaration} from '../types/declarations';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
 import {formatCurrency} from '../utils';
+import {DeclarationStatus} from '../types/declarations';
 
 const DeclarationsList = ({
   apuId,
   status,
 }: {
   apuId: number;
-  status: number[];
+  status: DeclarationStatus[];
 }) => {
   const navigation = useNavigation();
   const {
@@ -39,6 +41,12 @@ const DeclarationsList = ({
     const date = moment(declaration?.datum, true);
     const isValidDate = date.isValid();
     const formattedDate = isValidDate ? date.format('DD MMM YYYY') : '-';
+
+    const isInDraft = declaration.status === DeclarationStatus.DRAFT;
+    const hasBeenSubmitted = declaration.status === DeclarationStatus.SUBMITTED;
+    const InProgress = declaration.status === DeclarationStatus.IN_PROGRESS;
+    const actionRequired =
+      declaration.status === DeclarationStatus.ACTION_REQUIRED;
 
     return (
       <ListItem style={styles.listItemContainer} index={index}>
@@ -62,7 +70,7 @@ const DeclarationsList = ({
               <Typography
                 variant="h5"
                 color="#000"
-                fontWeight="bold"
+                fontWeight="500"
                 text={`#${declaration.nummer}`}
               />
             </View>
@@ -72,14 +80,52 @@ const DeclarationsList = ({
                 color="#A0A0A0"
                 fontWeight="800"
                 fontStyle="italic"
-                fontSize={12}
+                fontSize={13}
                 text={declaration.vkcNaam + ' - ' + declaration.artNaam}
               />
+
+              {(isInDraft || hasBeenSubmitted || InProgress) && (
+                <Typography
+                  variant="h4"
+                  color="#5e5e5e"
+                  textStyle={styles.statusText}
+                  fontStyle="italic"
+                  fontWeight="600"
+                  fontSize={12}
+                  text={
+                    isInDraft
+                      ? 'Draft'
+                      : hasBeenSubmitted
+                      ? 'Submitted'
+                      : 'In Progress'
+                  }
+                />
+              )}
+
+              {actionRequired && (
+                <View style={styles.actionRequiredContainer}>
+                  <FontAwesomeIcon
+                    size={12}
+                    icon={faWarning}
+                    color="#FF0000"
+                    style={{marginRight: 6, marginTop: 10}}
+                  />
+                  <Typography
+                    variant="h4"
+                    color="#FF0000"
+                    textStyle={styles.statusText}
+                    fontStyle="italic"
+                    fontWeight="600"
+                    fontSize={12}
+                    text="Action Required"
+                  />
+                </View>
+              )}
             </View>
           </View>
           <View style={styles.rightContainer}>
             <Typography
-              variant="h3"
+              variant="h4"
               color={primary}
               fontWeight="bold"
               textStyle={{textAlign: 'right', marginRight: 10}}
@@ -151,8 +197,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   extraInfoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 4,
   },
   headerTextContainer: {
@@ -173,6 +217,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-end',
+  },
+  statusText: {
+    marginTop: 10,
+  },
+  actionRequiredContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });
 

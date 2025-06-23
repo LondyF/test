@@ -35,6 +35,17 @@ export interface DeclarationLine {
   betaald: number | null;
 }
 
+export const DeclarationStatus = {
+  DRAFT: 1,
+  SUBMITTED: 2,
+  IN_PROGRESS: 3,
+  ACTION_REQUIRED: 4,
+  COMPLETED: 5,
+} as const;
+
+export type DeclarationStatus =
+  (typeof DeclarationStatus)[keyof typeof DeclarationStatus];
+
 export interface Declaration {
   StatusIco: number;
   StatusInfo: unknown;
@@ -49,7 +60,7 @@ export interface Declaration {
   scaId: number;
   sesId: string;
   sqArtId: number;
-  status: number;
+  status: DeclarationStatus;
   vkcId: number;
   vkcNaam: string;
 }
