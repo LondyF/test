@@ -9,12 +9,14 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Image,
+  Alert,
 } from 'react-native';
 import {
   Asset,
   CameraOptions,
   ImageLibraryOptions,
   launchImageLibrary,
+  launchCamera,
 } from 'react-native-image-picker';
 
 import * as Yup from 'yup';
@@ -44,6 +46,7 @@ import useFetchProviders from '../hooks/useFetchProviders';
 import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-date-picker';
 import useFetchCountries from '@src/hooks/useFetchCountries';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 type Props = {
   navigation: NavigationProp<{}>;
@@ -59,6 +62,7 @@ const NewDeclarationScreen = ({}: Props) => {
   const {navigate, goBack} = useNavigation();
   const styles = makeStyles(theme);
   const toast = useToast();
+  const {showActionSheetWithOptions} = useActionSheet();
 
   const inputStyles = {
     inputAndroidStyle: {...styles.inputStyle},
@@ -150,13 +154,48 @@ const NewDeclarationScreen = ({}: Props) => {
     })) || [];
 
   const handlePhotoPress = () => {
-    const photoOptions: CameraOptions | ImageLibraryOptions = {
-      mediaType: 'photo',
-      includeBase64: true,
-      maxHeight: 1000,
-      maxWidth: 1000,
-    };
+    const cancelButtonIndex = 2;
 
+    showActionSheetWithOptions(
+      {
+        options: ['Take picture', 'Choose from gallery', 'cancel'],
+        cancelButtonIndex,
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          handleTakeAPicture();
+        }
+
+        if (buttonIndex === 1) {
+          uploadPhotoFromLibrary();
+        }
+      },
+    );
+  };
+
+  const photoOptions: CameraOptions | ImageLibraryOptions = {
+    mediaType: 'photo',
+    includeBase64: true,
+    maxHeight: 1000,
+    maxWidth: 1000,
+  };
+
+  const handleTakeAPicture = () => {
+    try {
+      launchCamera(photoOptions, async ({assets, didCancel}) => {
+        if (!didCancel && !!assets) {
+          setFieldValue('image', assets?.[0] || null);
+        }
+      });
+    } catch (e) {
+      Alert.alert(
+        'Oops',
+        'Something went wrong opening your camera. Please check your permissions',
+      );
+    }
+  };
+
+  const uploadPhotoFromLibrary = () => {
     launchImageLibrary(photoOptions, ({didCancel, assets}) => {
       if (didCancel) {
         return;
@@ -288,6 +327,28 @@ const NewDeclarationScreen = ({}: Props) => {
                   error={errors.totalAmount}
                 />
                 <SelectInput
+                  label={'Country'}
+                  onValueChange={value => {
+                    if (value) {
+                      setFieldValue('country', value);
+                      setFieldValue(
+                        'currency',
+                        countriesData?.find(country => country.iso === value)
+                          ?.valuta,
+                      );
+                    }
+                  }}
+                  items={countryOptions}
+                  value={values.country}
+                  itemKey={values.selectedProviderId}
+                  iconStyle={styles.colorBlack}
+                  bottomBorderStyle={styles.bottomBlack}
+                  labelStyle={styles.colorBlack}
+                  icon={faUser}
+                  error={errors.country}
+                  {...inputStyles}
+                />
+                <SelectInput
                   label={'Department'}
                   onValueChange={value => {
                     if (value) {
@@ -331,28 +392,6 @@ const NewDeclarationScreen = ({}: Props) => {
                     autoCapitalize="none"
                   />
                 </TouchableOpacity>
-                <SelectInput
-                  label={'Country'}
-                  onValueChange={value => {
-                    if (value) {
-                      setFieldValue('country', value);
-                      setFieldValue(
-                        'currency',
-                        countriesData?.find(country => country.iso === value)
-                          ?.valuta,
-                      );
-                    }
-                  }}
-                  items={countryOptions}
-                  value={values.country}
-                  itemKey={values.selectedProviderId}
-                  iconStyle={styles.colorBlack}
-                  bottomBorderStyle={styles.bottomBlack}
-                  labelStyle={styles.colorBlack}
-                  icon={faUser}
-                  error={errors.country}
-                  {...inputStyles}
-                />
                 <SelectInput
                   label={'Currency'}
                   onValueChange={value => {
