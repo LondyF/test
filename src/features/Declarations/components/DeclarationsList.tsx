@@ -11,7 +11,7 @@ import {Theme} from '@src/styles';
 import useTheme from '@src/hooks/useTheme';
 import {Declaration} from '../types/declarations';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
-import {formatCurrency} from '../utils';
+import {currencyFormatter} from '../utils';
 import {DeclarationStatus} from '../types/declarations';
 
 const DeclarationsList = ({
@@ -47,6 +47,8 @@ const DeclarationsList = ({
     const InProgress = declaration.status === DeclarationStatus.IN_PROGRESS;
     const actionRequired =
       declaration.status === DeclarationStatus.ACTION_REQUIRED;
+
+    const formatCurrency = currencyFormatter(declaration.kurensie);
 
     return (
       <ListItem style={styles.listItemContainer} index={index}>

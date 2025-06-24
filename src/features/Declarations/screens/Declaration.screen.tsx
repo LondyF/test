@@ -37,7 +37,7 @@ import {faChevronLeft} from '@fortawesome/pro-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faWarning} from '@fortawesome/pro-light-svg-icons';
 
-import {formatCurrency} from '../utils';
+import {currencyFormatter} from '../utils';
 
 const LINEAR_BACKGROUND_COLORS = ['#50329F', '#8F76CF', '#AE98E7', '#FFFFFF'];
 const LINEAR_BACKGROUND_LOCATIONS = [0, 0.17, 0.31, 1];
@@ -46,10 +46,12 @@ const DeclarationLineItem = ({
   item,
   onPress,
   onLongPress,
+  formatCurrency,
 }: {
   item: DeclarationLine;
   onPress: (item: DeclarationLine) => void;
   onLongPress: (item: DeclarationLine) => void;
+  formatCurrency: (amount: number) => string;
 }) => {
   const {tekst, bedrag, aantal: aantalFromItem} = item;
 
@@ -137,6 +139,8 @@ const DeclarationScreen = ({route}: Props) => {
   const [declarationLines, setDeclarationLines] = React.useState<
     DeclarationLine[]
   >(declaration?.regels ?? []);
+
+  const formatCurrency = currencyFormatter(declaration?.kurensie);
 
   React.useEffect(() => {
     if (declaration?.regels) {
@@ -393,6 +397,7 @@ const DeclarationScreen = ({route}: Props) => {
                       {...props}
                       onPress={handleItemPress}
                       onLongPress={handleDeleteLine}
+                      formatCurrency={formatCurrency}
                     />
                   )}
                   contentContainerStyle={styles.flatlistContentContainer}
