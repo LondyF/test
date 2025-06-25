@@ -77,6 +77,7 @@ type ContentProps = {
   currencyFormatter: (value: number) => string;
   total: number;
   isEditingExistingLine: boolean;
+  isFreeTextDeclaration: boolean;
 };
 
 const Content: React.FC<ContentProps> = ({
@@ -91,6 +92,7 @@ const Content: React.FC<ContentProps> = ({
   currencyFormatter,
   total,
   isEditingExistingLine,
+  isFreeTextDeclaration,
 }) => {
   const styles = createStyles(insets);
   const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
@@ -113,38 +115,55 @@ const Content: React.FC<ContentProps> = ({
         fontWeight="300"
         textStyle={styles.title}
       />
-      <Dropdown
-        search
-        value={values.procedure}
-        autoScroll={false}
-        disable={isEditingExistingLine}
-        dropdownPosition="top"
-        data={procedureOptions}
-        labelField="label"
-        valueField="value"
-        onChange={value => setFieldValue('procedure', value.value)}
-        style={[
-          styles.selectInputBorder,
-          isEditingExistingLine && {opacity: 0.5},
-        ]}
-        maxHeight={250}
-        searchPlaceholder="Search..."
-        flatListProps={{
-          initialScrollIndex: activeIndex >= 0 ? activeIndex : 0,
-        }}
-        renderLeftIcon={() => (
-          <View style={{marginRight: 10}}>
-            {isLoadingProcedures ? (
-              <ActivityIndicator size="small" color={styles.selectIcon.color} />
-            ) : (
-              <FontAwesomeIcon
-                icon={faFileInvoiceDollar}
-                style={styles.selectIcon}
-              />
-            )}
-          </View>
-        )}
-      />
+      {isFreeTextDeclaration ? (
+        <TextInput
+          label="Procedure"
+          mainColor="black"
+          icon={faFileInvoiceDollar}
+          autoCapitalize="none"
+          value={values.procedure}
+          onChangeText={handleChange('procedure')}
+          error={errors.procedure}
+          disabled={isEditingExistingLine}
+          style={isEditingExistingLine && {opacity: 0.5}}
+        />
+      ) : (
+        <Dropdown
+          search
+          value={values.procedure}
+          autoScroll={false}
+          disable={isEditingExistingLine}
+          dropdownPosition="top"
+          data={procedureOptions}
+          labelField="label"
+          valueField="value"
+          onChange={value => setFieldValue('procedure', value.value)}
+          style={[
+            styles.selectInputBorder,
+            isEditingExistingLine && {opacity: 0.5},
+          ]}
+          maxHeight={250}
+          searchPlaceholder="Search..."
+          flatListProps={{
+            initialScrollIndex: activeIndex >= 0 ? activeIndex : 0,
+          }}
+          renderLeftIcon={() => (
+            <View style={{marginRight: 10}}>
+              {isLoadingProcedures ? (
+                <ActivityIndicator
+                  size="small"
+                  color={styles.selectIcon.color}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faFileInvoiceDollar}
+                  style={styles.selectIcon}
+                />
+              )}
+            </View>
+          )}
+        />
+      )}
       {errors.procedure && (
         <Typography
           variant="b1"
@@ -237,6 +256,8 @@ const AddDeclarationLineSheet = React.forwardRef<
     vkcId: declaration?.vkcId ?? -1,
   });
 
+  const isFreeTextDeclaration = declaration?.freeText === 1;
+
   const {values, errors, setFieldValue, handleChange, resetForm, handleSubmit} =
     useFormik<NewLineValues>({
       validateOnChange: false,
@@ -256,9 +277,12 @@ const AddDeclarationLineSheet = React.forwardRef<
         amount: 1,
       },
       onSubmit: submittedValues => {
-        const procedure = procedures?.find(
-          prcd => prcd.kode === submittedValues.procedure,
-        );
+        const procedure = isFreeTextDeclaration
+          ? {
+              naam: submittedValues.procedure,
+              kode: submittedValues.procedure,
+            }
+          : procedures?.find(prcd => prcd.kode === submittedValues.procedure);
 
         onSubmit({
           aantal: submittedValues.amount,

@@ -207,7 +207,7 @@ const DeclarationScreen = ({route}: Props) => {
 
   const handleItemPress = React.useCallback((item: DeclarationLine) => {
     addLineSheetRef.current?.present({
-      procedure: item.kode,
+      procedure: item.kode || item.tekst,
       unitPrice: item.bedrag,
       amount: item.aantal,
     });

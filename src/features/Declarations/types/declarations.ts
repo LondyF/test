@@ -65,6 +65,7 @@ export interface Declaration {
   vkcNaam: string;
   kurensie: string;
   progressId: DeclarationStatus;
+  freeText: number;
 }
 
 export interface Procedure {
