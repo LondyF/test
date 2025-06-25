@@ -168,7 +168,7 @@ export const fetchDeclarationSession = async ({
   });
 };
 
-export const addDeclarationLines = async ({
+export const submitDeclaration = async ({
   sesId,
   apuId,
   lines: regels,
@@ -181,10 +181,28 @@ export const addDeclarationLines = async ({
     url: '/app-declaration1/session',
     method: 'POST',
     data: {
-      fase: 'SAVE',
+      fase: 'SUBMIT',
       sesId,
       apuId,
       regels,
+    },
+  });
+};
+
+export const deleteDeclaration = async ({
+  sesId,
+  apuId,
+}: {
+  sesId: string;
+  apuId: number;
+}) => {
+  return await request({
+    url: '/app-declaration1/session',
+    method: 'POST',
+    data: {
+      fase: 'DELETE',
+      sesId,
+      apuId,
     },
   });
 };

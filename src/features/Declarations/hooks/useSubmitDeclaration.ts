@@ -1,6 +1,6 @@
 import {useMutation} from '@tanstack/react-query';
 
-import {addDeclarationLines} from '../services/declarations-service';
+import {submitDeclaration} from '../services/declarations-service';
 import {DeclarationLine} from '../types/declarations';
 
 const useSubmitDeclaration = () => {
@@ -10,7 +10,7 @@ const useSubmitDeclaration = () => {
       sesId: string;
       lines: DeclarationLine[];
     }) => {
-      return addDeclarationLines(variables);
+      return submitDeclaration(variables);
     },
   });
 };

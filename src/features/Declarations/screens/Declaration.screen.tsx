@@ -32,7 +32,7 @@ import useTheme from '@src/hooks/useTheme';
 import {Declaration, DeclarationLine} from '../types/declarations';
 import useToast from '@src/components/Toast/useToast';
 import {ToastTypes} from '@src/components/Toast/toastTypes';
-import useAddDeclarationLines from '../hooks/useAddDeclarationLines';
+import useSubmitDeclaration from '../hooks/useSubmitDeclaration';
 import {faChevronLeft} from '@fortawesome/pro-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faWarning} from '@fortawesome/pro-light-svg-icons';
@@ -134,7 +134,7 @@ const DeclarationScreen = ({route}: Props) => {
   const user = useAuthStore(state => state.user);
   const {data: declaration} = useFetchDeclaration(user?.apuId!, sesId);
 
-  const {mutate, isPending} = useAddDeclarationLines();
+  const {mutate, isPending} = useSubmitDeclaration();
 
   const [isPhotoModalVisible, setIsPhotoModalVisible] = React.useState(false);
   const [declarationLines, setDeclarationLines] = React.useState<
@@ -181,6 +181,8 @@ const DeclarationScreen = ({route}: Props) => {
       toast('Line added successfully', ToastTypes.SUCCESS);
     }
   };
+
+  console.log(declaration);
 
   const handleSubmit = () => {
     mutate(
