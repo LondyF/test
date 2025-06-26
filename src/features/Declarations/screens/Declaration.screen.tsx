@@ -32,12 +32,13 @@ import useTheme from '@src/hooks/useTheme';
 import {Declaration, DeclarationLine} from '../types/declarations';
 import useToast from '@src/components/Toast/useToast';
 import {ToastTypes} from '@src/components/Toast/toastTypes';
-import useAddDeclarationLines from '../hooks/useAddDeclarationLines';
+import useSubmitDeclaration from '../hooks/useSubmitDeclaration';
 import {faChevronLeft} from '@fortawesome/pro-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faWarning} from '@fortawesome/pro-light-svg-icons';
+import {faWarning as faWaringSolid} from '@fortawesome/pro-solid-svg-icons';
 
-import {formatCurrency} from '../utils';
+import {currencyFormatter} from '../utils';
 
 const LINEAR_BACKGROUND_COLORS = ['#50329F', '#8F76CF', '#AE98E7', '#FFFFFF'];
 const LINEAR_BACKGROUND_LOCATIONS = [0, 0.17, 0.31, 1];
@@ -46,10 +47,12 @@ const DeclarationLineItem = ({
   item,
   onPress,
   onLongPress,
+  formatCurrency,
 }: {
   item: DeclarationLine;
   onPress: (item: DeclarationLine) => void;
   onLongPress: (item: DeclarationLine) => void;
+  formatCurrency: (amount: number) => string;
 }) => {
   const {tekst, bedrag, aantal: aantalFromItem} = item;
 
@@ -131,12 +134,14 @@ const DeclarationScreen = ({route}: Props) => {
   const user = useAuthStore(state => state.user);
   const {data: declaration} = useFetchDeclaration(user?.apuId!, sesId);
 
-  const {mutate, isPending} = useAddDeclarationLines();
+  const {mutate, isPending} = useSubmitDeclaration();
 
   const [isPhotoModalVisible, setIsPhotoModalVisible] = React.useState(false);
   const [declarationLines, setDeclarationLines] = React.useState<
     DeclarationLine[]
   >(declaration?.regels ?? []);
+
+  const formatCurrency = currencyFormatter(declaration?.kurensie);
 
   React.useEffect(() => {
     if (declaration?.regels) {
@@ -177,6 +182,8 @@ const DeclarationScreen = ({route}: Props) => {
     }
   };
 
+  console.log(declaration);
+
   const handleSubmit = () => {
     mutate(
       {
@@ -200,7 +207,7 @@ const DeclarationScreen = ({route}: Props) => {
 
   const handleItemPress = React.useCallback((item: DeclarationLine) => {
     addLineSheetRef.current?.present({
-      procedure: item.kode,
+      procedure: item.kode || item.tekst,
       unitPrice: item.bedrag,
       amount: item.aantal,
     });
@@ -295,24 +302,35 @@ const DeclarationScreen = ({route}: Props) => {
               />
             </View>
             <Typography
-              variant="h5"
-              fontWeight="500"
-              color="white"
-              text={`Total: ${formatCurrency(declaration?.bedrag ?? 0)}`}
-            />
-            <Typography
-              variant="h1"
-              color="white"
-              text={formatCurrency(leftToPay)}
-              fontWeight="600"
-              fontSize={50}
-            />
-            <Typography
               variant="b2"
               color="rgba(255, 255, 255, 0.47)"
-              text="Left to be declared"
+              text={hasOverflown ? 'Total exceeded by' : 'Left to be declared'}
               fontWeight="500"
             />
+            <Typography
+              variant="h2"
+              color={hasOverflown ? '#940606' : 'white'}
+              text={formatCurrency(leftToPay)}
+              fontWeight="600"
+              fontSize={38}
+            />
+            <View style={styles.targetAmountContainer}>
+              {hasOverflown && (
+                <FontAwesomeIcon
+                  icon={faWaringSolid}
+                  size={15}
+                  color="#FFF01A"
+                />
+              )}
+              <Typography
+                variant="h5"
+                fontWeight="500"
+                color="white"
+                text={`Target amount: ${formatCurrency(
+                  declaration?.bedrag ?? 0,
+                )}`}
+              />
+            </View>
             <View style={styles.detailsContainer}>
               <Typography
                 variant="h2"
@@ -393,6 +411,7 @@ const DeclarationScreen = ({route}: Props) => {
                       {...props}
                       onPress={handleItemPress}
                       onLongPress={handleDeleteLine}
+                      formatCurrency={formatCurrency}
                     />
                   )}
                   contentContainerStyle={styles.flatlistContentContainer}
@@ -420,7 +439,7 @@ const DeclarationScreen = ({route}: Props) => {
                   onPress={handleSubmit}
                 />
               </View>
-              {(hasOverflown || isBelowExpected) && (
+              {isBelowExpected && (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -438,11 +457,7 @@ const DeclarationScreen = ({route}: Props) => {
                   <Typography
                     variant="b1"
                     fontSize={12}
-                    text={
-                      hasOverflown
-                        ? 'Declaration lines have exceeded the total amount of the declaration.'
-                        : 'Total declared amount is below the expected amount.'
-                    }
+                    text={'Total declared amount is below the expected amount.'}
                     color="black"
                     fontStyle="italic"
                     textStyle={{marginTop: 5}}
@@ -559,6 +574,11 @@ const createStyle = (theme: Theme) =>
     },
     relativeContainer: {
       position: 'relative',
+    },
+    targetAmountContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
     },
   });
 

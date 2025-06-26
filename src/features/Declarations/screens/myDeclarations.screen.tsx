@@ -23,7 +23,7 @@ const ActionRequiredBadge = ({apuId}: {apuId: number}) => {
   const {data} = useFetchDeclarations(apuId);
 
   const hasActionRequired = data?.some(
-    declaration => declaration.status === DeclarationStatus.ACTION_REQUIRED,
+    declaration => declaration.progressId === DeclarationStatus.ACTION_REQUIRED,
   );
 
   if (!hasActionRequired) {
@@ -56,11 +56,16 @@ const MyDeclarations = () => {
       showActionSheetWithOptions(
         {options: options, cancelButtonIndex},
         buttonIndex => {
+          if (buttonIndex === undefined) {
+            return;
+          }
+
           let chosenOption = options[buttonIndex];
           if (chosenOption === options[1]) {
             setModalVisible(true);
           }
           if (chosenOption === options[0]) {
+            //@ts-ignore
             navigate('NewDeclaration');
           }
         },

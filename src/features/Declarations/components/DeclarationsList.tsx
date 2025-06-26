@@ -1,5 +1,11 @@
 import React from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -11,8 +17,9 @@ import {Theme} from '@src/styles';
 import useTheme from '@src/hooks/useTheme';
 import {Declaration} from '../types/declarations';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
-import {formatCurrency} from '../utils';
+import {currencyFormatter} from '../utils';
 import {DeclarationStatus} from '../types/declarations';
+import useDeleteDeclaration from '../hooks/useDeleteDeclaration';
 
 const DeclarationsList = ({
   apuId,
@@ -28,6 +35,8 @@ const DeclarationsList = ({
 
   const {data, isError, isFetching, error, refetch} =
     useFetchDeclarations(apuId);
+
+  const {mutate: deleteDeclaration} = useDeleteDeclaration();
 
   const keyExtractor = (_: Declaration, index: number) => `${index}`;
 
@@ -46,7 +55,31 @@ const DeclarationsList = ({
     const hasBeenSubmitted = declaration.status === DeclarationStatus.SUBMITTED;
     const InProgress = declaration.status === DeclarationStatus.IN_PROGRESS;
     const actionRequired =
-      declaration.status === DeclarationStatus.ACTION_REQUIRED;
+      declaration.progressId === DeclarationStatus.ACTION_REQUIRED;
+
+    const formatCurrency = currencyFormatter(declaration.kurensie);
+
+    const handleDeleteDeclaration = () => {
+      if (declaration.progressId !== DeclarationStatus.DRAFT) {
+        return;
+      }
+
+      Alert.alert(
+        'Delete Declaration',
+        'Are you sure you want to delete this declaration?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: () => deleteDeclaration({apuId, sesId: declaration.sesId}),
+          },
+        ],
+      );
+    };
 
     return (
       <ListItem style={styles.listItemContainer} index={index}>
@@ -57,6 +90,7 @@ const DeclarationsList = ({
               sesId: declaration.sesId,
             })
           }
+          onLongPress={handleDeleteDeclaration}
           style={styles.itemContainer}>
           <View style={styles.textContainer}>
             <View style={styles.headerTextContainer}>
