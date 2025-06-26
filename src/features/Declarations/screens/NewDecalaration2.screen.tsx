@@ -349,6 +349,24 @@ const NewDeclarationScreen = ({}: Props) => {
                   {...inputStyles}
                 />
                 <SelectInput
+                  label={'Currency'}
+                  onValueChange={value => {
+                    if (value) {
+                      setFieldValue('currency', value);
+                    }
+                  }}
+                  items={currencyOptions}
+                  value={values.currency}
+                  itemKey={values.selectedProviderId}
+                  iconStyle={styles.colorBlack}
+                  bottomBorderStyle={styles.bottomBlack}
+                  labelStyle={styles.colorBlack}
+                  icon={faUser}
+                  error={errors.country}
+                  disabled
+                  {...inputStyles}
+                />
+                <SelectInput
                   label={'Department'}
                   onValueChange={value => {
                     if (value) {
@@ -392,24 +410,6 @@ const NewDeclarationScreen = ({}: Props) => {
                     autoCapitalize="none"
                   />
                 </TouchableOpacity>
-                <SelectInput
-                  label={'Currency'}
-                  onValueChange={value => {
-                    if (value) {
-                      setFieldValue('currency', value);
-                    }
-                  }}
-                  items={currencyOptions}
-                  value={values.currency}
-                  itemKey={values.selectedProviderId}
-                  iconStyle={styles.colorBlack}
-                  bottomBorderStyle={styles.bottomBlack}
-                  labelStyle={styles.colorBlack}
-                  icon={faUser}
-                  error={errors.country}
-                  disabled
-                  {...inputStyles}
-                />
               </KeyboardAwareScrollView>
               <View style={styles.bottomContainer}>
                 <Button

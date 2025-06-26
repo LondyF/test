@@ -11,6 +11,7 @@ import {
   TextStyle,
   ViewStyle,
   ActivityIndicator,
+  PlatformColor,
 } from 'react-native';
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select';
 import Typography from './typography';
@@ -51,6 +52,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   const styles = makeStyles(icon !== undefined);
 
   const isErrored = error && error?.length > 0;
+  const isDisabled = !!props.disabled;
 
   const Icon = loading ? (
     <ActivityIndicator
@@ -60,7 +62,11 @@ const SelectInput: React.FC<SelectInputProps> = ({
     />
   ) : icon ? (
     <FontAwesomeIcon
-      style={[styles.iconStyle, iconStyle]}
+      style={[
+        styles.iconStyle,
+        iconStyle,
+        isDisabled ? styles.disabledColor : {},
+      ]}
       size={16}
       icon={icon}
     />
@@ -68,7 +74,14 @@ const SelectInput: React.FC<SelectInputProps> = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={[styles.labelStyle, labelStyle]}>{label}</Text>
+      <Text
+        style={[
+          styles.labelStyle,
+          labelStyle,
+          isDisabled ? styles.disabledColor : {},
+        ]}>
+        {label}
+      </Text>
       <View style={styles.inputIconWrapper}>
         {Icon}
         <View style={styles.flex}>
@@ -84,8 +97,14 @@ const SelectInput: React.FC<SelectInputProps> = ({
                 fontSize: 16,
                 color: 'black',
                 ...inputAndroidStyle,
+                ...(props.disabled && styles.disabledColor),
               },
-              inputIOS: {fontSize: 16, paddingVertical: 3, ...inputIOSStyle},
+              inputIOS: {
+                fontSize: 16,
+                paddingVertical: 3,
+                ...inputIOSStyle,
+                ...(props.disabled && styles.disabledColor),
+              },
               inputAndroidContainer: styles.inputContainer,
               inputIOSContainer: styles.inputContainer,
               ...style,
@@ -99,6 +118,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
           styles.bottomBorder,
           bottomBorderStyle,
           isErrored ? styles.errorBorderBottom : {},
+          props.disabled ? styles.disabledBorderBottom : {},
         ]}
       />
       {isErrored && (
@@ -138,6 +158,12 @@ const makeStyles = (hasIcon: boolean) =>
     },
     errorBorderBottom: {
       borderBottomColor: '#d50000',
+    },
+    disabledBorderBottom: {
+      borderBottomColor: '#a4a4a4',
+    },
+    disabledColor: {
+      color: '#a4a4a4',
     },
     inputIconWrapper: {
       flexDirection: 'row',
