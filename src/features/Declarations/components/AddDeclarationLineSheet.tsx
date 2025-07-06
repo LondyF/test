@@ -138,12 +138,17 @@ const Content: React.FC<ContentProps> = ({
           labelField="label"
           valueField="value"
           onChange={value => setFieldValue('procedure', value.value)}
+          containerStyle={{borderWidth: 2, borderColor: '#d2d2d2'}}
           style={[
             styles.selectInputBorder,
             isEditingExistingLine && {opacity: 0.5},
           ]}
           maxHeight={250}
           searchPlaceholder="Search..."
+          itemContainerStyle={{
+            borderBottomColor: '#d2d2d2',
+            borderBottomWidth: 1,
+          }}
           flatListProps={{
             initialScrollIndex: activeIndex >= 0 ? activeIndex : 0,
           }}
