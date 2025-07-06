@@ -189,6 +189,27 @@ export const submitDeclaration = async ({
   });
 };
 
+export const saveDeclarationPhoto = async ({
+  sesId,
+  apuId,
+  imageBase64,
+}: {
+  sesId: string;
+  apuId: number;
+  imageBase64: string;
+}) => {
+  return await request({
+    url: '/app-declaration1/session',
+    method: 'POST',
+    data: {
+      fase: 'SAVEPDF',
+      sesId,
+      apuId,
+      fotoB64: imageBase64,
+    },
+  });
+};
+
 export const deleteDeclaration = async ({
   sesId,
   apuId,

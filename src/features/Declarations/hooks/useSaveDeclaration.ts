@@ -26,8 +26,9 @@ const useSaveDeclaration = () => {
       const {
         scan: {status},
       } = data;
-      status.status === 0 && navigation.goBack();
+
       queryClient.invalidateQueries({queryKey: ['declarations']});
+      status.status === 0 && navigation.goBack();
     },
   });
 };

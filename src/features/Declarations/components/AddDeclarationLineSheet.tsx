@@ -113,7 +113,7 @@ const Content: React.FC<ContentProps> = ({
             : 'Add new declaration line'
         }
         fontWeight="300"
-        textStyle={styles.title}
+        textStyle={!isFreeTextDeclaration ? styles.title : {}}
       />
       {isFreeTextDeclaration ? (
         <TextInput
@@ -261,7 +261,7 @@ const AddDeclarationLineSheet = React.forwardRef<
     vkcId: declaration?.vkcId ?? -1,
   });
 
-  const isFreeTextDeclaration = declaration?.freeText === 1;
+  const isFreeTextDeclaration = declaration?.freeTxt === 1;
 
   const {values, errors, setFieldValue, handleChange, resetForm, handleSubmit} =
     useFormik<NewLineValues>({
@@ -324,6 +324,7 @@ const AddDeclarationLineSheet = React.forwardRef<
       backdropComponent={BottomSheetBackdrop}>
       <Content
         isEditingExistingLine={isEditingExistingLine}
+        isFreeTextDeclaration={isFreeTextDeclaration}
         insets={insets}
         procedureOptions={procedureOptions}
         isPending={isPending}

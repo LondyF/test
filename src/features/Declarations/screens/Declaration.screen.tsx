@@ -29,7 +29,11 @@ import DeclarationSubmittedSheet, {
 } from '../components/DeclarationSubmittedSheet';
 import {Theme} from '@src/styles/styles';
 import useTheme from '@src/hooks/useTheme';
-import {Declaration, DeclarationLine} from '../types/declarations';
+import {
+  Declaration,
+  DeclarationLine,
+  DeclarationStatus,
+} from '../types/declarations';
 import useToast from '@src/components/Toast/useToast';
 import {ToastTypes} from '@src/components/Toast/toastTypes';
 import useSubmitDeclaration from '../hooks/useSubmitDeclaration';
@@ -39,6 +43,9 @@ import {faWarning} from '@fortawesome/pro-light-svg-icons';
 import {faWarning as faWaringSolid} from '@fortawesome/pro-solid-svg-icons';
 
 import {currencyFormatter} from '../utils';
+import ActionRequiredSheet, {
+  ActionRequiredSheetRef,
+} from '../components/ActionRequiredSheet';
 
 const LINEAR_BACKGROUND_COLORS = ['#50329F', '#8F76CF', '#AE98E7', '#FFFFFF'];
 const LINEAR_BACKGROUND_LOCATIONS = [0, 0.17, 0.31, 1];
@@ -48,11 +55,13 @@ const DeclarationLineItem = ({
   onPress,
   onLongPress,
   formatCurrency,
+  canEdit,
 }: {
   item: DeclarationLine;
   onPress: (item: DeclarationLine) => void;
   onLongPress: (item: DeclarationLine) => void;
   formatCurrency: (amount: number) => string;
+  canEdit: boolean;
 }) => {
   const {tekst, bedrag, aantal: aantalFromItem} = item;
 
@@ -65,7 +74,11 @@ const DeclarationLineItem = ({
 
   return (
     <TouchableOpacity
-      style={styles.declarationLineItem}
+      disabled={!canEdit}
+      style={[
+        styles.declarationLineItem,
+        !canEdit && {backgroundColor: 'rgba(255, 255, 255, 0.05)'},
+      ]}
       onPress={() => onPress(item)}
       onLongPress={() => onLongPress(item)}>
       <View style={styles.flex}>
@@ -132,7 +145,8 @@ const DeclarationScreen = ({route}: Props) => {
   const theme = useTheme();
 
   const user = useAuthStore(state => state.user);
-  const {data: declaration} = useFetchDeclaration(user?.apuId!, sesId);
+  const {data: declaration, isPending: isFetchingDeclaration} =
+    useFetchDeclaration(user?.apuId!, sesId);
 
   const {mutate, isPending} = useSubmitDeclaration();
 
@@ -143,15 +157,37 @@ const DeclarationScreen = ({route}: Props) => {
 
   const formatCurrency = currencyFormatter(declaration?.kurensie);
 
+  const canEdit =
+    declaration?.progressId === DeclarationStatus.ACTION_REQUIRED ||
+    declaration?.progressId === DeclarationStatus.DRAFT;
+
   React.useEffect(() => {
     if (declaration?.regels) {
       setDeclarationLines(declaration.regels);
     }
   }, [declaration?.regels]);
 
+  React.useEffect(() => {
+    if (declaration?.progressId === DeclarationStatus.ACTION_REQUIRED) {
+      actionRequiredSheetRef.current?.present({
+        additionalInfo: declaration?.addInfo ?? '',
+        additionalInfoId: declaration?.addInfoId ?? 1,
+        apuId: user?.apuId!,
+        sesId: declaration?.sesId ?? '',
+      });
+    }
+  }, [
+    declaration?.progressId,
+    declaration?.addInfo,
+    declaration?.addInfoId,
+    declaration?.sesId,
+    user?.apuId,
+  ]);
+
   const addLineSheetRef = React.useRef<AddDeclarationLineSheetRef>(null);
   const declarationSubmittedSheetRef =
     React.useRef<DeclarationSubmittedSheetRef>(null);
+  const actionRequiredSheetRef = React.useRef<ActionRequiredSheetRef>(null);
 
   const handlePresentModalPress = React.useCallback(() => {
     addLineSheetRef.current?.present();
@@ -181,8 +217,6 @@ const DeclarationScreen = ({route}: Props) => {
       toast('Line added successfully', ToastTypes.SUCCESS);
     }
   };
-
-  console.log(declaration);
 
   const handleSubmit = () => {
     mutate(
@@ -269,202 +303,226 @@ const DeclarationScreen = ({route}: Props) => {
           locations={LINEAR_BACKGROUND_LOCATIONS}
           style={styles.linearGradient}>
           <SafeAreaView style={styles.flex}>
-            <View style={styles.topBarContainer}>
-              <View style={styles.innerHeaderContainer}>
-                <Button
-                  variant="transparent"
-                  text=""
-                  style={{minWidth: 0, padding: 10, paddingLeft: 0}}
-                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
-                  customTextComponent={
-                    <FontAwesomeIcon
-                      icon={faChevronLeft}
-                      size={20}
-                      color="white"
+            {isFetchingDeclaration ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              </View>
+            ) : (
+              <>
+                <View style={styles.topBarContainer}>
+                  <View style={styles.innerHeaderContainer}>
+                    <Button
+                      variant="transparent"
+                      text=""
+                      style={{minWidth: 0, padding: 10, paddingLeft: 0}}
+                      hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                      customTextComponent={
+                        <FontAwesomeIcon
+                          icon={faChevronLeft}
+                          size={20}
+                          color="white"
+                        />
+                      }
+                      onPress={() => {
+                        navigation.goBack();
+                      }}
                     />
+                    <Typography
+                      color="white"
+                      variant="h3"
+                      text={`Declaration ${moment(declaration?.datum).format(
+                        'DD MMM YYYY',
+                      )}`}
+                    />
+                  </View>
+                  <DeclarationImageButton
+                    onPress={() => {
+                      setIsPhotoModalVisible(true);
+                    }}
+                  />
+                </View>
+                <Typography
+                  variant="b2"
+                  color="rgba(255, 255, 255, 0.47)"
+                  text={
+                    hasOverflown ? 'Total exceeded by' : 'Left to be declared'
                   }
-                  onPress={() => {
-                    navigation.goBack();
-                  }}
+                  fontWeight="500"
                 />
                 <Typography
-                  color="white"
-                  variant="h3"
-                  text={`Declaration ${moment(declaration?.datum).format(
-                    'DD MMM YYYY',
-                  )}`}
+                  variant="h2"
+                  color={hasOverflown ? '#940606' : 'white'}
+                  text={formatCurrency(leftToPay)}
+                  fontWeight="600"
+                  fontSize={38}
                 />
-              </View>
-              <DeclarationImageButton
-                onPress={() => {
-                  setIsPhotoModalVisible(true);
-                }}
-              />
-            </View>
-            <Typography
-              variant="b2"
-              color="rgba(255, 255, 255, 0.47)"
-              text={hasOverflown ? 'Total exceeded by' : 'Left to be declared'}
-              fontWeight="500"
-            />
-            <Typography
-              variant="h2"
-              color={hasOverflown ? '#940606' : 'white'}
-              text={formatCurrency(leftToPay)}
-              fontWeight="600"
-              fontSize={38}
-            />
-            <View style={styles.targetAmountContainer}>
-              {hasOverflown && (
-                <FontAwesomeIcon
-                  icon={faWaringSolid}
-                  size={15}
-                  color="#FFF01A"
-                />
-              )}
-              <Typography
-                variant="h5"
-                fontWeight="500"
-                color="white"
-                text={`Target amount: ${formatCurrency(
-                  declaration?.bedrag ?? 0,
-                )}`}
-              />
-            </View>
-            <View style={styles.detailsContainer}>
-              <Typography
-                variant="h2"
-                color="white"
-                text="Details"
-                fontWeight="300"
-                textStyle={{marginBottom: 10}}
-              />
-              <View style={styles.detailItemRow}>
-                <View style={styles.detailItemContainer}>
-                  <Typography
-                    variant="h6"
-                    text="Date"
-                    textStyle={styles.detailsTitle}
-                  />
-                  <Typography
-                    variant="h4"
-                    color="white"
-                    text={moment(declaration?.datum).format('DD MMM YYYY')}
-                  />
-                </View>
-                <View style={styles.detailItemContainer}>
-                  <Typography
-                    variant="h6"
-                    text="Department"
-                    textStyle={styles.detailsTitle}
-                  />
-                  <Typography
-                    variant="h4"
-                    color="white"
-                    text={declaration?.vkcNaam}
-                  />
-                </View>
-              </View>
-              <View style={[styles.detailItemRow, {marginTop: 5}]}>
-                <View style={styles.detailItemContainer}>
-                  <Typography
-                    variant="h6"
-                    text="Provider"
-                    textStyle={styles.detailsTitle}
-                  />
-                  <Typography
-                    variant="h4"
-                    color="white"
-                    text={declaration?.artNaam}
-                  />
-                </View>
-                <View style={styles.detailItemContainer}>
-                  <Typography
-                    variant="h6"
-                    text="Declaratie Id"
-                    textStyle={styles.detailsTitle}
-                  />
-                  <Typography
-                    variant="h4"
-                    color="white"
-                    text={String(declaration?.nummer)}
-                  />
-                </View>
-              </View>
-            </View>
-            <View style={styles.hr} />
-            <Typography
-              variant="h2"
-              color="white"
-              text="Declaration lines"
-              fontWeight="300"
-              textStyle={styles.declarationLinesTitle}
-            />
-
-            <View style={styles.flex}>
-              <View style={{flex: 0.9}}>
-                <FlatList
-                  data={declarationLines}
-                  ListEmptyComponent={renderEmptyList}
-                  renderItem={props => (
-                    <DeclarationLineItem
-                      {...props}
-                      onPress={handleItemPress}
-                      onLongPress={handleDeleteLine}
-                      formatCurrency={formatCurrency}
+                <View style={styles.targetAmountContainer}>
+                  {hasOverflown && (
+                    <FontAwesomeIcon
+                      icon={faWaringSolid}
+                      size={15}
+                      color="#FFF01A"
                     />
                   )}
-                  contentContainerStyle={styles.flatlistContentContainer}
-                  keyExtractor={keyExtractor}
-                />
-              </View>
-              <View style={styles.buttonContainer}>
-                <Button
-                  variant="secondary"
-                  text="Add line"
-                  buttonStyle={styles.addLineButton}
-                  onPress={handlePresentModalPress}
-                />
-                <Button
-                  variant="primary"
-                  text="Submit declaration"
-                  disabled={
-                    isPending ||
-                    declarationLines.length === 0 ||
-                    hasOverflown ||
-                    isBelowExpected
-                  }
-                  buttonStyle={styles.flex}
-                  loading={isPending}
-                  onPress={handleSubmit}
-                />
-              </View>
-              {isBelowExpected && (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    gap: 10,
-                    marginTop: 10,
-                    alignItems: 'center',
-                  }}>
-                  <FontAwesomeIcon
-                    icon={faWarning}
-                    size={20}
-                    color="#FF8F00"
-                    style={{marginTop: 10, marginBottom: 5}}
-                  />
-
                   <Typography
-                    variant="b1"
-                    fontSize={12}
-                    text={'Total declared amount is below the expected amount.'}
-                    color="black"
-                    fontStyle="italic"
-                    textStyle={{marginTop: 5}}
+                    variant="h5"
+                    fontWeight="500"
+                    color="white"
+                    text={`Target amount: ${formatCurrency(
+                      declaration?.bedrag ?? 0,
+                    )}`}
                   />
                 </View>
-              )}
-            </View>
+                <View style={styles.detailsContainer}>
+                  <Typography
+                    variant="h2"
+                    color="white"
+                    text="Details"
+                    fontWeight="300"
+                    textStyle={{marginBottom: 10}}
+                  />
+                  <View style={styles.detailItemRow}>
+                    <View style={styles.detailItemContainer}>
+                      <Typography
+                        variant="h6"
+                        text="Date"
+                        textStyle={styles.detailsTitle}
+                      />
+                      <Typography
+                        variant="h4"
+                        color="white"
+                        text={moment(declaration?.datum).format('DD MMM YYYY')}
+                      />
+                    </View>
+                    <View style={styles.detailItemContainer}>
+                      <Typography
+                        variant="h6"
+                        text="Department"
+                        textStyle={styles.detailsTitle}
+                      />
+                      <Typography
+                        variant="h4"
+                        color="white"
+                        text={declaration?.vkcNaam}
+                      />
+                    </View>
+                  </View>
+                  <View style={[styles.detailItemRow, {marginTop: 5}]}>
+                    <View style={styles.detailItemContainer}>
+                      <Typography
+                        variant="h6"
+                        text="Provider"
+                        textStyle={styles.detailsTitle}
+                      />
+                      <Typography
+                        variant="h4"
+                        color="white"
+                        text={declaration?.artNaam}
+                      />
+                    </View>
+                    <View style={styles.detailItemContainer}>
+                      <Typography
+                        variant="h6"
+                        text="Declaratie Id"
+                        textStyle={styles.detailsTitle}
+                      />
+                      <Typography
+                        variant="h4"
+                        color="white"
+                        text={String(declaration?.nummer)}
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.hr} />
+                <Typography
+                  variant="h2"
+                  color="white"
+                  text="Declaration lines"
+                  fontWeight="300"
+                  textStyle={styles.declarationLinesTitle}
+                />
+
+                <View style={styles.flex}>
+                  <View style={{flex: 0.9}}>
+                    <FlatList
+                      data={declarationLines}
+                      ListEmptyComponent={renderEmptyList}
+                      renderItem={props => (
+                        <DeclarationLineItem
+                          {...props}
+                          onPress={handleItemPress}
+                          onLongPress={handleDeleteLine}
+                          formatCurrency={formatCurrency}
+                          canEdit={canEdit}
+                        />
+                      )}
+                      contentContainerStyle={styles.flatlistContentContainer}
+                      keyExtractor={keyExtractor}
+                    />
+                  </View>
+                  <View style={styles.buttonContainer}>
+                    <Button
+                      variant="secondary"
+                      text="Add line"
+                      // @ts-ignore
+                      buttonStyle={[
+                        styles.addLineButton,
+                        !canEdit && styles.addLineButtonDisabled,
+                      ]}
+                      onPress={handlePresentModalPress}
+                      disabled={!canEdit}
+                    />
+                    <Button
+                      variant="primary"
+                      text="Submit declaration"
+                      disabled={
+                        isPending ||
+                        declarationLines.length === 0 ||
+                        hasOverflown ||
+                        isBelowExpected ||
+                        !canEdit
+                      }
+                      buttonStyle={styles.flex}
+                      loading={isPending}
+                      onPress={handleSubmit}
+                    />
+                  </View>
+                  {isBelowExpected && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        gap: 10,
+                        marginTop: 10,
+                        alignItems: 'center',
+                      }}>
+                      <FontAwesomeIcon
+                        icon={faWarning}
+                        size={20}
+                        color="#FF8F00"
+                        style={{marginTop: 10, marginBottom: 5}}
+                      />
+
+                      <Typography
+                        variant="b1"
+                        fontSize={12}
+                        text={
+                          'Total declared amount is below the expected amount.'
+                        }
+                        color="black"
+                        fontStyle="italic"
+                        textStyle={{marginTop: 5}}
+                      />
+                    </View>
+                  )}
+                </View>
+              </>
+            )}
           </SafeAreaView>
         </LinearGradient>
         <AddDeclarationLineSheet
@@ -478,6 +536,7 @@ const DeclarationScreen = ({route}: Props) => {
           ref={declarationSubmittedSheetRef}
           currencyFormatter={formatCurrency}
         />
+        <ActionRequiredSheet ref={actionRequiredSheetRef} />
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
@@ -553,6 +612,9 @@ const createStyle = (theme: Theme) =>
       borderColor: theme.colors.primary,
       borderWidth: 2,
       borderStyle: 'dashed',
+    },
+    addLineButtonDisabled: {
+      opacity: 0.5,
     },
     declarationLineItem: {
       flexDirection: 'row',

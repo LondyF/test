@@ -51,9 +51,10 @@ const DeclarationsList = ({
     const isValidDate = date.isValid();
     const formattedDate = isValidDate ? date.format('DD MMM YYYY') : '-';
 
-    const isInDraft = declaration.status === DeclarationStatus.DRAFT;
-    const hasBeenSubmitted = declaration.status === DeclarationStatus.SUBMITTED;
-    const InProgress = declaration.status === DeclarationStatus.IN_PROGRESS;
+    const isInDraft = declaration.progressId === DeclarationStatus.DRAFT;
+    const hasBeenSubmitted =
+      declaration.progressId === DeclarationStatus.SUBMITTED;
+    const InProgress = declaration.progressId === DeclarationStatus.IN_PROGRESS;
     const actionRequired =
       declaration.progressId === DeclarationStatus.ACTION_REQUIRED;
 
@@ -193,7 +194,9 @@ const DeclarationsList = ({
 
   const filteredData = React.useMemo(() => {
     if (data) {
-      return data.filter(declaration => status.includes(declaration.status));
+      return data.filter(declaration =>
+        status.includes(declaration.progressId),
+      );
     }
     return [];
   }, [data, status]);

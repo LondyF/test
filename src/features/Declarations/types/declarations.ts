@@ -46,6 +46,15 @@ export const DeclarationStatus = {
 export type DeclarationStatus =
   (typeof DeclarationStatus)[keyof typeof DeclarationStatus];
 
+export const DeclarationAdditionalInfo = {
+  FOTO_UNCLEAR: 1,
+  INCORRECT_LINES: 2,
+  FREE_TEXT: 99,
+};
+
+export type DeclarationAdditionalInfo =
+  (typeof DeclarationAdditionalInfo)[keyof typeof DeclarationAdditionalInfo];
+
 export interface Declaration {
   StatusIco: number;
   StatusInfo: unknown;
@@ -65,7 +74,9 @@ export interface Declaration {
   vkcNaam: string;
   kurensie: string;
   progressId: DeclarationStatus;
-  freeText: number;
+  freeTxt: number;
+  addInfo: string;
+  addInfoId: DeclarationAdditionalInfo;
 }
 
 export interface Procedure {
