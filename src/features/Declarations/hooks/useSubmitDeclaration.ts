@@ -14,8 +14,11 @@ const useSubmitDeclaration = () => {
     }) => {
       return submitDeclaration(variables);
     },
-    onSuccess: async () => {
+    onSuccess: async (_, {apuId, sesId}) => {
       await queryClient.invalidateQueries({queryKey: ['declarations']});
+      await queryClient.invalidateQueries({
+        queryKey: ['declaration', apuId, sesId],
+      });
     },
   });
 };
