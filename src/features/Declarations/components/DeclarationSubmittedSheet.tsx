@@ -202,7 +202,7 @@ const DeclarationSubmittedSheet = React.forwardRef<
         <DashedSvgLine style={{marginTop: 0, marginBottom: 10}} />
         <StepIndicator
           style={{marginBottom: 10}}
-          currentStep={declaration?.status ?? 0}
+          currentStep={declaration?.progressId}
         />
         <Button variant="primary" text="Close" onPress={handleClose} />
       </BottomSheetView>

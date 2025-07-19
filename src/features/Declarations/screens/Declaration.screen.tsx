@@ -14,7 +14,7 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import moment from 'moment';
 
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {RouteProp, StackActions, useNavigation} from '@react-navigation/native';
 import useAuthStore from '@src/stores/useAuthStore';
 
 import useFetchDeclaration from '../hooks/useFetchDeclaration';
@@ -184,6 +184,12 @@ const DeclarationScreen = ({route}: Props) => {
     user?.apuId,
   ]);
 
+  React.useEffect(() => {
+    if (declaration?.progressId === DeclarationStatus.SUBMITTED) {
+      declarationSubmittedSheetRef.current?.present(declaration);
+    }
+  }, [declaration?.progressId, declaration]);
+
   const addLineSheetRef = React.useRef<AddDeclarationLineSheetRef>(null);
   const declarationSubmittedSheetRef =
     React.useRef<DeclarationSubmittedSheetRef>(null);
@@ -329,7 +335,7 @@ const DeclarationScreen = ({route}: Props) => {
                         />
                       }
                       onPress={() => {
-                        navigation.goBack();
+                        navigation.dispatch(StackActions.pop(2));
                       }}
                     />
                     <Typography

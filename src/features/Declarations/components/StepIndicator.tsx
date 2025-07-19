@@ -9,12 +9,13 @@ import {
 
 import {Theme} from '@src/styles/styles';
 import useTheme from '@src/hooks/useTheme';
+import {DeclarationStatus} from '../types/declarations';
 
 const StepIndicator = ({
-  currentStep = 0,
+  currentStep = DeclarationStatus.DRAFT,
   style,
 }: {
-  currentStep: number;
+  currentStep: DeclarationStatus;
   style: ViewStyle;
 }) => {
   const steps = ['Sent', 'Pending Info', 'Approved', 'Refund'];
@@ -22,10 +23,27 @@ const StepIndicator = ({
   const theme = useTheme();
   const styles = createStyles(theme);
 
+  const getActiveStep = () => {
+    switch (currentStep) {
+      case DeclarationStatus.SUBMITTED:
+        return 0; // Sent
+      case DeclarationStatus.ACTION_REQUIRED:
+        return 1; // Pending Info
+      case DeclarationStatus.COMPLETED:
+        return 2; // Approved
+      case DeclarationStatus.IN_PROGRESS:
+        return 3; // Refund
+      default:
+        return 0; // Default to Sent
+    }
+  };
+
+  const activeStepIndex = getActiveStep();
+
   return (
     <View style={[styles.container, style]}>
       {steps.map((step, index) => {
-        const isActive = index === currentStep - 1;
+        const isActive = index === activeStepIndex;
 
         return (
           <TouchableOpacity key={step} style={styles.stepContainer}>

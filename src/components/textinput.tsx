@@ -19,12 +19,14 @@ type TextInputProps = {
   label?: string;
   error?: string;
   disabled?: boolean;
+  noMarginTop?: boolean;
 } & ReactNativeTextInputProps;
 
 const TextInput: React.FC<TextInputProps> = ({
   icon,
   iconStyle,
   mainColor,
+  noMarginTop,
   ...props
 }) => {
   const hasIcon = icon != null;
@@ -38,15 +40,21 @@ const TextInput: React.FC<TextInputProps> = ({
         lineWidth={2}
         baseColor={mainColor}
         tintColor={mainColor}
-        inputContainerStyle={hasIcon && styles.inputContainer}
+        inputContainerStyle={[hasIcon && styles.inputContainer]}
         textColor={mainColor}
         titleTextStyle={styles.title}
         contextMenuHidden={true}
+        containerStyle={{marginTop: noMarginTop ? -10 : undefined}}
         {...props}
       />
       {hasIcon && (
         <FontAwesomeIcon
-          style={[{color: mainColor}, styles.iconStyle, iconStyle]}
+          style={[
+            {color: mainColor},
+            styles.iconStyle,
+            iconStyle,
+            {marginTop: noMarginTop ? -10 : undefined},
+          ]}
           size={16}
           icon={icon}
         />

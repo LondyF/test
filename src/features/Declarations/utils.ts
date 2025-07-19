@@ -6,7 +6,7 @@ export const currencyFormatter =
     return Number(amount).toLocaleString('nl-NL', {
       style: 'currency',
       currencyDisplay: 'code',
-      currency,
+      currency: currency === 'Euro' ? 'EUR' : currency,
       minimumFractionDigits: 2,
     });
   };

@@ -85,6 +85,7 @@ export const createDeclarationSession = async ({
   lndKde,
   currency,
   imageBase64 = '',
+  artNaam = '',
 }: {
   apuId: number;
   vkcId: number;
@@ -94,6 +95,7 @@ export const createDeclarationSession = async ({
   lndKde: string;
   currency: string;
   imageBase64?: string;
+  artNaam?: string;
 }) => {
   return await request({
     url: '/app-declaration1/session',
@@ -109,6 +111,7 @@ export const createDeclarationSession = async ({
       currency,
       lndKde,
       fotoB64: imageBase64,
+      artNaam,
     },
   });
 };

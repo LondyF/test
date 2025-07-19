@@ -70,6 +70,8 @@ const NewDeclarationScreen = ({}: Props) => {
     style: {placeholder: {...styles.inputStyle}},
   };
 
+  const [freeTextDeclaration, setFreeTextDeclaration] = useState(false);
+
   const {mutate, isPending} = useCreateDeclarationSession();
 
   const {handleChange, handleSubmit, values, setFieldValue, errors} = useFormik(
@@ -82,21 +84,23 @@ const NewDeclarationScreen = ({}: Props) => {
         selectedDepartmentId: Yup.number()
           .required('Department is required')
           .positive('Department must be a positive number'),
-        selectedProviderId: Yup.number()
+        selectedProviderId: Yup.string()
           .required('Provider is required')
-          .positive('Provider must be a positive number'),
+          .min(1, 'Provider is required'),
         date: Yup.string().required('Date is required'),
         country: Yup.string().required('Country is required'),
-        image: Yup.object<Asset>().required('Image is required'),
+        image: Yup.mixed<Asset>().nullable().required('Image is required'),
+        artNaam: Yup.string(),
       }),
       initialValues: {
         totalAmount: '',
         selectedDepartmentId: 0,
-        selectedProviderId: 0,
+        selectedProviderId: '',
         currency: 'Xcg',
         country: 'CUR',
         date: moment().format('DD MMM YYYY'),
-        image: {} as Asset,
+        image: null as Asset | null,
+        artNaam: '',
       },
       onSubmit: async submittedValues => {
         mutate(
@@ -106,9 +110,19 @@ const NewDeclarationScreen = ({}: Props) => {
             currency: submittedValues.currency,
             apuId: user?.apuId!,
             vkcId: submittedValues.selectedDepartmentId,
-            sqArtId: submittedValues.selectedProviderId,
+            sqArtId: Number.isInteger(submittedValues.selectedProviderId)
+              ? Number(submittedValues.selectedProviderId)
+              : 0,
+            artNaam: freeTextDeclaration
+              ? submittedValues.selectedProviderId
+              : submittedValues.selectedProviderId
+              ? providersData?.find(
+                  provider =>
+                    provider.id === Number(submittedValues.selectedProviderId),
+                )?.naam
+              : '',
             datum: moment(submittedValues.date, 'DD MMM YYYY').toISOString(),
-            imageBase64: submittedValues.image?.base64 || '',
+            imageBase64: (submittedValues.image as Asset)?.base64 || '',
           },
           {
             onSuccess: data => {
@@ -222,6 +236,24 @@ const NewDeclarationScreen = ({}: Props) => {
     return moment(dateString, 'DD MMM YYYY').toDate();
   };
 
+  const handleCountryChange = (value: string) => {
+    const selectedCountry = countriesData?.find(
+      country => country.iso === value,
+    );
+
+    const isFreeTextDeclaration = selectedCountry?.freeTxt === 1;
+
+    setFieldValue('country', value);
+    setFieldValue('currency', selectedCountry?.valuta);
+    setFreeTextDeclaration(isFreeTextDeclaration);
+
+    if (isFreeTextDeclaration) {
+      setFieldValue('selectedProviderId', '');
+    } else {
+      setFieldValue('selectedProviderId', '');
+    }
+  };
+
   return (
     <LinearGradient
       colors={LINEAR_BACKGROUND_COLORS}
@@ -243,6 +275,7 @@ const NewDeclarationScreen = ({}: Props) => {
             <View style={styles.flex}>
               <KeyboardAwareScrollView
                 style={styles.container}
+                extraScrollHeight={-50}
                 keyboardShouldPersistTaps="handled">
                 <View
                   style={{
@@ -276,9 +309,9 @@ const NewDeclarationScreen = ({}: Props) => {
                   <TouchableOpacity
                     style={styles.imageUploadContainer}
                     onPress={handlePhotoPress}>
-                    {Object.keys(values.image).length !== 0 ? (
+                    {values.image && Object.keys(values.image).length !== 0 ? (
                       <Image
-                        source={{uri: values.image?.uri}}
+                        source={{uri: (values.image as Asset)?.uri}}
                         style={styles.image}
                       />
                     ) : (
@@ -328,16 +361,7 @@ const NewDeclarationScreen = ({}: Props) => {
                 />
                 <SelectInput
                   label={'Country'}
-                  onValueChange={value => {
-                    if (value) {
-                      setFieldValue('country', value);
-                      setFieldValue(
-                        'currency',
-                        countriesData?.find(country => country.iso === value)
-                          ?.valuta,
-                      );
-                    }
-                  }}
+                  onValueChange={handleCountryChange}
                   items={countryOptions}
                   value={values.country}
                   itemKey={values.selectedProviderId}
@@ -346,24 +370,6 @@ const NewDeclarationScreen = ({}: Props) => {
                   labelStyle={styles.colorBlack}
                   icon={faUser}
                   error={errors.country}
-                  {...inputStyles}
-                />
-                <SelectInput
-                  label={'Currency'}
-                  onValueChange={value => {
-                    if (value) {
-                      setFieldValue('currency', value);
-                    }
-                  }}
-                  items={currencyOptions}
-                  value={values.currency}
-                  itemKey={values.selectedProviderId}
-                  iconStyle={styles.colorBlack}
-                  bottomBorderStyle={styles.bottomBlack}
-                  labelStyle={styles.colorBlack}
-                  icon={faUser}
-                  error={errors.country}
-                  disabled
                   {...inputStyles}
                 />
                 <SelectInput
@@ -383,21 +389,50 @@ const NewDeclarationScreen = ({}: Props) => {
                   icon={faHome}
                   {...inputStyles}
                 />
+                {freeTextDeclaration ? (
+                  <TextInput
+                    label="Provider"
+                    mainColor="white"
+                    value={values.selectedProviderId || ''}
+                    onChangeText={handleChange('selectedProviderId')}
+                    icon={faUser}
+                    noMarginTop
+                  />
+                ) : (
+                  <SelectInput
+                    label={'Provider'}
+                    onValueChange={value => {
+                      if (value) {
+                        setFieldValue('selectedProviderId', Number(value));
+                      }
+                    }}
+                    items={providersOptions}
+                    value={values.selectedProviderId}
+                    itemKey={values.selectedProviderId}
+                    iconStyle={styles.colorBlack}
+                    bottomBorderStyle={styles.bottomBlack}
+                    labelStyle={styles.colorBlack}
+                    icon={faUser}
+                    error={errors.selectedProviderId}
+                    {...inputStyles}
+                  />
+                )}
                 <SelectInput
-                  label={'Provider'}
+                  label={'Currency'}
                   onValueChange={value => {
                     if (value) {
-                      setFieldValue('selectedProviderId', Number(value));
+                      setFieldValue('currency', value);
                     }
                   }}
-                  items={providersOptions}
-                  value={values.selectedProviderId}
+                  items={currencyOptions}
+                  value={values.currency}
                   itemKey={values.selectedProviderId}
                   iconStyle={styles.colorBlack}
                   bottomBorderStyle={styles.bottomBlack}
                   labelStyle={styles.colorBlack}
                   icon={faUser}
-                  error={errors.selectedProviderId}
+                  error={errors.country}
+                  disabled
                   {...inputStyles}
                 />
                 <TouchableOpacity onPress={openDateModal}>

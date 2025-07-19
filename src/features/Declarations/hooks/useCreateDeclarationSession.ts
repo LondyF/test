@@ -15,6 +15,7 @@ const useCreateDeclarationSession = () => {
       lndKde: string;
       currency: string;
       imageBase64?: string;
+      artNaam?: string;
     }) => createDeclarationSession(variables),
     onSuccess: async () => {
       await queryClient.invalidateQueries({queryKey: ['declarations']});
