@@ -106,7 +106,7 @@ const MyDeclarations = () => {
         }}>
         <Tab.Screen
           options={{
-            title: 'Pending',
+            title: t('declarations.pending'),
           }}
           name="PendingDeclarations"
           children={() => (
@@ -122,7 +122,7 @@ const MyDeclarations = () => {
         />
         <Tab.Screen
           options={{
-            title: 'Awaiting Action',
+            title: t('declarations.awaitingAction'),
             tabBarBadge: () => (
               <ActionRequiredBadge apuId={user?.apuId || -1} />
             ),
@@ -137,7 +137,7 @@ const MyDeclarations = () => {
         />
         <Tab.Screen
           options={{
-            title: 'Completed',
+            title: t('declarations.completed'),
           }}
           name="CompletedDeclarations"
           children={() => (

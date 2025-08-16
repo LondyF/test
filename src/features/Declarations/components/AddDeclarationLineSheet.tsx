@@ -21,6 +21,7 @@ import useFetchProcedures from '../hooks/useFetchProcedures';
 import {useFormik} from 'formik';
 import {Dropdown} from 'react-native-element-dropdown';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useTranslation} from 'react-i18next';
 
 const BottomSheetBackdrop = (props: BottomSheetBackdropProps) => {
   const styles = createStyles();
@@ -97,6 +98,8 @@ const Content: React.FC<ContentProps> = ({
   const styles = createStyles(insets);
   const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
 
+  const {t} = useTranslation();
+
   const activeIndex = React.useMemo(
     () =>
       procedureOptions.findIndex(option => option.value === values.procedure),
@@ -109,15 +112,15 @@ const Content: React.FC<ContentProps> = ({
         variant="h3"
         text={
           isEditingExistingLine
-            ? 'Edit declaration line'
-            : 'Add new declaration line'
+            ? t('declarations.updateDeclarationLine')
+            : t('declarations.addNewDeclarationLine')
         }
         fontWeight="300"
         textStyle={!isFreeTextDeclaration ? styles.title : {}}
       />
       {isFreeTextDeclaration ? (
         <TextInput
-          label="Procedure"
+          label={t('declarations.procedure')}
           mainColor="black"
           icon={faFileInvoiceDollar}
           autoCapitalize="none"
@@ -178,7 +181,7 @@ const Content: React.FC<ContentProps> = ({
         />
       )}
       <TextInput
-        label="Unit price"
+        label={t('declarations.unitPrice')}
         mainColor="black"
         icon={faReceipt}
         autoCapitalize="none"
@@ -194,7 +197,7 @@ const Content: React.FC<ContentProps> = ({
         }}
       />
       <TextInput
-        label="Amount"
+        label={t('declarations.amount')}
         mainColor="black"
         icon={faReceipt}
         autoCapitalize="none"
@@ -206,7 +209,7 @@ const Content: React.FC<ContentProps> = ({
 
       <Typography
         variant="b1"
-        text="Please note that the amount will be multiplied by the unit price."
+        text={t('declarations.noteAmountMultipliedByUnitPrice')}
         fontStyle="italic"
         fontSize={10}
         textStyle={{marginTop: 10, marginBottom: 20}}
@@ -215,13 +218,17 @@ const Content: React.FC<ContentProps> = ({
       <Typography
         variant="b1"
         fontWeight="bold"
-        text={`Total: ${currencyFormatter(total)}`}
+        text={`${t('declarations.total')}: ${currencyFormatter(total)}`}
         textStyle={{marginBottom: 10}}
       />
 
       <Button
         variant="primary"
-        text={isEditingExistingLine ? 'Update line' : 'Add line'}
+        text={
+          isEditingExistingLine
+            ? t('declarations.updateLine')
+            : t('declarations.addLine')
+        }
         onPress={() => handleSubmit()}
         buttonStyle={styles.addLineButton}
       />
@@ -234,7 +241,7 @@ const AddDeclarationLineSheet = React.forwardRef<
   AddDeclarationLineSheetProps
 >(({apuId, declaration, currencyFormatter, onSubmit}, ref) => {
   const insets = useSafeAreaInsets();
-
+  const {t} = useTranslation();
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
   const [isEditingExistingLine, setIsEditingExistingLine] =
@@ -267,14 +274,14 @@ const AddDeclarationLineSheet = React.forwardRef<
     useFormik<NewLineValues>({
       validateOnChange: false,
       validationSchema: Yup.object().shape({
-        procedure: Yup.string().required('Procedure is required'),
+        procedure: Yup.string().required(t('validators.requiredField')),
         unitPrice: Yup.number()
-          .typeError('Unit price must be a number')
-          .required('Unit price is required')
-          .positive('Unit price must be a positive number'),
+          .typeError(t('validators.onlyNumbers'))
+          .required(t('validators.requiredField'))
+          .positive(t('validators.onlyNumbers')),
         amount: Yup.number()
-          .required('Amount is required')
-          .positive('Amount must be a positive number'),
+          .required(t('validators.requiredField'))
+          .positive(t('validators.onlyNumbers')),
       }),
       initialValues: {
         procedure: undefined,

@@ -46,6 +46,9 @@ import {currencyFormatter} from '../utils';
 import ActionRequiredSheet, {
   ActionRequiredSheetRef,
 } from '../components/ActionRequiredSheet';
+import {useTranslation} from 'react-i18next';
+import useSaveDeclarationDraft from '../hooks/useSaveDeclarationDraft';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 const LINEAR_BACKGROUND_COLORS = ['#50329F', '#8F76CF', '#AE98E7', '#FFFFFF'];
 const LINEAR_BACKGROUND_LOCATIONS = [0, 0.17, 0.31, 1];
@@ -141,6 +144,8 @@ const DeclarationScreen = ({route}: Props) => {
 
   const toast = useToast();
   const navigation = useNavigation();
+  const {t} = useTranslation();
+  const {showActionSheetWithOptions} = useActionSheet();
 
   const theme = useTheme();
 
@@ -148,7 +153,9 @@ const DeclarationScreen = ({route}: Props) => {
   const {data: declaration, isPending: isFetchingDeclaration} =
     useFetchDeclaration(user?.apuId!, sesId);
 
-  const {mutate, isPending} = useSubmitDeclaration();
+  const {mutate: submitDeclaration, isPending} = useSubmitDeclaration();
+  const {mutate: saveDeclarationDraft, isPending: isSavingDraft} =
+    useSaveDeclarationDraft();
 
   const [isPhotoModalVisible, setIsPhotoModalVisible] = React.useState(false);
   const [declarationLines, setDeclarationLines] = React.useState<
@@ -217,15 +224,65 @@ const DeclarationScreen = ({route}: Props) => {
       updatedLines[existingLineIndex] = newLine;
 
       setDeclarationLines(updatedLines);
-      toast('Line updated successfully', ToastTypes.SUCCESS);
+      toast(t('declarations.lineUpdatedSuccessfully'), ToastTypes.SUCCESS);
     } else {
       setDeclarationLines(prevLines => [newLine, ...prevLines]);
-      toast('Line added successfully', ToastTypes.SUCCESS);
+      toast(t('declarations.lineAddedSuccessfully'), ToastTypes.SUCCESS);
     }
   };
 
+  const handleSave = () => {
+    if (hasOverflown || isBelowExpected) {
+      handleSaveDraft();
+    } else if (hasReachedTarget) {
+      const options = [
+        t('declarations.saveDraft'),
+        t('declarations.submit'),
+        t('common.cancel'),
+      ];
+
+      const cancelButtonIndex = 2;
+
+      showActionSheetWithOptions(
+        {
+          title: t('declarations.targetAmountReached'),
+          message: t('declarations.targetAmountReachedMessage'),
+          options,
+          cancelButtonIndex,
+        },
+        buttonIndex => {
+          if (buttonIndex === 0) {
+            handleSaveDraft();
+          } else if (buttonIndex === 1) {
+            handleSubmit();
+          }
+        },
+      );
+    } else {
+      handleSaveDraft();
+    }
+  };
+
+  const handleSaveDraft = () => {
+    saveDeclarationDraft(
+      {
+        sesId: declaration?.sesId ?? '',
+        apuId: user?.apuId!,
+        lines: declarationLines,
+      },
+      {
+        onSuccess: () => {
+          toast('Draft saved successfully', ToastTypes.SUCCESS);
+        },
+        onError: (error: any) => {
+          toast(`Error saving draft: ${error.message}`, ToastTypes.ERROR);
+        },
+      },
+    );
+  };
+
   const handleSubmit = () => {
-    mutate(
+    submitDeclaration(
       {
         sesId: declaration?.sesId ?? '',
         apuId: user?.apuId!,
@@ -235,7 +292,7 @@ const DeclarationScreen = ({route}: Props) => {
         onSuccess: (declarations: Declaration[]) => {
           declarationSubmittedSheetRef.current?.present(declarations[0]);
         },
-        onError: error => {
+        onError: (error: any) => {
           toast(
             `Error submitting declaration: ${error.message}`,
             ToastTypes.ERROR,
@@ -256,17 +313,20 @@ const DeclarationScreen = ({route}: Props) => {
   const handleDeleteLine = React.useCallback(
     (line: DeclarationLine) => {
       Alert.alert(
-        `Are you sure you want to delete ${line.tekst}?`,
-        'This will delete the line permanently.',
+        t('declarations.areYouSureYouWantToDelete', {line: line.tekst}),
+        t('declarations.thisWillDeleteLinePermanently'),
         [
           {
-            text: 'delete',
+            text: t('common.delete'),
             style: 'destructive',
             onPress: () => {
               setDeclarationLines(prevLines =>
                 prevLines.filter(item => item.kode !== line.kode),
               );
-              toast('Line deleted successfully', ToastTypes.SUCCESS);
+              toast(
+                t('declarations.lineDeletedSuccessfully'),
+                ToastTypes.SUCCESS,
+              );
             },
           },
           {
@@ -276,7 +336,7 @@ const DeclarationScreen = ({route}: Props) => {
         ],
       );
     },
-    [setDeclarationLines, toast],
+    [setDeclarationLines, toast, t],
   );
 
   const totalDeclared =
@@ -291,6 +351,14 @@ const DeclarationScreen = ({route}: Props) => {
   const hasOverflown = leftToPay < 0;
   const isBelowExpected =
     totalDeclared > 0 && leftToPay > 0 && totalDeclared < declarationAmount;
+  const hasReachedTarget = leftToPay === 0;
+
+  const getButtonText = () => {
+    if (hasOverflown || isBelowExpected || !hasReachedTarget) {
+      return t('declarations.saveDraft');
+    }
+    return t('declarations.submit');
+  };
 
   const renderEmptyList = React.useCallback(() => {
     return <EmptyList isLoading={isPending} />;
@@ -341,9 +409,9 @@ const DeclarationScreen = ({route}: Props) => {
                     <Typography
                       color="white"
                       variant="h3"
-                      text={`Declaration ${moment(declaration?.datum).format(
-                        'DD MMM YYYY',
-                      )}`}
+                      text={`${t('declarations.declaration')} ${moment(
+                        declaration?.datum,
+                      ).format('DD MMM YYYY')}`}
                     />
                   </View>
                   <DeclarationImageButton
@@ -356,7 +424,9 @@ const DeclarationScreen = ({route}: Props) => {
                   variant="b2"
                   color="rgba(255, 255, 255, 0.47)"
                   text={
-                    hasOverflown ? 'Total exceeded by' : 'Left to be declared'
+                    hasOverflown
+                      ? t('declarations.totalExceededBy')
+                      : t('declarations.leftToBeDeclared')
                   }
                   fontWeight="500"
                 />
@@ -379,7 +449,7 @@ const DeclarationScreen = ({route}: Props) => {
                     variant="h5"
                     fontWeight="500"
                     color="white"
-                    text={`Target amount: ${formatCurrency(
+                    text={`${t('declarations.targetAmount')}: ${formatCurrency(
                       declaration?.bedrag ?? 0,
                     )}`}
                   />
@@ -388,7 +458,7 @@ const DeclarationScreen = ({route}: Props) => {
                   <Typography
                     variant="h2"
                     color="white"
-                    text="Details"
+                    text={t('declarations.details')}
                     fontWeight="300"
                     textStyle={{marginBottom: 10}}
                   />
@@ -396,7 +466,7 @@ const DeclarationScreen = ({route}: Props) => {
                     <View style={styles.detailItemContainer}>
                       <Typography
                         variant="h6"
-                        text="Date"
+                        text={t('declarations.date')}
                         textStyle={styles.detailsTitle}
                       />
                       <Typography
@@ -408,7 +478,7 @@ const DeclarationScreen = ({route}: Props) => {
                     <View style={styles.detailItemContainer}>
                       <Typography
                         variant="h6"
-                        text="Department"
+                        text={t('declarations.department')}
                         textStyle={styles.detailsTitle}
                       />
                       <Typography
@@ -422,7 +492,7 @@ const DeclarationScreen = ({route}: Props) => {
                     <View style={styles.detailItemContainer}>
                       <Typography
                         variant="h6"
-                        text="Provider"
+                        text={t('declarations.provider')}
                         textStyle={styles.detailsTitle}
                       />
                       <Typography
@@ -434,7 +504,7 @@ const DeclarationScreen = ({route}: Props) => {
                     <View style={styles.detailItemContainer}>
                       <Typography
                         variant="h6"
-                        text="Declaratie Id"
+                        text={t('declarations.declarationId')}
                         textStyle={styles.detailsTitle}
                       />
                       <Typography
@@ -449,7 +519,7 @@ const DeclarationScreen = ({route}: Props) => {
                 <Typography
                   variant="h2"
                   color="white"
-                  text="Declaration lines"
+                  text={t('declarations.declarationLines')}
                   fontWeight="300"
                   textStyle={styles.declarationLinesTitle}
                 />
@@ -475,7 +545,7 @@ const DeclarationScreen = ({route}: Props) => {
                   <View style={styles.buttonContainer}>
                     <Button
                       variant="secondary"
-                      text="Add line"
+                      text={t('declarations.addLine')}
                       // @ts-ignore
                       buttonStyle={[
                         styles.addLineButton,
@@ -486,17 +556,16 @@ const DeclarationScreen = ({route}: Props) => {
                     />
                     <Button
                       variant="primary"
-                      text="Submit declaration"
+                      text={getButtonText()}
                       disabled={
                         isPending ||
+                        isSavingDraft ||
                         declarationLines.length === 0 ||
-                        hasOverflown ||
-                        isBelowExpected ||
                         !canEdit
                       }
                       buttonStyle={styles.flex}
-                      loading={isPending}
-                      onPress={handleSubmit}
+                      loading={isPending || isSavingDraft}
+                      onPress={handleSave}
                     />
                   </View>
                   {isBelowExpected && (
@@ -517,9 +586,9 @@ const DeclarationScreen = ({route}: Props) => {
                       <Typography
                         variant="b1"
                         fontSize={12}
-                        text={
-                          'Total declared amount is below the expected amount.'
-                        }
+                        text={t(
+                          'declarations.totalAmountLowerThanExpectedAmount',
+                        )}
                         color="black"
                         fontStyle="italic"
                         textStyle={{marginTop: 5}}

@@ -20,6 +20,7 @@ import useFetchDeclarations from '../hooks/useFetchDeclarations';
 import {currencyFormatter} from '../utils';
 import {DeclarationStatus} from '../types/declarations';
 import useDeleteDeclaration from '../hooks/useDeleteDeclaration';
+import {useTranslation} from 'react-i18next';
 
 const DeclarationsList = ({
   apuId,
@@ -28,6 +29,7 @@ const DeclarationsList = ({
   apuId: number;
   status: DeclarationStatus[];
 }) => {
+  const {t} = useTranslation();
   const navigation = useNavigation();
   const {
     colors: {darkGray, gray, primary},
@@ -129,10 +131,10 @@ const DeclarationsList = ({
                   fontSize={12}
                   text={
                     isInDraft
-                      ? 'Draft'
+                      ? t('declarations.draft')
                       : hasBeenSubmitted
-                      ? 'Submitted'
-                      : 'In Progress'
+                      ? t('declarations.submitted')
+                      : t('declarations.inProgress')
                   }
                 />
               )}
@@ -152,7 +154,7 @@ const DeclarationsList = ({
                     fontStyle="italic"
                     fontWeight="600"
                     fontSize={12}
-                    text="Action Required"
+                    text={t('declarations.actionRequired')}
                   />
                 </View>
               )}
@@ -184,10 +186,14 @@ const DeclarationsList = ({
       <View style={styles.noDeclarationsFoundContainer}>
         <Typography
           textStyle={styles.noDeclarationsFoundText}
-          text="Geen declaraties gevonden"
+          text={t('declarations.noDeclarationsFound')}
           variant="h4"
         />
-        <Button onPress={() => refetch()} variant="primary" text="refresh" />
+        <Button
+          onPress={() => refetch()}
+          variant="primary"
+          text={t('common.refresh')}
+        />
       </View>
     );
   };

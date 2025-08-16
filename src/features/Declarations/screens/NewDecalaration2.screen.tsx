@@ -47,6 +47,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-date-picker';
 import useFetchCountries from '@src/hooks/useFetchCountries';
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import {useTranslation} from 'react-i18next';
 
 type Props = {
   navigation: NavigationProp<{}>;
@@ -63,6 +64,7 @@ const NewDeclarationScreen = ({}: Props) => {
   const styles = makeStyles(theme);
   const toast = useToast();
   const {showActionSheetWithOptions} = useActionSheet();
+  const {t} = useTranslation();
 
   const inputStyles = {
     inputAndroidStyle: {...styles.inputStyle},
@@ -79,17 +81,24 @@ const NewDeclarationScreen = ({}: Props) => {
       validateOnChange: false,
       validationSchema: Yup.object().shape({
         totalAmount: Yup.number()
-          .required('Total amount is required')
-          .positive('Total amount must be a positive number'),
+          .required(t('validators.requiredField'))
+          .typeError(t('validators.onlyNumbers'))
+          .positive(t('validators.onlyNumbers')),
         selectedDepartmentId: Yup.number()
-          .required('Department is required')
-          .positive('Department must be a positive number'),
+          .required(t('validators.requiredField'))
+          .typeError(t('validators.onlyNumbers'))
+          .positive(t('validators.onlyNumbers')),
         selectedProviderId: Yup.string()
-          .required('Provider is required')
-          .min(1, 'Provider is required'),
-        date: Yup.string().required('Date is required'),
-        country: Yup.string().required('Country is required'),
-        image: Yup.mixed<Asset>().nullable().required('Image is required'),
+          .required(t('validators.requiredField'))
+          .typeError(t('validators.onlyNumbers'))
+          .min(1, t('validators.requiredField')),
+        date: Yup.string().required(t('validators.requiredField')),
+        country: Yup.string()
+          .required(t('validators.requiredField'))
+          .typeError(t('validators.onlyNumbers')),
+        image: Yup.mixed<Asset>()
+          .nullable()
+          .required(t('validators.requiredField')),
         artNaam: Yup.string(),
       }),
       initialValues: {
@@ -126,7 +135,10 @@ const NewDeclarationScreen = ({}: Props) => {
           },
           {
             onSuccess: data => {
-              toast('Declaration created successfully', ToastTypes.SUCCESS);
+              toast(
+                t('newDeclaration.declarationCreatedSuccessfully'),
+                ToastTypes.SUCCESS,
+              );
 
               //@ts-ignore
               navigate('Declaration', {
@@ -172,7 +184,11 @@ const NewDeclarationScreen = ({}: Props) => {
 
     showActionSheetWithOptions(
       {
-        options: ['Take picture', 'Choose from gallery', 'cancel'],
+        options: [
+          t('newDeclaration.takePicture'),
+          t('newDeclaration.selectFromGallery'),
+          t('common.cancel'),
+        ],
         cancelButtonIndex,
       },
       buttonIndex => {
@@ -302,7 +318,7 @@ const NewDeclarationScreen = ({}: Props) => {
                   <Typography
                     color="white"
                     variant="h2"
-                    text="New Declaration"
+                    text={t('newDeclaration.newDeclaration')}
                   />
                 </View>
                 <View style={styles.imageUploadWrapper}>
@@ -331,7 +347,7 @@ const NewDeclarationScreen = ({}: Props) => {
                         <Typography
                           color="white"
                           align="center"
-                          text="Add Photo"
+                          text={t('newDeclaration.pressToUploadPhoto')}
                           fontWeight="bold"
                           variant="h5"
                           textStyle={{marginTop: 10}}
@@ -348,9 +364,13 @@ const NewDeclarationScreen = ({}: Props) => {
                   )}
                 </View>
                 <View style={styles.hr} />
-                <Typography variant="h2" color="white" text="Info" />
+                <Typography
+                  variant="h2"
+                  color="white"
+                  text={t('newDeclaration.information')}
+                />
                 <TextInput
-                  label="Total Amount"
+                  label={t('newDeclaration.amount')}
                   mainColor="white"
                   value={values.totalAmount}
                   onChangeText={handleChange('totalAmount')}
@@ -360,7 +380,7 @@ const NewDeclarationScreen = ({}: Props) => {
                   error={errors.totalAmount}
                 />
                 <SelectInput
-                  label={'Country'}
+                  label={t('declarations.country')}
                   onValueChange={handleCountryChange}
                   items={countryOptions}
                   value={values.country}
@@ -373,7 +393,7 @@ const NewDeclarationScreen = ({}: Props) => {
                   {...inputStyles}
                 />
                 <SelectInput
-                  label={'Department'}
+                  label={t('declarations.department')}
                   onValueChange={value => {
                     if (value) {
                       setFieldValue('selectedDepartmentId', Number(value));
@@ -391,7 +411,7 @@ const NewDeclarationScreen = ({}: Props) => {
                 />
                 {freeTextDeclaration ? (
                   <TextInput
-                    label="Provider"
+                    label={t('declarations.provider')}
                     mainColor="white"
                     value={values.selectedProviderId || ''}
                     onChangeText={handleChange('selectedProviderId')}
@@ -400,7 +420,7 @@ const NewDeclarationScreen = ({}: Props) => {
                   />
                 ) : (
                   <SelectInput
-                    label={'Provider'}
+                    label={t('declarations.provider')}
                     onValueChange={value => {
                       if (value) {
                         setFieldValue('selectedProviderId', Number(value));
@@ -418,7 +438,7 @@ const NewDeclarationScreen = ({}: Props) => {
                   />
                 )}
                 <SelectInput
-                  label={'Currency'}
+                  label={t('declarations.currency')}
                   onValueChange={value => {
                     if (value) {
                       setFieldValue('currency', value);
@@ -437,7 +457,7 @@ const NewDeclarationScreen = ({}: Props) => {
                 />
                 <TouchableOpacity onPress={openDateModal}>
                   <TextInput
-                    label="Date"
+                    label={t('newDeclaration.date')}
                     disabled
                     mainColor="white"
                     value={values.date}
@@ -450,7 +470,7 @@ const NewDeclarationScreen = ({}: Props) => {
                 <Button
                   loading={isPending}
                   variant="primary"
-                  text="Submit"
+                  text={t('common.save')}
                   onPress={() => handleSubmit()}
                   buttonStyle={styles.buttonStyle}
                   textStyle={styles.buttonTextStyle}

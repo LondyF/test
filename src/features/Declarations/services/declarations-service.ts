@@ -171,6 +171,27 @@ export const fetchDeclarationSession = async ({
   });
 };
 
+export const saveDeclarationDraft = async ({
+  sesId,
+  apuId,
+  lines: regels,
+}: {
+  sesId: string;
+  apuId: number;
+  lines: DeclarationLine[];
+}) => {
+  return await request({
+    url: '/app-declaration1/session',
+    method: 'POST',
+    data: {
+      fase: 'SAVE',
+      sesId,
+      apuId,
+      regels,
+    },
+  });
+};
+
 export const submitDeclaration = async ({
   sesId,
   apuId,

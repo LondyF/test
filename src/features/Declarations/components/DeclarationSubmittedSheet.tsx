@@ -6,7 +6,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {Platform, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faCircleCheck} from '@fortawesome/pro-solid-svg-icons';
@@ -14,10 +14,15 @@ import {faCircleCheck} from '@fortawesome/pro-solid-svg-icons';
 import {Button, Typography} from '@src/components';
 import useTheme from '@src/hooks/useTheme';
 import Svg, {Line} from 'react-native-svg';
-import {Declaration, DeclarationLine} from '../types/declarations';
+import {
+  Declaration,
+  DeclarationLine,
+  DeclarationStatus,
+} from '../types/declarations';
 import moment from 'moment';
 import StepIndicator from './StepIndicator';
 import {StackActions, useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 const DashedSvgLine = ({style}: {style?: StyleProp<ViewStyle>}) => (
   <Svg height="8" width="100%" style={style}>
@@ -104,7 +109,7 @@ const DeclarationSubmittedSheet = React.forwardRef<
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-
+  const {t} = useTranslation();
   const styles = createStylesWithInsets(insets);
 
   const BackdropComponent = React.useCallback(
@@ -138,12 +143,12 @@ const DeclarationSubmittedSheet = React.forwardRef<
         <Typography
           variant="h3"
           fontWeight="bold"
-          text="Declaration Submitted"
+          text={t('declarations.declarationSubmitted')}
           textStyle={{textAlign: 'center'}}
         />
         <Typography
           variant="h4"
-          text="Amout declared"
+          text={t('declarations.amountDeclared')}
           textStyle={{textAlign: 'center', marginTop: 20, marginBottom: 10}}
           color="#929191"
         />
@@ -156,7 +161,11 @@ const DeclarationSubmittedSheet = React.forwardRef<
         <DashedSvgLine style={{marginVertical: 25}} />
         <View style={{gap: 15}}>
           <View style={styles.infoContainer}>
-            <Typography variant="h5" text="Department" color="#585858" />
+            <Typography
+              variant="h5"
+              text={t('declarations.department')}
+              color="#585858"
+            />
             <Typography
               variant="h4"
               text={declaration?.vkcNaam}
@@ -164,7 +173,11 @@ const DeclarationSubmittedSheet = React.forwardRef<
             />
           </View>
           <View style={styles.infoContainer}>
-            <Typography variant="h5" text="Provider" color="#585858" />
+            <Typography
+              variant="h5"
+              text={t('declarations.provider')}
+              color="#585858"
+            />
             <Typography
               variant="h4"
               text={declaration?.artNaam}
@@ -172,7 +185,11 @@ const DeclarationSubmittedSheet = React.forwardRef<
             />
           </View>
           <View style={styles.infoContainer}>
-            <Typography variant="h5" text="Date" color="#585858" />
+            <Typography
+              variant="h5"
+              text={t('declarations.date')}
+              color="#585858"
+            />
             <Typography
               variant="h4"
               text={moment(declaration?.datum).format('DD MMM YYYY')}
@@ -180,7 +197,11 @@ const DeclarationSubmittedSheet = React.forwardRef<
             />
           </View>
           <View style={styles.infoContainer}>
-            <Typography variant="h5" text="ID" color="#585858" />
+            <Typography
+              variant="h5"
+              text={t('declarations.declarationId')}
+              color="#585858"
+            />
             <Typography
               variant="h4"
               text={String(declaration?.nummer)}
@@ -202,9 +223,16 @@ const DeclarationSubmittedSheet = React.forwardRef<
         <DashedSvgLine style={{marginTop: 0, marginBottom: 10}} />
         <StepIndicator
           style={{marginBottom: 10}}
-          currentStep={declaration?.progressId}
+          currentStep={declaration?.progressId ?? (0 as DeclarationStatus)}
         />
-        <Button variant="primary" text="Close" onPress={handleClose} />
+        <Button
+          variant="primary"
+          text={t('common.close')}
+          onPress={handleClose}
+          buttonStyle={{
+            marginBottom: Platform.OS === 'ios' ? 0 : 10,
+          }}
+        />
       </BottomSheetView>
     </BottomSheetModal>
   );

@@ -33,6 +33,7 @@ import {
   type DeclarationAdditionalInfo as DeclarationAdditionalInfoType,
 } from '../types/declarations';
 import useSaveDeclarationPhoto from '../hooks/useSaveDeclarationPhoto';
+import {useTranslation} from 'react-i18next';
 
 type AdditionalInfo = {
   additionalInfo: string;
@@ -111,6 +112,8 @@ const ReuploadPhotoSheetContent = ({
   additionalInfo: AdditionalInfo;
   isPending: boolean;
 }) => {
+  const {t} = useTranslation();
+
   const {showActionSheetWithOptions} = useActionSheet();
   const styles = createStyles(useSafeAreaInsets());
   const [photo, setPhoto] = React.useState<Asset | null>(null);
@@ -145,7 +148,11 @@ const ReuploadPhotoSheetContent = ({
 
     showActionSheetWithOptions(
       {
-        options: ['Take picture', 'Choose from gallery', 'cancel'],
+        options: [
+          t('newDeclaration.takePicture'),
+          t('newDeclaration.selectFromGallery'),
+          t('common.cancel'),
+        ],
         cancelButtonIndex,
       },
       buttonIndex => {
@@ -165,11 +172,11 @@ const ReuploadPhotoSheetContent = ({
       <View>
         <ExplanationBody
           explanation={additionalInfo?.additionalInfo ?? ''}
-          boldCallToAction="Please review and correct the discrepancies to proceed."
+          boldCallToAction={t('declarations.pleaseReviewAndCorrect')}
         />
         <Button
           variant="primary"
-          text="Upload photo"
+          text={t('declarations.uploadPhoto')}
           onPress={() => setState('upload_photo')}
         />
       </View>
@@ -181,7 +188,7 @@ const ReuploadPhotoSheetContent = ({
       <View>
         <Typography
           variant="b1"
-          text="Please upload a clear photo of your receipt or document."
+          text={t('declarations.pleaseUploadClearPhoto')}
           fontSize={12}
           color="#585858"
           textStyle={styles.body}
@@ -192,7 +199,7 @@ const ReuploadPhotoSheetContent = ({
           ) : (
             <Typography
               variant="b1"
-              text="Tap to upload a photo"
+              text={t('newDeclaration.pressToUploadPhoto')}
               fontWeight="bold"
               fontSize={12}
               color="#585858"
@@ -202,7 +209,7 @@ const ReuploadPhotoSheetContent = ({
         <Button
           loading={isPending}
           variant="primary"
-          text="Upload photo"
+          text={t('declarations.uploadPhoto')}
           onPress={() => {
             onUpload(photo);
           }}
@@ -217,10 +224,10 @@ const ReuploadPhotoSheetContent = ({
       <View>
         <Typography
           variant="b1"
-          text="The photo of your receipt or document has been submitted. Your declaration will continue progressing"
+          text={t('declarations.photoSubmitted')}
           textStyle={styles.body}
         />
-        <Button variant="primary" text="Close" onPress={onClose} />
+        <Button variant="primary" text={t('common.close')} onPress={onClose} />
       </View>
     );
   }
@@ -237,7 +244,7 @@ const ActionRequiredSheet = forwardRef<
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const insets = useSafeAreaInsets();
   const styles = createStyles(insets);
-
+  const {t} = useTranslation();
   const {mutate: saveDeclarationPhoto, isPending} = useSaveDeclarationPhoto();
 
   const [additionalInfo, setAdditionalInfo] = React.useState<AdditionalInfo>();
@@ -307,7 +314,11 @@ const ActionRequiredSheet = forwardRef<
         <Typography
           variant="h3"
           fontWeight="bold"
-          text={state === 'success' ? 'Document submitted' : 'Action Required'}
+          text={
+            state === 'success'
+              ? t('declarations.documentSubmitted')
+              : t('declarations.actionRequired')
+          }
           textStyle={{textAlign: 'center'}}
         />
         {additionalInfo?.additionalInfoId ===
@@ -327,11 +338,11 @@ const ActionRequiredSheet = forwardRef<
           <>
             <ExplanationBody
               explanation={additionalInfo?.additionalInfo ?? ''}
-              boldCallToAction="Please review and correct the discrepancies to proceed."
+              boldCallToAction={t('declarations.pleaseReviewAndCorrect')}
             />
             <Button
               variant="primary"
-              text="Close"
+              text={t('common.close')}
               onPress={() => bottomSheetModalRef.current?.dismiss()}
             />
           </>
