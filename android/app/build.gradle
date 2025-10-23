@@ -78,6 +78,10 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     namespace "com.misalumobileapp"
     defaultConfig {
         applicationId "net.sqlapius.iSQSalu"
