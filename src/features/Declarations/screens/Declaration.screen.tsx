@@ -49,6 +49,9 @@ import ActionRequiredSheet, {
 import {useTranslation} from 'react-i18next';
 import useSaveDeclarationDraft from '../hooks/useSaveDeclarationDraft';
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import DeclarationCompletedSheet, {
+  DeclarationCompletedSheetRef,
+} from '../components/DeclarationCompletedSheet';
 
 const LINEAR_BACKGROUND_COLORS = ['#50329F', '#8F76CF', '#AE98E7', '#FFFFFF'];
 const LINEAR_BACKGROUND_LOCATIONS = [0, 0.17, 0.31, 1];
@@ -197,10 +200,18 @@ const DeclarationScreen = ({route}: Props) => {
     }
   }, [declaration?.progressId, declaration]);
 
+  React.useEffect(() => {
+    if (declaration?.progressId === DeclarationStatus.COMPLETED) {
+      declarationCompletedSheetRef.current?.present(declaration);
+    }
+  }, [declaration?.progressId, declaration]);
+
   const addLineSheetRef = React.useRef<AddDeclarationLineSheetRef>(null);
   const declarationSubmittedSheetRef =
     React.useRef<DeclarationSubmittedSheetRef>(null);
   const actionRequiredSheetRef = React.useRef<ActionRequiredSheetRef>(null);
+  const declarationCompletedSheetRef =
+    React.useRef<DeclarationCompletedSheetRef>(null);
 
   const handlePresentModalPress = React.useCallback(() => {
     addLineSheetRef.current?.present();
@@ -609,6 +620,10 @@ const DeclarationScreen = ({route}: Props) => {
         />
         <DeclarationSubmittedSheet
           ref={declarationSubmittedSheetRef}
+          currencyFormatter={formatCurrency}
+        />
+        <DeclarationCompletedSheet
+          ref={declarationCompletedSheetRef}
           currencyFormatter={formatCurrency}
         />
         <ActionRequiredSheet ref={actionRequiredSheetRef} />

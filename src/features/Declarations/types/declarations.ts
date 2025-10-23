@@ -28,6 +28,7 @@ export interface Photo {
 }
 
 export interface DeclarationLine {
+  info: string;
   aantal: number;
   kode: string;
   tekst: string;
@@ -77,6 +78,7 @@ export interface Declaration {
   freeTxt: number;
   addInfo: string;
   addInfoId: DeclarationAdditionalInfo;
+  kurensieBetaling: string;
 }
 
 export interface Procedure {

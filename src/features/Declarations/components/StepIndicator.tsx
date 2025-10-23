@@ -29,9 +29,9 @@ const StepIndicator = ({
         return 0; // Sent
       case DeclarationStatus.ACTION_REQUIRED:
         return 1; // Pending Info
-      case DeclarationStatus.COMPLETED:
-        return 2; // Approved
       case DeclarationStatus.IN_PROGRESS:
+        return 2; // Approved
+      case DeclarationStatus.COMPLETED:
         return 3; // Refund
       default:
         return 0; // Default to Sent
@@ -43,7 +43,7 @@ const StepIndicator = ({
   return (
     <View style={[styles.container, style]}>
       {steps.map((step, index) => {
-        const isActive = index === activeStepIndex;
+        const isActive = index <= activeStepIndex;
 
         return (
           <TouchableOpacity key={step} style={styles.stepContainer}>

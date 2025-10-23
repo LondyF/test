@@ -35,6 +35,10 @@ const RESULT_LEVEL: Record<string, {text: string; color: ColorValue}> = {
     text: 'Normal',
     color: '#16c44d',
   },
+  X: {
+    text: '-',
+    color: '',
+  },
 };
 
 const LabResult: React.FC<LabResultProps> = ({
@@ -65,7 +69,7 @@ const LabResult: React.FC<LabResultProps> = ({
             <View
               style={[
                 styles.resultLevelBulletIndicator,
-                {backgroundColor: RESULT_LEVEL[hoogLaag ?? 'N'].color},
+                {backgroundColor: RESULT_LEVEL[hoogLaag ?? 'X'].color},
               ]}
             />
             <Typography
@@ -79,8 +83,8 @@ const LabResult: React.FC<LabResultProps> = ({
             variant="b2"
             fontWeight="500"
             textStyle={styles.resultLevelText}
-            text={RESULT_LEVEL[hoogLaag ?? 'N'].text}
-            color={RESULT_LEVEL[hoogLaag ?? 'N'].color}
+            text={RESULT_LEVEL[hoogLaag ?? 'X'].text}
+            color={RESULT_LEVEL[hoogLaag ?? 'X'].color}
           />
         </View>
         <View style={styles.testResultContainer}>

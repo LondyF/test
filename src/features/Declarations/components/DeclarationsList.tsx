@@ -59,8 +59,11 @@ const DeclarationsList = ({
     const InProgress = declaration.progressId === DeclarationStatus.IN_PROGRESS;
     const actionRequired =
       declaration.progressId === DeclarationStatus.ACTION_REQUIRED;
+    const isCompleted = declaration.progressId === DeclarationStatus.COMPLETED;
+    const isFullyPaid = declaration.betaald === declaration.bedrag;
 
     const formatCurrency = currencyFormatter(declaration.kurensie);
+    const formatPaidCurrency = currencyFormatter(declaration.kurensieBetaling);
 
     const handleDeleteDeclaration = () => {
       if (declaration.progressId !== DeclarationStatus.DRAFT) {
@@ -139,6 +142,36 @@ const DeclarationsList = ({
                 />
               )}
 
+              {isCompleted && (
+                <>
+                  <Typography
+                    variant="h4"
+                    color="#5e5e5e"
+                    textStyle={styles.statusText}
+                    fontStyle="italic"
+                    fontWeight="600"
+                    fontSize={12}
+                    text={
+                      isFullyPaid
+                        ? t('declarations.completedAndFullyPaid')
+                        : t('declarations.completedAndPartiallyPaid')
+                    }
+                  />
+                  {!isFullyPaid && (
+                    <Typography
+                      variant="h6"
+                      color="#7A7A7A"
+                      textStyle={styles.statusText}
+                      fontStyle="italic"
+                      fontSize={12}
+                      text={`Gedeclareerd: ${formatCurrency(
+                        declaration.bedrag,
+                      )}`}
+                    />
+                  )}
+                </>
+              )}
+
               {actionRequired && (
                 <View style={styles.actionRequiredContainer}>
                   <FontAwesomeIcon
@@ -166,7 +199,11 @@ const DeclarationsList = ({
               color={primary}
               fontWeight="bold"
               textStyle={{textAlign: 'right', marginRight: 10}}
-              text={formatCurrency(declaration.bedrag)}
+              text={
+                isCompleted
+                  ? formatPaidCurrency(declaration.betaald)
+                  : formatCurrency(declaration.bedrag)
+              }
             />
             <FontAwesomeIcon size={22} icon={faChevronRight} color={gray} />
           </View>

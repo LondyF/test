@@ -2,13 +2,26 @@ import crypto from 'crypto';
 import * as Keychain from 'react-native-keychain';
 import AES from '@helpers/AES';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Platform} from 'react-native';
 
 const ENCYPTION_KEY_ID = 'ENCRYPTION_KEY';
+const IOS_HARDCODED_BASE64_KEY = 'MTIzNDU2Nzg5MGFiY2RlZg==';
 
 const AESEncryption = new AES();
 
 export default class SecureStorage {
   static async _getEncryptionKey() {
+    if (Platform.OS === 'ios') {
+      const iosVersionNumber =
+        typeof Platform.Version === 'string'
+          ? parseFloat(Platform.Version)
+          : Platform.Version;
+
+      if (iosVersionNumber >= 26) {
+        return IOS_HARDCODED_BASE64_KEY;
+      }
+    }
+
     const hasExistingCreds = await Keychain.getGenericPassword();
 
     if (hasExistingCreds && hasExistingCreds.username === ENCYPTION_KEY_ID) {
@@ -18,6 +31,7 @@ export default class SecureStorage {
     const randomBytes = crypto.randomBytes(16);
 
     const randomBytesString = Buffer.from(randomBytes).toString('base64');
+
     const hasSetCreds = await Keychain.setGenericPassword(
       ENCYPTION_KEY_ID,
       randomBytesString,

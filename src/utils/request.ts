@@ -59,9 +59,6 @@ const request = async ({
     const testURL = await SecureStorage.getItem(Config.TEST_MODE_STORAGE_KEY);
     const loadFromCache = !(await hasConnectionAndHasInternet());
     const cacheKey = data?.apuId + (data?.mdsId ?? 0);
-    console.log(testURL);
-
-    console.log(Config);
 
     const response = !loadFromCache
       ? await client({

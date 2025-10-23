@@ -6,79 +6,18 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import {Platform, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faCircleCheck} from '@fortawesome/pro-solid-svg-icons';
 
 import {Button, Typography} from '@src/components';
-import useTheme from '@src/hooks/useTheme';
-import Svg, {Line} from 'react-native-svg';
-import {
-  Declaration,
-  DeclarationLine,
-  DeclarationStatus,
-} from '../types/declarations';
+import {Declaration, DeclarationStatus} from '../types/declarations';
 import moment from 'moment';
 import StepIndicator from './StepIndicator';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-
-const DashedSvgLine = ({style}: {style?: StyleProp<ViewStyle>}) => (
-  <Svg height="8" width="100%" style={style}>
-    <Line
-      x1="0"
-      y1="5"
-      x2="100%"
-      y2="5"
-      stroke="#DCDCDC"
-      strokeWidth="4"
-      strokeDasharray="15,10"
-    />
-  </Svg>
-);
-
-const SuccessIcon = () => {
-  const theme = useTheme();
-  const styles = createStylesWithInsets(useSafeAreaInsets());
-
-  return (
-    <View style={styles.successIconContainer}>
-      <FontAwesomeIcon
-        icon={faCircleCheck}
-        size={80}
-        color={theme.colors.primary}
-      />
-    </View>
-  );
-};
-
-const DeclarationLineItem = ({
-  item,
-  currencyFormatter,
-}: {
-  item: DeclarationLine;
-  currencyFormatter: (value: number) => string;
-}) => {
-  const {tekst, bedrag, aantal: aantalFromItem} = item;
-
-  const aantal = aantalFromItem ?? 1;
-  const total = aantal * bedrag;
-
-  const styles = createStylesWithInsets(useSafeAreaInsets());
-
-  return (
-    <View style={styles.declarationLineItem}>
-      <Typography variant="h5" text={aantal + ' x ' + tekst} color="#585858" />
-      <Typography
-        variant="h5"
-        text={currencyFormatter(total)}
-        fontWeight="500"
-        textStyle={{textAlign: 'center'}}
-      />
-    </View>
-  );
-};
+import DashedSvgLine from './DashedSvgLine';
+import DeclarationSuccessIcon from './DeclarationSuccessIcon';
+import DeclarationLineItem from './DeclarationLineItem';
 
 export type DeclarationSubmittedSheetRef = {
   present: (declaration: Declaration) => void;
@@ -137,7 +76,7 @@ const DeclarationSubmittedSheet = React.forwardRef<
     <BottomSheetModal
       ref={bottomSheetModalRef}
       enableDynamicSizing={true}
-      handleComponent={SuccessIcon}
+      handleComponent={DeclarationSuccessIcon}
       backdropComponent={BackdropComponent}>
       <BottomSheetView style={styles.sheet}>
         <Typography
@@ -249,29 +188,6 @@ const createStylesWithInsets = (insets: EdgeInsets) =>
     bottomsheetBackdrop: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(0, 0, 0, 1)',
-    },
-    hr: {
-      borderBottomStyle: 'dashed',
-      borderBottomWidth: 5,
-      borderColor: '#DCDCDC',
-      width: '100%',
-    },
-    successIconContainer: {
-      width: 110,
-      height: 110,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'white',
-      position: 'absolute',
-      borderRadius: 55,
-      top: -55,
-      alignSelf: 'center',
-    },
-    declarationLineItem: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      marginBottom: 20,
     },
     infoContainer: {
       flexDirection: 'row',

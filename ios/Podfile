@@ -86,6 +86,26 @@ target 'MiSaluMobileApp' do
       target.build_configurations.each do |config|
       # some older pods don't support some architectures, anything over iOS 11 resolves that
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+        # Ensure arm64 simulator builds are allowed (needed for iOS 26.0 simulators)
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = ''
+      end
+    end
+
+    # Also remove simulator arm64 exclusion from generated xcconfig files
+    installer.aggregate_targets.each do |aggregate_target|
+      aggregate_target.xcconfigs.each do |config_name, xcconfig|
+        if xcconfig.attributes['EXCLUDED_ARCHS[sdk=iphonesimulator*]']
+          xcconfig.attributes.delete('EXCLUDED_ARCHS[sdk=iphonesimulator*]')
+          File.open(aggregate_target.xcconfig_path(config_name), 'w') { |out| out << xcconfig.to_s }
+        end
+      end
+      if aggregate_target.respond_to?(:user_target_xcconfigs)
+        aggregate_target.user_target_xcconfigs.each do |config_name, xcconfig|
+          if xcconfig.attributes['EXCLUDED_ARCHS[sdk=iphonesimulator*]']
+            xcconfig.attributes.delete('EXCLUDED_ARCHS[sdk=iphonesimulator*]')
+            File.open(aggregate_target.user_target_xcconfig_path(config_name), 'w') { |out| out << xcconfig.to_s }
+          end
+        end
       end
     end
 
