@@ -275,6 +275,7 @@ const DeclarationScreen = ({route}: Props) => {
   };
 
   const handleSaveDraft = () => {
+    console.log('handleSaveDraft', declarationLines);
     saveDeclarationDraft(
       {
         sesId: declaration?.sesId ?? '',

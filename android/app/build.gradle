@@ -87,8 +87,8 @@ android {
         applicationId "net.sqlapius.iSQSalu"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 39
-        versionName "36.3"
+        versionCode 41
+        versionName "37.0"
         missingDimensionStrategy 'react-native-camera', 'general' 
 
     }

@@ -36,7 +36,7 @@ const RESULT_LEVEL: Record<string, {text: string; color: ColorValue}> = {
     color: '#16c44d',
   },
   X: {
-    text: '-',
+    text: '',
     color: '',
   },
 };

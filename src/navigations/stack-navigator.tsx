@@ -23,7 +23,10 @@ const AppStackNavigator = () => {
 
   return (
     <StackNavigator.Navigator
-      screenOptions={{gestureEnabled: false, headerShown: false}}>
+      screenOptions={{
+        gestureEnabled: false,
+        headerShown: false,
+      }}>
       <StackNavigator.Screen name="Home" component={TabNavigator} />
       <StackNavigator.Screen
         name="AllPharmacies"

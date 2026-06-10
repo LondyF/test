@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Platform, StyleSheet, View} from 'react-native';
 import {
   BottomSheetBackdrop as BottomSheetBackdropComponent,
   BottomSheetBackdropProps,
@@ -190,10 +190,14 @@ const Content: React.FC<ContentProps> = ({
         onChangeText={handleChange('unitPrice')}
         error={errors.unitPrice}
         onFocus={() => {
-          shouldHandleKeyboardEvents.value = true;
+          if (Platform.OS === 'ios') {
+            shouldHandleKeyboardEvents.value = true;
+          }
         }}
         onBlur={() => {
-          shouldHandleKeyboardEvents.value = false;
+          if (Platform.OS === 'ios') {
+            shouldHandleKeyboardEvents.value = false;
+          }
         }}
       />
       <TextInput

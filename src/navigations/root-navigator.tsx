@@ -10,8 +10,7 @@ import useAuthStore from '@stores/useAuthStore';
 
 import AuthStack from './auth-navigator';
 import AppStack from './app-navigator';
-import {StatusBar} from 'react-native';
-import {INSURERS} from '@src/constants';
+import {Platform, StatusBar, View} from 'react-native';
 
 const RootNavigator = createStackNavigator();
 

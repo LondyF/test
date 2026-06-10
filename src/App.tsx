@@ -6,6 +6,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {useTranslation} from 'react-i18next';
 import {NotificationClickEvent, OneSignal} from 'react-native-onesignal';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {Loader} from '@components/index';
 import {primaryBlue} from '@styles/colors';
@@ -106,7 +107,9 @@ const App = () => {
       <NavigationContainer>
         <ActionSheetProvider>
           <ToastContainer>
-            <RootStack />
+            <SafeAreaProvider>
+              <RootStack />
+            </SafeAreaProvider>
           </ToastContainer>
         </ActionSheetProvider>
       </NavigationContainer>

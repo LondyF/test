@@ -15,7 +15,7 @@ import {faWarning} from '@fortawesome/pro-light-svg-icons';
 import {Button, ErrorView, ListItem, Typography} from '@src/components';
 import {Theme} from '@src/styles';
 import useTheme from '@src/hooks/useTheme';
-import {Declaration} from '../types/declarations';
+import {Declaration, FullyPaidStatus} from '../types/declarations';
 import useFetchDeclarations from '../hooks/useFetchDeclarations';
 import {currencyFormatter} from '../utils';
 import {DeclarationStatus} from '../types/declarations';
@@ -60,7 +60,6 @@ const DeclarationsList = ({
     const actionRequired =
       declaration.progressId === DeclarationStatus.ACTION_REQUIRED;
     const isCompleted = declaration.progressId === DeclarationStatus.COMPLETED;
-    const isFullyPaid = declaration.betaald === declaration.bedrag;
 
     const formatCurrency = currencyFormatter(declaration.kurensie);
     const formatPaidCurrency = currencyFormatter(declaration.kurensieBetaling);
@@ -152,23 +151,14 @@ const DeclarationsList = ({
                     fontWeight="600"
                     fontSize={12}
                     text={
-                      isFullyPaid
+                      declaration.volledigBetaald === FullyPaidStatus.FULLY_PAID
                         ? t('declarations.completedAndFullyPaid')
+                        : declaration.volledigBetaald ===
+                          FullyPaidStatus.REJECTED
+                        ? t('declarations.completedAndRejected')
                         : t('declarations.completedAndPartiallyPaid')
                     }
                   />
-                  {!isFullyPaid && (
-                    <Typography
-                      variant="h6"
-                      color="#7A7A7A"
-                      textStyle={styles.statusText}
-                      fontStyle="italic"
-                      fontSize={12}
-                      text={`Gedeclareerd: ${formatCurrency(
-                        declaration.bedrag,
-                      )}`}
-                    />
-                  )}
                 </>
               )}
 

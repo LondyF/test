@@ -10,13 +10,18 @@ import {Platform, StyleSheet, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Button, Typography} from '@src/components';
-import {Declaration, DeclarationStatus} from '../types/declarations';
+import {
+  Declaration,
+  DeclarationStatus,
+  FullyPaidStatus,
+} from '../types/declarations';
 import moment from 'moment';
 import StepIndicator from './StepIndicator';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import DashedSvgLine from './DashedSvgLine';
 import DeclarationSuccessIcon from './DeclarationSuccessIcon';
+import DeclarationRejectedIcon from './DeclarationRejectedIcon';
 import DeclarationLineItem from './DeclarationLineItem';
 import {currencyFormatter as currenyFormatterFn} from '../utils';
 import useTheme from '@src/hooks/useTheme';
@@ -74,8 +79,6 @@ const DeclarationCompletedSheet = React.forwardRef<
     navigation.dispatch(popAction);
   };
 
-  const isFullyPaid = declaration?.bedrag === declaration?.betaald;
-
   const formatInPaidCurrency = currenyFormatterFn(
     declaration?.kurensieBetaling ?? declaration?.kurensie ?? 'XCG',
   );
@@ -86,15 +89,22 @@ const DeclarationCompletedSheet = React.forwardRef<
     <BottomSheetModal
       ref={bottomSheetModalRef}
       enableDynamicSizing={true}
-      handleComponent={DeclarationSuccessIcon}
+      handleComponent={
+        declaration?.volledigBetaald === FullyPaidStatus.FULLY_PAID ||
+        declaration?.volledigBetaald === FullyPaidStatus.NOT_FULLY_PAID
+          ? DeclarationSuccessIcon
+          : DeclarationRejectedIcon
+      }
       backdropComponent={BackdropComponent}>
       <BottomSheetView style={styles.sheet}>
         <Typography
           variant="h3"
           fontWeight="bold"
           text={
-            isFullyPaid
+            declaration?.volledigBetaald === FullyPaidStatus.FULLY_PAID
               ? t('declarations.declarationPaid')
+              : declaration?.volledigBetaald === FullyPaidStatus.REJECTED
+              ? t('declarations.declarationRejected')
               : t('declarations.declarationPartiallyPaid')
           }
           textStyle={{textAlign: 'center'}}
@@ -131,6 +141,16 @@ const DeclarationCompletedSheet = React.forwardRef<
             color={theme.colors.primary}
           />
         </View>
+        {declaration?.addInfo && (
+          <View style={styles.additionalInfoContainer}>
+            <Typography
+              variant="h6"
+              text={declaration.addInfo}
+              fontWeight="500"
+              color="#333333"
+            />
+          </View>
+        )}
         <DashedSvgLine style={{marginVertical: 25}} />
         <View style={{gap: 15}}>
           <View style={styles.infoContainer}>
@@ -198,10 +218,12 @@ const DeclarationCompletedSheet = React.forwardRef<
           )}
         />
         <DashedSvgLine style={{marginTop: 0, marginBottom: 10}} />
-        <StepIndicator
-          style={{marginBottom: 10}}
-          currentStep={declaration?.progressId ?? (0 as DeclarationStatus)}
-        />
+        {declaration?.volledigBetaald !== FullyPaidStatus.REJECTED && (
+          <StepIndicator
+            style={{marginBottom: 10}}
+            currentStep={declaration?.progressId ?? (0 as DeclarationStatus)}
+          />
+        )}
         <Button
           variant="primary"
           text={t('common.close')}
@@ -231,6 +253,12 @@ const createStylesWithInsets = (insets: EdgeInsets) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+    },
+    additionalInfoContainer: {
+      backgroundColor: '#F5F5F5',
+      padding: 15,
+      borderRadius: 8,
+      marginTop: 15,
     },
   });
 

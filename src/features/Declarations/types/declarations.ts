@@ -56,6 +56,15 @@ export const DeclarationAdditionalInfo = {
 export type DeclarationAdditionalInfo =
   (typeof DeclarationAdditionalInfo)[keyof typeof DeclarationAdditionalInfo];
 
+export const FullyPaidStatus = {
+  REJECTED: -1,
+  NOT_FULLY_PAID: 0,
+  FULLY_PAID: 1,
+} as const;
+
+export type FullyPaidStatus =
+  (typeof FullyPaidStatus)[keyof typeof FullyPaidStatus];
+
 export interface Declaration {
   StatusIco: number;
   StatusInfo: unknown;
@@ -79,6 +88,7 @@ export interface Declaration {
   addInfo: string;
   addInfoId: DeclarationAdditionalInfo;
   kurensieBetaling: string;
+  volledigBetaald: FullyPaidStatus;
 }
 
 export interface Procedure {

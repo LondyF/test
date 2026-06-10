@@ -1,7 +1,8 @@
 import React from 'react';
-import { SafeAreaView, ImageBackground, ViewStyle, StyleSheet } from 'react-native';
+import {ImageBackground, ViewStyle, StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-import { Theme } from '@styles/index';
+import {Theme} from '@styles/index';
 
 interface PageContainerProps {
   children: React.ReactNode;
@@ -9,10 +10,18 @@ interface PageContainerProps {
   style?: ViewStyle;
 }
 
-const PageContainer: React.FC<PageContainerProps> = ({ children, style, variant = 'gray' }) => {
+const PageContainer: React.FC<PageContainerProps> = ({
+  children,
+  style,
+  variant = 'gray',
+}) => {
   return (
     <ImageBackground
-      style={[styles.container, style, { paddingHorizontal: Theme.spacing.horizontalPadding }]}
+      style={[
+        styles.container,
+        style,
+        {paddingHorizontal: Theme.spacing.horizontalPadding},
+      ]}
       source={
         variant === 'blue'
           ? require('@assets/BackgroundBlue.png')
@@ -24,7 +33,9 @@ const PageContainer: React.FC<PageContainerProps> = ({ children, style, variant 
           ? require('@assets/EnniaBackground.png')
           : null
       }>
-      <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>
+      <SafeAreaView style={[styles.container, style]} edges={['top', 'bottom']}>
+        {children}
+      </SafeAreaView>
     </ImageBackground>
   );
 };
