@@ -25,6 +25,7 @@ const AccountRejectedModal: React.FC<Props> = ({
     <Modal isVisible={isVisible}>
       <View style={styles.container}>
         <FontAwesomeIcon
+          color="#B33A3A"
           size={75}
           style={styles.icon}
           icon={faExclamationTriangle}

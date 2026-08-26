@@ -34,7 +34,9 @@ export default class AuthCreds {
 
   static async getAuthCreds() {
     const rawCreds = await SecureStorage.getItem('@auth/authCreds');
-    const authCreds = rawCreds ? (JSON.parse(rawCreds) as Creds) : null;
+    const authCreds = rawCreds
+      ? (AuthCreds._parseStoredJson(rawCreds, '@auth/authCreds') as Creds)
+      : null;
 
     if (!authCreds || AuthCreds.hasBearerExpired(authCreds.bearerExpTime)) {
       const user = await AuthCreds._getUser();
@@ -74,9 +76,25 @@ export default class AuthCreds {
 
   static async _getUser() {
     const rawUser = await SecureStorage.getItem('user');
-    const user = JSON.parse(rawUser!);
+    const user = AuthCreds._parseStoredJson(rawUser!, 'user') as User;
 
     return user;
+  }
+
+  static _parseStoredJson(value: string, key: string) {
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      if (__DEV__) {
+        console.log('[AuthCreds] failed parsing stored JSON', {
+          key,
+          preview: value?.slice(0, 120),
+          error: String(error),
+        });
+      }
+
+      throw error;
+    }
   }
 
   static hasBearerExpired(bearerExpireTime: string) {

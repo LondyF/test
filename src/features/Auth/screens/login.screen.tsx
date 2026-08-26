@@ -40,6 +40,12 @@ import useResetPassword from '../hooks/useResetPassword';
 
 import useActivateTestMode from '@hooks/useActivateTestMode';
 
+type LoginFormValues = {
+  email: string | undefined;
+  password: string;
+  biometricPassword: string | undefined;
+};
+
 const LoginScreen: React.FC = () => {
   const {t} = useTranslation();
   const Toast = useToast();
@@ -65,13 +71,8 @@ const LoginScreen: React.FC = () => {
     data: resetPasswordData,
   } = useResetPassword();
 
-  const {handleChange, handleSubmit, values, setFieldValue} = useFormik({
-    initialValues: {
-      email: storedUser?.account,
-      password: '',
-      biometricPassword: '',
-    },
-    onSubmit: async ({email, password, biometricPassword}) => {
+  const submitLogin = useCallback(
+    async ({email, password, biometricPassword}: LoginFormValues) => {
       return mutate({
         email,
         password,
@@ -79,23 +80,38 @@ const LoginScreen: React.FC = () => {
         device: await getDeviceInfo(),
       });
     },
+    [mutate],
+  );
+
+  const {handleChange, handleSubmit, values} = useFormik<LoginFormValues>({
+    initialValues: {
+      email: storedUser?.account,
+      password: '',
+      biometricPassword: '',
+    },
+    onSubmit: submitLogin,
   });
 
   const {ActivateTestModeWrapper} = useActivateTestMode();
+
+  const submitLoginWithStoredBiometricPassword = useCallback(() => {
+    return submitLogin({
+      ...values,
+      biometricPassword: storedUser?.biometricPassword,
+    });
+  }, [storedUser?.biometricPassword, submitLogin, values]);
 
   const loginUserWithBiometrics = useCallback(
     async () => {
       try {
         if (await promptBiometrics()) {
-          setFieldValue('biometricPassword', storedUser?.biometricPassword);
-          handleSubmit();
+          submitLoginWithStoredBiometricPassword();
         }
       } catch (e) {
         console.log(e);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setFieldValue, handleSubmit, promptBiometrics],
+    [promptBiometrics, submitLoginWithStoredBiometricPassword],
   );
 
   const loginOfflineMode = async () => {
@@ -196,8 +212,7 @@ const LoginScreen: React.FC = () => {
     try {
       await authenticateUser();
 
-      setFieldValue('biometricPassword', storedUser?.biometricPassword);
-      handleSubmit();
+      submitLoginWithStoredBiometricPassword();
     } catch {
       Alert.alert('Oops', t('login.cantAuthenticatePin'));
     }
@@ -278,10 +293,7 @@ const LoginScreen: React.FC = () => {
                       buttonStyle={styles.buttonStyle}
                       variant="secondary"
                       text={t('login.login')}
-                      onPress={() => {
-                        setFieldValue('biometricPassword', '');
-                        handleSubmit();
-                      }}
+                      onPress={() => handleSubmit()}
                     />
                     <Text style={styles.white}>{t('login.or')}</Text>
                     <TouchableOpacity onPress={authenticateUserWithPin}>

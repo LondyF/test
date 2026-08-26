@@ -1,53 +1,76 @@
-import React, {useCallback, useMemo, useRef} from 'react';
-import {Alert, View} from 'react-native';
+import React, {useCallback, useRef} from 'react';
+import {
+  Alert,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
-
-import {
-  HandlerStateChangeEvent,
-  State,
-  TapGestureHandler,
-  TapGestureHandlerEventPayload,
-} from 'react-native-gesture-handler';
 
 import SecureStorage from '@helpers/secureStorage';
 import Config from '@src/config';
 
 const useActivateTestMode = (numTapsToActivate = 7) => {
   const {t} = useTranslation();
-  const tapsRef = useRef(null);
+  const tapCountRef = useRef(0);
+  const resetTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const onHandlerStateChange = useCallback(
-    async (event: HandlerStateChangeEvent<TapGestureHandlerEventPayload>) => {
-      if (event.nativeEvent.state === State.ACTIVE) {
-        const testModeURL = t('negatief.testModeURL');
+  const handlePress = useCallback(async () => {
+    if (resetTimeoutRef.current) {
+      clearTimeout(resetTimeoutRef.current);
+    }
 
-        await SecureStorage.setItem(Config.TEST_MODE_STORAGE_KEY, testModeURL);
+    tapCountRef.current += 1;
 
-        Alert.alert(
-          'Success',
-          `Succeesfully entered Developer mode! All APIs will be made using ${testModeURL} as URL`,
-        );
-      }
-    },
-    [t],
-  );
+    resetTimeoutRef.current = setTimeout(() => {
+      tapCountRef.current = 0;
+    }, 1500);
+
+    if (tapCountRef.current < numTapsToActivate) {
+      return;
+    }
+
+    tapCountRef.current = 0;
+
+    const testModeURL = t('negatief.testModeURL');
+
+    await SecureStorage.setItem(Config.TEST_MODE_STORAGE_KEY, testModeURL);
+
+    Alert.alert(
+      'Success',
+      `Succeesfully entered Developer mode! All APIs will be made using ${testModeURL} as URL`,
+    );
+  }, [numTapsToActivate, t]);
 
   const activateTestModeWrapper = useCallback(
-    ({children}: {children: React.ReactNode}) => {
+    ({
+      children,
+      style,
+    }: {
+      children: React.ReactNode;
+      style?: StyleProp<ViewStyle>;
+    }) => {
       return (
-        <TapGestureHandler
-          ref={tapsRef}
-          numberOfTaps={numTapsToActivate}
-          onHandlerStateChange={onHandlerStateChange}>
-          <View>{children}</View>
-        </TapGestureHandler>
+        <Pressable
+          onPress={handlePress}
+          collapsable={false}
+          style={[styles.pressable, style]}>
+          {children}
+        </Pressable>
       );
     },
-    [numTapsToActivate, onHandlerStateChange],
+    [handlePress],
   );
 
   return {ActivateTestModeWrapper: React.memo(activateTestModeWrapper)};
 };
+
+const styles = StyleSheet.create({
+  pressable: {
+    flex: 1,
+  },
+});
 
 export default useActivateTestMode;

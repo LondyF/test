@@ -12,12 +12,12 @@ import {faPlus} from '@fortawesome/pro-regular-svg-icons';
 import {useNavigation} from '@react-navigation/core';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import {useTranslation} from 'react-i18next';
-import {BarCodeReadEvent} from 'react-native-camera';
 import {useQueryClient} from '@tanstack/react-query';
 
 import useAuthStore from '@src/stores/useAuthStore';
 import useToast from '@components/Toast/useToast';
 import {ToastTypes} from '@components/Toast/toastTypes';
+import {QRScanEvent} from '@components/qrScanner';
 import {
   Loader,
   Typography,
@@ -169,7 +169,7 @@ const AllMandansaPowerOfAttorneysScreen: React.FC = () => {
     });
   };
 
-  const onQRScan = async (e: BarCodeReadEvent) => {
+  const onQRScan = async (e: QRScanEvent) => {
     try {
       setIsScanning(false);
 

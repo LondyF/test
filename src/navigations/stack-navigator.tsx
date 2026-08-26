@@ -27,7 +27,7 @@ const AppStackNavigator = () => {
         gestureEnabled: false,
         headerShown: false,
       }}>
-      <StackNavigator.Screen name="Home" component={TabNavigator} />
+      <StackNavigator.Screen name="Tabs" component={TabNavigator} />
       <StackNavigator.Screen
         name="AllPharmacies"
         options={{headerShown: true, title: t('dashboard.pharmacies')}}

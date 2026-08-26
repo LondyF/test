@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import 'moment/locale/nl';
 
 import { IDayComponentProps } from 'react-native-calendar-strip';
 import { Moment } from 'moment';
@@ -16,7 +17,7 @@ const DayComponent: React.FC<Props> = (props) => {
         <Typography
           variant="b1"
           fontSize={8}
-          text={(props.date as Day).format('ddd').toUpperCase()}
+          text={(props.date as Day).locale('nl').format('ddd').toUpperCase()}
         />
         <Typography variant="b1" fontWeight="bold" text={(props.date as Day).date().toString()} />
       </View>

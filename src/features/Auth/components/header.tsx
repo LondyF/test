@@ -1,34 +1,11 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet, Linking} from 'react-native';
-
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faAngleLeft, faInfoCircle} from '@fortawesome/pro-light-svg-icons';
-import {useNavigation} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
-
-import Logo from './logo';
+import {View, StyleSheet} from 'react-native';
 
 interface HeaderProps {
   variant?: 'white' | 'blue';
 }
 
-const Header: React.FC<HeaderProps> = ({variant = 'white'}) => {
-  const {goBack} = useNavigation();
-  const {t} = useTranslation();
-
-  const handleInfoButtonPressed = async () => {
-    try {
-      const helpURL = t('register.helpURL');
-      const canOpenURL = await Linking.canOpenURL(helpURL);
-
-      if (canOpenURL) {
-        Linking.openURL(helpURL);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
+const Header: React.FC<HeaderProps> = () => {
   return (
     <>
       <View style={styles.header}>

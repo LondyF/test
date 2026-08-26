@@ -4,11 +4,16 @@ import {Animated} from 'react-native';
 import {Typography} from '@src/components';
 import {TypographyProps} from '@src/components/typography';
 
+type UseCyclingTextOptions = Omit<TypographyProps, 'text'> & {
+  fullWidth?: boolean;
+};
+
 const useCyclingText = (
   texts: string[],
   cyclingSpeed: number,
-  style?: Omit<TypographyProps, 'text'>,
+  style?: UseCyclingTextOptions,
 ) => {
+  const {fullWidth, ...typographyProps} = style ?? {};
   const [currentIndex, setCurrentIndex] = useState(0);
 
   let fade = useRef(new Animated.Value(1)).current;
@@ -45,8 +50,8 @@ const useCyclingText = (
 
   const typographyFadeComponent = () => {
     return (
-      <Animated.View style={{opacity: fade}}>
-        <Typography variant="b1" {...style} text={texts[currentIndex]} />
+      <Animated.View style={[{opacity: fade}, fullWidth && {width: '100%'}]}>
+        <Typography variant="b1" {...typographyProps} text={texts[currentIndex]} />
       </Animated.View>
     );
   };

@@ -1,6 +1,6 @@
 import {Typography} from '@src/components';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 type AmountProgressBarProps = {
@@ -132,9 +132,5 @@ const AmountProgressBar = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export default AmountProgressBar;

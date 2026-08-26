@@ -1,0 +1,267 @@
+diff --git a/node_modules/@onfido/react-native-sdk/ios/EncryptedBiometricTokenHandlerReceiver.swift b/node_modules/@onfido/react-native-sdk/ios/EncryptedBiometricTokenHandlerReceiver.swift
+index 14e28b5..85a0b47 100644
+--- a/node_modules/@onfido/react-native-sdk/ios/EncryptedBiometricTokenHandlerReceiver.swift
++++ b/node_modules/@onfido/react-native-sdk/ios/EncryptedBiometricTokenHandlerReceiver.swift
+@@ -4,42 +4,13 @@
+ //  Copyright © 2016-2024 Onfido. All rights reserved.
+ //
+ 
+-import Foundation
+-import Onfido
+-
+ final class EncryptedBiometricTokenHandlerReceiver {
+-    private let onTokenRequestedCallback: (([String: String]) -> Void)?
+-    private let onTokenGeneratedCallback: (([String: String]) -> Void)?
+-
+-    private var onTokenRequestedCompletion: ((String) -> Void)?
+-
+     init(
+         withTokenRequestedCallback tokenRequestedCallback: (([String: String]) -> Void)?,
+         andTokenGeneratedCallback tokenGeneratedCallback: (([String: String]) -> Void)?
+     ) {
+-        self.onTokenRequestedCallback = tokenRequestedCallback
+-        self.onTokenGeneratedCallback = tokenGeneratedCallback
+     }
+ 
+     func provide(encryptedBiometricToken: String) {
+-        onTokenRequestedCompletion?(encryptedBiometricToken)
+-    }
+-}
+-
+-extension EncryptedBiometricTokenHandlerReceiver: EncryptedBiometricTokenHandler {
+-    func onTokenRequested(customerUserHash: String, completion: @escaping (String) -> Void) {
+-        onTokenRequestedCompletion = completion
+-        let dictionary = [
+-            "customerUserHash" : customerUserHash
+-        ]
+-        onTokenRequestedCallback?(dictionary)
+-    }
+-
+-    func onTokenGenerated(customerUserHash: String, encryptedBiometricToken: String) {
+-        let dictionary = [
+-            "customerUserHash" : customerUserHash,
+-            "encryptedBiometricToken" : encryptedBiometricToken
+-        ]
+-        onTokenGeneratedCallback?(dictionary)
+     }
+ }
+diff --git a/node_modules/@onfido/react-native-sdk/ios/OnfidoConfigBuilder.swift b/node_modules/@onfido/react-native-sdk/ios/OnfidoConfigBuilder.swift
+index dffd898..713dd6e 100644
+--- a/node_modules/@onfido/react-native-sdk/ios/OnfidoConfigBuilder.swift
++++ b/node_modules/@onfido/react-native-sdk/ios/OnfidoConfigBuilder.swift
+@@ -16,8 +16,7 @@ struct OnfidoConfigBuilder {
+     func build(
+         config: OnfidoPluginConfig,
+         appearance: Appearance,
+-        mediaCallBack: CallbackReceiver?,
+-        encryptedBiometricTokenHandler: EncryptedBiometricTokenHandlerReceiver?
++        mediaCallBack: CallbackReceiver?
+     ) throws -> OnfidoMode {
+         guard let workflowId = config.workflowRunId else {
+             return try buildClassic(config: config, appearance: appearance, mediaCallBack: mediaCallBack)
+@@ -27,8 +26,7 @@ struct OnfidoConfigBuilder {
+             workflowId: workflowId,
+             config: config,
+             appearance: appearance,
+-            mediaCallBack: mediaCallBack,
+-            encryptedBiometricTokenHandler: encryptedBiometricTokenHandler
++            mediaCallBack: mediaCallBack
+         )
+     }
+     
+@@ -38,8 +36,7 @@ struct OnfidoConfigBuilder {
+         workflowId: String,
+         config: OnfidoPluginConfig,
+         appearance: Appearance,
+-        mediaCallBack: CallbackReceiver?,
+-        encryptedBiometricTokenHandler: EncryptedBiometricTokenHandlerReceiver?
++        mediaCallBack: CallbackReceiver?
+     ) throws -> OnfidoMode {
+         var workflowConfig = WorkflowConfiguration(workflowRunId: workflowId, sdkToken: config.sdkToken)
+         
+@@ -60,11 +57,6 @@ struct OnfidoConfigBuilder {
+             workflowConfig = workflowConfig.withMediaCallback(mediaCallback: mediaCallBack)
+          }
+ 
+-        // Encrypted biometric token handler
+-        if let encryptedBiometricTokenHandler {
+-            workflowConfig = workflowConfig.withEncryptedBiometricTokenHandler(handler: encryptedBiometricTokenHandler)
+-        }
+-
+         return .studio(workflowConfig: workflowConfig)
+     }
+     
+@@ -86,18 +78,11 @@ struct OnfidoConfigBuilder {
+         let enterpriseFeatures = try enterpriseFeatures(for: config)
+         builder.withEnterpriseFeatures(enterpriseFeatures)
+         
+-        // NFC
+-        if let disableNFC = config.disableNFC, disableNFC == true {
+-            builder.withNFC(.off)
+-        }
+-        
+         // Localization
+         if let localizationFile = try customLocalization(config: config) {
+             builder.withCustomLocalization(andTableName: localizationFile)
+         }
+         
+-        builder.withNFC(nfcConfiguration(config: config))
+-        
+         // Media Callback
+         if let mediaCallBack {
+             builder.withMediaCallback(mediaCallback: mediaCallBack)
+diff --git a/node_modules/@onfido/react-native-sdk/ios/OnfidoFlowBuilder.swift b/node_modules/@onfido/react-native-sdk/ios/OnfidoFlowBuilder.swift
+index 04977a7..e05ca6c 100644
+--- a/node_modules/@onfido/react-native-sdk/ios/OnfidoFlowBuilder.swift
++++ b/node_modules/@onfido/react-native-sdk/ios/OnfidoFlowBuilder.swift
+@@ -17,14 +17,12 @@ struct OnfidoFlowBuilder {
+     func build(
+         with config: OnfidoPluginConfig,
+         appearance: Appearance,
+-        customMediaCallback: CallbackReceiver?,
+-        customEncryptedBiometricTokenHandler: EncryptedBiometricTokenHandlerReceiver?
++        customMediaCallback: CallbackReceiver?
+     ) throws -> OnfidoFlow {
+         let mode = try configBuilder.build(
+             config: config,
+             appearance: appearance,
+-            mediaCallBack: customMediaCallback,
+-            encryptedBiometricTokenHandler: customEncryptedBiometricTokenHandler
++            mediaCallBack: customMediaCallback
+         )
+ 
+         let flow: OnfidoFlow
+diff --git a/node_modules/@onfido/react-native-sdk/ios/OnfidoResponse.swift b/node_modules/@onfido/react-native-sdk/ios/OnfidoResponse.swift
+index 22bec2e..47e8ec1 100644
+--- a/node_modules/@onfido/react-native-sdk/ios/OnfidoResponse.swift
++++ b/node_modules/@onfido/react-native-sdk/ios/OnfidoResponse.swift
+@@ -24,17 +24,6 @@ protocol ReactFaceResult {
+     var variant: FaceResultVariant { get }
+ }
+ 
+-protocol ReactProofOfAddressResult {
+-    var reactFront: ReactProofOfAddressSideResult { get }
+-    var reactBack: ReactProofOfAddressSideResult? { get }
+-    var reactType: String { get }
+-}
+-
+-protocol ReactProofOfAddressSideResult {
+-    var id: String { get }
+-    var type: String? { get }
+-}
+-
+ extension DocumentSideResult: ReactDocumentSideResult {}
+ extension DocumentResult: ReactDocumentResult {
+     var reactFront: ReactDocumentSideResult { front }
+@@ -46,13 +35,6 @@ extension DocumentResult: ReactDocumentResult {
+ 
+ extension FaceResult: ReactFaceResult {}
+ 
+-extension ProofOfAddressSideResult: ReactProofOfAddressSideResult {}
+-extension ProofOfAddressResult: ReactProofOfAddressResult {
+-    var reactFront: ReactProofOfAddressSideResult { front }
+-    var reactBack: ReactProofOfAddressSideResult? { back }
+-    var reactType: String { type }
+-}
+-
+ func createResponse(_ results: [OnfidoResult]) -> [String: [String: Any]] {
+     let document: DocumentResult? = results.compactMap { result in
+         guard case let .document(documentResult) = result else { return nil }
+@@ -64,19 +46,13 @@ func createResponse(_ results: [OnfidoResult]) -> [String: [String: Any]] {
+         return faceResult
+     }.first
+ 
+-    let poa: ProofOfAddressResult? = results.compactMap { result in
+-        guard case let .proofOfAddress(proofOfAddressResult) = result else { return nil }
+-        return proofOfAddressResult
+-    }.first
+-
+     return createResponse(document: document, face: face)
+ }
+ 
+ // TODO: Refactor to Encodable
+ func createResponse(
+     document: ReactDocumentResult? = nil,
+-    face: ReactFaceResult? = nil,
+-    proofOfAddress: ReactProofOfAddressResult? = nil
++    face: ReactFaceResult? = nil
+ ) -> [String: [String: Any]] {
+     var response = [String: [String: Any]]()
+ 
+@@ -108,16 +84,5 @@ func createResponse(
+         response["face"] = ["id": faceResponse.id, "variant": faceVariant]
+     }
+ 
+-    if let poaResponse = proofOfAddress {
+-        response["proofOfAddress"] = ["front": ["id": poaResponse.reactFront.id]]
+-
+-        if let backId = poaResponse.reactBack?.id,
+-           backId != poaResponse.reactFront.id
+-        {
+-            response["proofOfAddress"]?["back"] = ["id": backId]
+-        }
+-        response["proofOfAddress"]?["type"] = poaResponse.reactType
+-    }
+-
+     return response
+ }
+diff --git a/node_modules/@onfido/react-native-sdk/ios/OnfidoSdk.swift b/node_modules/@onfido/react-native-sdk/ios/OnfidoSdk.swift
+index 0c0c6f7..27007bd 100644
+--- a/node_modules/@onfido/react-native-sdk/ios/OnfidoSdk.swift
++++ b/node_modules/@onfido/react-native-sdk/ios/OnfidoSdk.swift
+@@ -11,7 +11,6 @@ import React
+ // Analytics to be re-added once payloads are harmonised across platforms
+ private enum CallbackType {
+     case media
+-    case encryptedBiometricToken
+ }
+ 
+ @objc(OnfidoSdk)
+@@ -19,10 +18,6 @@ final class OnfidoSdk: RCTEventEmitter {
+ 
+     private let onfidoFlowBuilder = OnfidoFlowBuilder()
+     private let configParser = OnfidoConfigParser()
+-    private lazy var encryptedBiometricTokenHandlerReceiver = EncryptedBiometricTokenHandlerReceiver(
+-        withTokenRequestedCallback: processEncryptedBiometricTokenRequestedResult(_:),
+-        andTokenGeneratedCallback: processEncryptedBiometricTokenGeneratedResult(_:)
+-    )
+     private var callbackTypes: [CallbackType] = []
+ 
+     @objc
+@@ -64,14 +59,10 @@ final class OnfidoSdk: RCTEventEmitter {
+                 mediaCallback = nil
+             }
+ 
+-            let encryptedBiometricTokenHandler = callbackTypes
+-                .contains(.encryptedBiometricToken) ? encryptedBiometricTokenHandlerReceiver : nil
+-
+             let onfidoFlow: OnfidoFlow = try onfidoFlowBuilder.build(
+                 with: onfidoConfig,
+                 appearance: appearance,
+-                customMediaCallback: mediaCallback,
+-                customEncryptedBiometricTokenHandler: encryptedBiometricTokenHandler
++                customMediaCallback: mediaCallback
+             )
+ 
+             onfidoFlow
+@@ -142,20 +133,10 @@ final class OnfidoSdk: RCTEventEmitter {
+ 
+     @objc
+     func withBiometricTokenCallback() {
+-        callbackTypes.append(.encryptedBiometricToken)
+     }
+ 
+     @objc
+     func provideBiometricToken(_ biometricToken: String) {
+-        encryptedBiometricTokenHandlerReceiver.provide(encryptedBiometricToken: biometricToken)
+-    }
+-
+-    private func processEncryptedBiometricTokenRequestedResult(_ dictionary: [String: String]) {
+-        sendEvent(withName: "onTokenRequested", body: dictionary)
+-    }
+-
+-    private func processEncryptedBiometricTokenGeneratedResult(_ dictionary: [String: String]) {
+-        sendEvent(withName: "onTokenGenerated", body: dictionary)
+     }
+ }
+ 

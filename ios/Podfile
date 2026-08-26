@@ -1,3 +1,4 @@
+require 'fileutils'
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 require File.join(File.dirname(`node --print "require.resolve('react-native/package.json')"`), "scripts/react_native_pods")
 
@@ -13,8 +14,19 @@ end
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
-platform :ios, '13.4'
+platform :ios, '16.4'
+ENV['RCT_NEW_ARCH_ENABLED'] = '1'
 prepare_react_native_project!
+
+date_picker_package = File.join(__dir__, '..', 'node_modules', 'react-native-date-picker', 'package.json')
+if File.exist?(date_picker_package)
+  contents = File.read(date_picker_package)
+  contents.gsub!(
+    /,\n\s+"modulesProvider": \{\n\s+"RNDatePicker": "RNDatePickerManager"\n\s+\}/,
+    ''
+  )
+  File.write(date_picker_package, contents)
+end
 
 setup_permissions([
   'Camera',
@@ -27,17 +39,6 @@ setup_permissions([
   'PhotoLibrary',
 ])
 
-# If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
-# because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
-#
-# To fix this you can also exclude `react-native-flipper` using a `react-native.config.js`
-# ```js
-# module.exports = {
-#   dependencies: {
-#     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
-# ```
-flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
-
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
@@ -47,16 +48,30 @@ end
 
 target 'MiSaluMobileApp' do
   use_expo_modules!
+  pod 'react-native-maps/Google', :path => '../node_modules/react-native-maps'
+
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)
-    rescue => ew
+    rescue => e
       Pod::UI.warn e
+    end
+
+    configure_project_script = File.join(
+      __dir__,
+      'Pods',
+      'Target Support Files',
+      'Pods-MiSaluMobileApp',
+      'expo-configure-project.sh'
+    )
+    if File.exist?(configure_project_script)
+      contents = File.read(configure_project_script)
+      contents.gsub!(/^\s+--entitlement ".*MiSaluMobileApp\.entitlements" \\\n/, '')
+      contents.gsub!(/^\s+\\\n(?=\s+--podfile-properties-file-path)/, '')
+      File.write(configure_project_script, contents)
     end
   end
 
-  rn_maps_path = '../node_modules/react-native-maps'
-  pod 'react-native-google-maps', :path => rn_maps_path
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -66,12 +81,7 @@ target 'MiSaluMobileApp' do
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
     :hermes_enabled => flags[:hermes_enabled],
-    :fabric_enabled => false,
-    # Enables Flipper.
-    #
-    # Note that if you have use_frameworks! enabled, Flipper will not work and
-    # you should disable the next line.
-    # :flipper_configuration => flipper_config,
+    :fabric_enabled => flags[:fabric_enabled],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -84,10 +94,12 @@ target 'MiSaluMobileApp' do
   post_install do |installer|
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
-      # some older pods don't support some architectures, anything over iOS 11 resolves that
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
+      # Keep pods aligned with Expo SDK 56's current minimum iOS target.
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.4'
         # Ensure arm64 simulator builds are allowed (needed for iOS 26.0 simulators)
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = ''
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_HAS_COROUTINES=0'
       end
     end
 
@@ -129,6 +141,42 @@ target 'MiSaluMobileApp' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
+
+    ['RCT-Folly', 'ReactNativeDependencies'].each do |folly_root|
+      ['Expected.h', 'Optional.h'].each do |folly_header|
+        header_path = File.join(__dir__, 'Pods', 'Headers', 'Public', folly_root, 'folly', folly_header)
+        next unless File.exist?(header_path)
+
+        File.chmod(0644, header_path)
+        contents = File.read(header_path)
+        contents.gsub!('#if FOLLY_HAS_COROUTINES', '#if 0 // FOLLY_HAS_COROUTINES')
+        File.write(header_path, contents)
+      end
+    end
+
+    expo_sqlite_root = File.join(__dir__, '..', 'node_modules', 'expo-sqlite')
+    expo_sqlite_ios = File.join(expo_sqlite_root, 'ios')
+    expo_sqlite_vendor = File.join(expo_sqlite_root, 'vendor', 'sqlite3')
+
+    ['sqlite3.c', 'sqlite3.h'].each do |sqlite_file|
+      source = File.join(expo_sqlite_vendor, sqlite_file)
+      destination = File.join(expo_sqlite_ios, sqlite_file)
+      FileUtils.cp(source, destination) if File.exist?(source)
+    end
+
+    # ExpoSQLite's vendored header uses SQLite's default include guard. When
+    # the system SQLite header is imported first, Swift cannot see exsqlite3_*.
+    [
+      File.join(expo_sqlite_ios, 'sqlite3.h'),
+      File.join(expo_sqlite_vendor, 'sqlite3.h')
+    ].each do |sqlite_header|
+      next unless File.exist?(sqlite_header)
+
+      contents = File.read(sqlite_header)
+      contents.sub!("#ifndef SQLITE3_H\n#define SQLITE3_H", "#ifndef EXPO_SQLITE3_H\n#define EXPO_SQLITE3_H")
+      File.write(sqlite_header, contents)
+    end
+
   end
 end
 

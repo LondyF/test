@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, ScrollView, StyleSheet, TextInput} from 'react-native';
+import moment from 'moment';
 
 import {RouteProp, useNavigation} from '@react-navigation/native';
 
@@ -51,13 +52,10 @@ const DeclineAppointmentScreen: React.FC<Props> = ({
     navigation.goBack();
   };
 
-  const getTime = () => {
-    let dateString = datum.toString().split('T')[1];
-    return dateString.substring(0, dateString.length - 3) || '';
-  };
+  const getTime = () => moment(datum).format('HH:mm');
 
   return (
-    <PageContainer variant="gray">
+    <PageContainer variant="gray" safeAreaEdges={['bottom']}>
       <ScrollView contentContainerStyle={styles.scrollViewContainerStyle}>
         <View style={styles.container}>
           <View style={styles.box}>

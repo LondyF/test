@@ -39,16 +39,16 @@ const LabRequestsScreen: React.FC<Props> = ({
     <Tab.Navigator
       lazy={true}
       initialRouteName="AllLabResults"
-      tabBarOptions={{
-        labelStyle: {
+      screenOptions={{
+        tabBarLabelStyle: {
           textTransform: 'capitalize',
           fontWeight: 'bold',
         },
-        indicatorStyle: {
+        tabBarIndicatorStyle: {
           backgroundColor: primary,
         },
-        activeTintColor: primary,
-        inactiveTintColor: lightGray,
+        tabBarActiveTintColor: primary,
+        tabBarInactiveTintColor: lightGray,
       }}>
       <Tab.Screen
         options={{

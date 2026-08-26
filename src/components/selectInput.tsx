@@ -11,7 +11,6 @@ import {
   TextStyle,
   ViewStyle,
   ActivityIndicator,
-  PlatformColor,
 } from 'react-native';
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select';
 import Typography from './typography';
@@ -53,6 +52,9 @@ const SelectInput: React.FC<SelectInputProps> = ({
 
   const isErrored = error && error?.length > 0;
   const isDisabled = !!props.disabled;
+  const iconColor = isDisabled
+    ? '#a4a4a4'
+    : StyleSheet.flatten(iconStyle)?.color || '#c7c5c5';
 
   const Icon = loading ? (
     <ActivityIndicator
@@ -62,6 +64,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
     />
   ) : icon ? (
     <FontAwesomeIcon
+      color={iconColor}
       style={[
         styles.iconStyle,
         iconStyle,

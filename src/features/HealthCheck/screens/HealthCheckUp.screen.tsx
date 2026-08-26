@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {Item} from 'react-native-picker-select';
 import {useTranslation} from 'react-i18next';

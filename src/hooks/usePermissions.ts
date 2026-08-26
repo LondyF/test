@@ -15,7 +15,7 @@ export enum Permissions {
 type UsePermissionsProps = Permissions;
 type UsePermissionReturn = [
   boolean,
-  () => Promise<void>,
+  () => Promise<boolean>,
   () => Promise<'unavailable' | 'blocked' | 'denied' | 'granted' | 'limited'>,
 ];
 
@@ -43,7 +43,7 @@ const usePermissions = (
 
   const requestPermissions = async () => {
     if (hasPermissions) {
-      return;
+      return true;
     }
 
     const permissionResult =
@@ -51,7 +51,11 @@ const usePermissions = (
         ? await requestBiometricsPerms()
         : await request(permToRequest);
 
-    setHasPermissions(permissionResult === RESULTS.GRANTED);
+    const isGranted = permissionResult === RESULTS.GRANTED;
+
+    setHasPermissions(isGranted);
+
+    return isGranted;
   };
 
   /*

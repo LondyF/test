@@ -276,7 +276,11 @@ const MapScreen: React.FC<Props> = ({route}) => {
                 }
               />
               <TouchableOpacity onPress={() => getDirections(item)}>
-                <FontAwesomeIcon size={24} icon={faDirections} />
+                <FontAwesomeIcon
+                  color={appTheme.colors.primary}
+                  size={24}
+                  icon={faDirections}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -370,6 +374,7 @@ const MapScreen: React.FC<Props> = ({route}) => {
               <TouchableOpacity onPress={() => setIsShowingDirections(false)}>
                 {isShowingDirections && (
                   <FontAwesomeIcon
+                    color={appTheme.colors.primary}
                     style={styles.backButtonIcon}
                     icon={faChevronLeft}
                   />
@@ -403,6 +408,7 @@ const MapScreen: React.FC<Props> = ({route}) => {
             <View style={styles.singleMapItemContainer}>
               <TouchableOpacity onPress={() => getDirections(mapItems[0])}>
                 <FontAwesomeIcon
+                  color={appTheme.colors.primary}
                   style={styles.singleMapItemIcon}
                   size={24}
                   icon={faDirections}

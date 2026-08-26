@@ -85,7 +85,7 @@ const request = async ({
 
     return onRequestSuccess(response);
   } catch (error) {
-    console.log(error.response);
+    console.log(error);
 
     throw onRequestError(error);
   }

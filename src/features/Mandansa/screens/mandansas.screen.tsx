@@ -29,16 +29,16 @@ const MandansasScreen: React.FC<MandansasScreenProps> = ({route}) => {
           ? 'AllMandansasPowerOfAttorneys'
           : 'AllMandansasAuthorizedReps'
       }
-      tabBarOptions={{
-        labelStyle: {
+      screenOptions={{
+        tabBarLabelStyle: {
           textTransform: 'capitalize',
           fontWeight: 'bold',
         },
-        indicatorStyle: {
+        tabBarIndicatorStyle: {
           backgroundColor: primary,
         },
-        activeTintColor: primary,
-        inactiveTintColor: lightGray,
+        tabBarActiveTintColor: primary,
+        tabBarInactiveTintColor: lightGray,
       }}>
       <Tab.Screen
         options={{

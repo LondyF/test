@@ -31,6 +31,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import {useNavigation} from '@react-navigation/core';
 import {useTranslation} from 'react-i18next';
+import DeviceInfo from 'react-native-device-info';
 import {
   CameraOptions,
   ImageLibraryOptions,
@@ -75,6 +76,9 @@ const UserProfileScreen: React.FC = () => {
   const {checkIfConnected} = useInternetConnection();
 
   const [hasBiometricsPermissions] = usePermissions(Permissions.faceId);
+  const [hasCameraPermissions, requestCameraPermissions] = usePermissions(
+    Permissions.camera,
+  );
 
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(
     user?.biometricEnabled,
@@ -256,18 +260,61 @@ const UserProfileScreen: React.FC = () => {
     );
   };
 
-  const handleTakeAPicture = () => {
+  const handleTakeAPicture = async () => {
     try {
-      launchCamera(photoOptions, async ({assets, didCancel}) => {
-        if (!didCancel && !!assets) {
-          const response = await uploadProfilePic({
-            apuId: user?.apuId,
-            image: assets[0].base64,
-          });
+      if (await DeviceInfo.isEmulator()) {
+        Alert.alert(
+          'Camera unavailable',
+          'The simulator has no camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
 
-          setProfilePicURL(response.uploadFotoId.fotoUrl);
+      if (!hasCameraPermissions) {
+        const isGranted = await requestCameraPermissions();
+
+        if (!isGranted) {
+          Alert.alert('No permissions', 'No permissions to use camera');
+          return;
         }
+      }
+
+      const {assets, didCancel, errorCode, errorMessage} = await launchCamera(
+        photoOptions,
+      );
+      const image = assets?.[0]?.base64;
+
+      if (errorCode === 'camera_unavailable') {
+        Alert.alert(
+          'Camera unavailable',
+          'This device does not have an available camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
+
+      if (errorMessage) {
+        Alert.alert('Oops', errorMessage);
+        return;
+      }
+
+      if (didCancel || !image) {
+        return;
+      }
+
+      const response = await uploadProfilePic({
+        apuId: user?.apuId,
+        image,
       });
+
+      setProfilePicURL(response.uploadFotoId.fotoUrl);
     } catch (e) {
       Alert.alert(
         'Oops',
@@ -276,18 +323,28 @@ const UserProfileScreen: React.FC = () => {
     }
   };
 
-  const handleSelectImageFromLibrary = () => {
+  const handleSelectImageFromLibrary = async () => {
     try {
-      launchImageLibrary(photoOptions, async ({assets, didCancel}) => {
-        if (!didCancel && !!assets) {
-          const response = await uploadProfilePic({
-            apuId: user?.apuId,
-            image: assets[0].base64,
-          });
+      const {assets, didCancel, errorMessage} = await launchImageLibrary(
+        photoOptions,
+      );
+      const image = assets?.[0]?.base64;
 
-          setProfilePicURL(response.uploadFotoId.fotoUrl);
-        }
+      if (errorMessage) {
+        Alert.alert('Oops', errorMessage);
+        return;
+      }
+
+      if (didCancel || !image) {
+        return;
+      }
+
+      const response = await uploadProfilePic({
+        apuId: user?.apuId,
+        image,
       });
+
+      setProfilePicURL(response.uploadFotoId.fotoUrl);
     } catch (e) {
       Alert.alert(
         'Oops',

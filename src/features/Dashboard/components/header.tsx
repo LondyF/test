@@ -40,6 +40,21 @@ const Header: React.FC<{user: User}> = ({user}) => {
   const isNewerVersionAvailable = user?.device?.needUpdate === 1;
 
   const openDrawer = () => {
+    const drawerNavigation =
+      navigation.getParent('AppDrawer') ?? navigation.getParent();
+
+    if (drawerNavigation) {
+      console.log('hier');
+      navigation.toggleDrawer();
+      console.log(navigation);
+
+      // drawerNavigation.dispatch({
+      //   ...DrawerActions.openDrawer(),
+      //   target: drawerNavigation.getState().key,
+      // });
+      return;
+    }
+
     navigation.dispatch(DrawerActions.openDrawer());
   };
 
@@ -72,6 +87,8 @@ const Header: React.FC<{user: User}> = ({user}) => {
         source={require('@assets/DashboardHeader.png')}>
         <View style={styles.openDrawerButtonContainer}>
           <TouchableOpacity
+            accessibilityLabel="Open drawer"
+            accessibilityRole="button"
             disabled={!isAccountValidated}
             onPress={openDrawer}
             style={{
@@ -84,7 +101,7 @@ const Header: React.FC<{user: User}> = ({user}) => {
       </ImageBackground>
       <View style={styles.headerContainer}>
         <View style={styles.flexRow}>
-          <View>
+          <View style={styles.headerTextContainer}>
             <Text style={styles.welcomeText}>{`${t('dashboard.welcome')} ${
               user.firstName
             }!`}</Text>
@@ -95,7 +112,7 @@ const Header: React.FC<{user: User}> = ({user}) => {
             </Text>
 
             {isNewerVersionAvailable && (
-              <Text style={styles.newUpdateAvailable}>
+              <Text numberOfLines={2} style={styles.newUpdateAvailable}>
                 {t('dashboard.newUpdateAvailable')}
               </Text>
             )}
@@ -103,7 +120,11 @@ const Header: React.FC<{user: User}> = ({user}) => {
           <View style={styles.iconContainer}>
             {isNewerVersionAvailable && (
               <TouchableOpacity onPress={handleDownloadButton}>
-                <FontAwesomeIcon size={s(23)} icon={faDownload} />
+                <FontAwesomeIcon
+                  color={appTheme.colors.primary}
+                  size={s(23)}
+                  icon={faDownload}
+                />
               </TouchableOpacity>
             )}
 
@@ -111,6 +132,7 @@ const Header: React.FC<{user: User}> = ({user}) => {
               disabled={!isAccountValidated}
               onPress={() => navigation.navigate('Notifications')}>
               <FontAwesomeIcon
+                color={appTheme.colors.primary}
                 style={styles.bellIcon}
                 size={s(23)}
                 icon={faBell}
@@ -153,6 +175,12 @@ const makeStyles = (theme: Theme) =>
     },
     flexRow: {
       flexDirection: 'row',
+      alignItems: 'flex-end',
+    },
+    headerTextContainer: {
+      flex: 1,
+      minWidth: 0,
+      paddingRight: 8,
     },
     headerImage: {
       width: '100%',
@@ -177,9 +205,10 @@ const makeStyles = (theme: Theme) =>
     },
     iconContainer: {
       flexDirection: 'row',
-      alignItems: 'flex-end',
+      alignItems: 'center',
       justifyContent: 'flex-end',
-      flex: 1,
+      flexShrink: 0,
+      paddingBottom: 2,
     },
     validationStatus: {
       marginTop: 5,

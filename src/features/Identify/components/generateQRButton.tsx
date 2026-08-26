@@ -11,7 +11,7 @@ interface GenerateQRButtonProps {
 const GenerateQRButton: React.FC<GenerateQRButtonProps> = ({onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <FontAwesomeIcon size={35} icon={faQrcode} />
+      <FontAwesomeIcon color="#000" size={35} icon={faQrcode} />
       <View style={styles.plusIconWrapper}>
         <FontAwesomeIcon color="white" size={12.5} icon={faPlus} />
       </View>

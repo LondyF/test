@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, StyleSheet, View, Text, Image} from 'react-native';
+import {TouchableOpacity, StyleSheet, View, Image} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 
@@ -10,7 +10,6 @@ import {convertISOdate} from '@utils/utils';
 import {LabRequest} from '../types/laboratory';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faCalendarPlus} from '@fortawesome/pro-regular-svg-icons';
-import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   labRequest: LabRequest;
@@ -28,8 +27,6 @@ const LabRequestItem: React.FC<Props> = ({
   onAppointmentIconPressed,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const {navigate} = useNavigation();
-
   const {t} = useTranslation();
 
   const {darkGray, primary} = theme.colors;

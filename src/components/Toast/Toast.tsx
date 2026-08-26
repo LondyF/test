@@ -58,7 +58,7 @@ const Toast: React.FC<Props> = ({ message, type, hideToast, duration }) => {
         underlayColor={'#FFFFFF'}
         onPress={() => hideToastAnimation()}
         style={styles.toasterBox}>
-        <React.Fragment>
+        <View style={styles.toasterContent}>
           <View>
             <View style={styles.iconContainer}>
               <Text style={styles.icon}>{icon}</Text>
@@ -71,7 +71,7 @@ const Toast: React.FC<Props> = ({ message, type, hideToast, duration }) => {
           <View style={styles.closeIconContainer}>
             <Text style={styles.closeIcon}>&#10007;</Text>
           </View>
-        </React.Fragment>
+        </View>
       </TouchableHighlight>
     </Animated.View>
   );
@@ -92,17 +92,13 @@ const makeStyles = (background: string) =>
     },
     toasterBox: {
       backgroundColor: 'white',
-      paddingVertical: 15,
-      paddingHorizontal: 15,
-      borderTopColor: '#DEDEDE',
       borderBottomColor: '#DEDEDE',
-      borderRightColor: '#DEDEDE',
-      borderWidth: 1,
+      borderLeftColor: background,
       borderLeftWidth: 5,
       borderRadius: 4,
-      borderLeftColor: background,
-      flexDirection: 'row',
-      alignItems: 'center',
+      borderRightColor: '#DEDEDE',
+      borderTopColor: '#DEDEDE',
+      borderWidth: 1,
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -110,6 +106,12 @@ const makeStyles = (background: string) =>
       },
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
+    },
+    toasterContent: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      paddingVertical: 15,
+      paddingHorizontal: 15,
     },
     title: {
       fontSize: 18,

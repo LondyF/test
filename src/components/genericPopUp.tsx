@@ -68,6 +68,7 @@ const GenericPopUp: React.FC<Props> = ({
     <Modal isVisible={isVisible}>
       <View style={styles.container}>
         <FontAwesomeIcon
+          color={isWarning ? '#B33A3A' : theme.colors.primary}
           size={75}
           style={isWarning ? styles.iconWarning : {color: theme.colors.primary}}
           icon={isWarning ? faExclamationTriangle : faInfoCircle}

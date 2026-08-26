@@ -12,7 +12,6 @@ import {
 import {useTranslation} from 'react-i18next';
 import {
   DrawerContentComponentProps,
-  DrawerContentOptions,
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
@@ -23,7 +22,7 @@ import {deleteTmpFolder} from '@src/utils';
 import {Theme} from '@styles/styles';
 
 interface DrawerProps {
-  props: DrawerContentComponentProps<DrawerContentOptions>;
+  props: DrawerContentComponentProps;
   theme: Theme;
   user: User;
   logoutUser: Function;

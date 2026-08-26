@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ScrollView,
+} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import {useActionSheet} from '@expo/react-native-action-sheet';
@@ -12,12 +19,12 @@ import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
+import DeviceInfo from 'react-native-device-info';
 
 import {ValidationStatus} from '@src/types/validationStatus';
 import {Button, PageContainer, Typography, Loader} from '@src/components';
 import useUploadPhotoOfId from '@hooks/useUploadPhotoOfId';
 import useAuthStore from '@stores/useAuthStore';
-import {ScrollView} from 'react-native-gesture-handler';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {useQueryClient} from '@tanstack/react-query';
 
@@ -103,20 +110,58 @@ const ReuploadValidationPhoto: React.FC<Props> = ({route}) => {
     );
   };
 
-  const handleTakeAPicture = () => {
-    launchCamera(photoOptions, ({assets, didCancel}) => {
-      if (!didCancel) {
-        setImage(assets[0]);
-      }
-    });
+  const handleTakeAPicture = async () => {
+    if (await DeviceInfo.isEmulator()) {
+      Alert.alert(
+        'Camera unavailable',
+        'The simulator has no camera. Choose an image from your gallery instead.',
+        [
+          {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+      return;
+    }
+
+    const {assets, didCancel, errorCode, errorMessage} = await launchCamera(
+      photoOptions,
+    );
+
+    if (errorCode === 'camera_unavailable') {
+      Alert.alert(
+        'Camera unavailable',
+        'This device does not have an available camera. Choose an image from your gallery instead.',
+        [
+          {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+      return;
+    }
+
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (!didCancel && assets?.[0]) {
+      setImage(assets[0]);
+    }
   };
 
-  const handleSelectImageFromLibrary = () => {
-    launchImageLibrary(photoOptions, ({assets, didCancel}) => {
-      if (!didCancel) {
-        setImage(assets[0]);
-      }
-    });
+  const handleSelectImageFromLibrary = async () => {
+    const {assets, didCancel, errorMessage} = await launchImageLibrary(
+      photoOptions,
+    );
+
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (!didCancel && assets?.[0]) {
+      setImage(assets[0]);
+    }
   };
 
   const handleContinueButtonPressed = () => {

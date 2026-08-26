@@ -22,6 +22,7 @@ import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
+import DeviceInfo from 'react-native-device-info';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import * as Yup from 'yup';
 import {useTranslation} from 'react-i18next';
@@ -221,20 +222,58 @@ const RegisterMandansaScreen: React.FC = () => {
     );
   };
 
-  const handleTakeAPicture = () => {
-    launchCamera(PHOTO_OPTIONS, ({assets, didCancel}) => {
-      if (!didCancel) {
-        setImage(assets?.[0]);
-      }
-    });
+  const handleTakeAPicture = async () => {
+    if (await DeviceInfo.isEmulator()) {
+      Alert.alert(
+        'Camera unavailable',
+        'The simulator has no camera. Choose an image from your gallery instead.',
+        [
+          {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+      return;
+    }
+
+    const {assets, didCancel, errorCode, errorMessage} = await launchCamera(
+      PHOTO_OPTIONS,
+    );
+
+    if (errorCode === 'camera_unavailable') {
+      Alert.alert(
+        'Camera unavailable',
+        'This device does not have an available camera. Choose an image from your gallery instead.',
+        [
+          {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+      return;
+    }
+
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (!didCancel && assets?.[0]) {
+      setImage(assets[0]);
+    }
   };
 
-  const handleSelectImageFromLibrary = () => {
-    launchImageLibrary(PHOTO_OPTIONS, ({assets, didCancel}) => {
-      if (!didCancel) {
-        setImage(assets?.[0]);
-      }
-    });
+  const handleSelectImageFromLibrary = async () => {
+    const {assets, didCancel, errorMessage} = await launchImageLibrary(
+      PHOTO_OPTIONS,
+    );
+
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (!didCancel && assets?.[0]) {
+      setImage(assets[0]);
+    }
   };
 
   const handleSubmitPhotoId = () => {

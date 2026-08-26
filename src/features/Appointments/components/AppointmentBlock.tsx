@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import moment from 'moment';
 
 import {Typography} from '@src/components';
 import useTheme from '@src/hooks/useTheme';
@@ -22,10 +23,7 @@ const AppointmentBlock: React.FC<{
   const styles = makeStyles(appTheme);
   const {fontColor, background} = useAppointmentStatus(status);
 
-  const getTime = () => {
-    let dateString = date.toString().split('T')[1];
-    return dateString.substring(0, dateString.length - 3);
-  };
+  const getTime = () => moment(date).format('HH:mm');
 
   return (
     <TouchableOpacity onPress={onPress}>

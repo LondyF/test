@@ -1,13 +1,12 @@
 import React from 'react';
 import {Modal, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 
-import {BarCodeReadEvent} from 'react-native-camera';
-
 import {QRScanner, Typography} from '@src/components';
+import {QRScanEvent} from '@components/qrScanner';
 
 interface ScanQRCodeModalProps {
   isVisisble: boolean;
-  onScan: (e: BarCodeReadEvent) => any;
+  onScan: (e: QRScanEvent) => any;
   onCancel: () => void;
 }
 
@@ -28,12 +27,14 @@ const ScanQRCodeModal: React.FC<ScanQRCodeModalProps> = ({
             color="white"
           />
         </TouchableOpacity>
-        <QRScanner
-          topContent={
-            <Typography variant="h1" text="Scan QR Code" color="white" />
-          }
-          onScan={onScan}
-        />
+        {isVisisble && (
+          <QRScanner
+            topContent={
+              <Typography variant="h1" text="Scan QR Code" color="white" />
+            }
+            onScan={onScan}
+          />
+        )}
       </SafeAreaView>
     </Modal>
   );

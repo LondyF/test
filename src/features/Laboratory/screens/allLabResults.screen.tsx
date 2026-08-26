@@ -1,5 +1,5 @@
-import React, {useState, useMemo, useEffect} from 'react';
-import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState, useMemo} from 'react';
+import {View, FlatList, StyleSheet} from 'react-native';
 
 import {NavigationProp} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';

@@ -1,7 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacityProps} from 'react-native';
-
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {s, vs, ms} from 'react-native-size-matters';
 
@@ -44,7 +47,12 @@ const QuickNavItem: React.FC<Props> = ({
       onPress={() => isValidated(action)}
       style={[styles.container, isDisabled && styles.disabled]}>
       <>
-        <FontAwesomeIcon size={ms(60, 1.2)} style={styles.icon} icon={icon} />
+        <FontAwesomeIcon
+          color={appTheme.colors.primary}
+          size={ms(60, 1.2)}
+          style={styles.icon}
+          icon={icon}
+        />
         <Text style={styles.title}>{title}</Text>
       </>
     </TouchableOpacity>

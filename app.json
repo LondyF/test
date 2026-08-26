@@ -1,4 +1,8 @@
 {
   "name": "MiSaluMobileApp",
-  "displayName": "MiSalu"
+  "plugins": [
+    "expo-sqlite",
+    "expo-splash-screen",
+    "expo-asset"
+  ]
 }

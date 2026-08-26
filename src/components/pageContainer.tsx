@@ -1,6 +1,6 @@
 import React from 'react';
 import {ImageBackground, ViewStyle, StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Edge, SafeAreaView} from 'react-native-safe-area-context';
 
 import {Theme} from '@styles/index';
 
@@ -8,12 +8,14 @@ interface PageContainerProps {
   children: React.ReactNode;
   variant?: 'blue' | 'gray' | 'purple' | 'green' | 'none';
   style?: ViewStyle;
+  safeAreaEdges?: Edge[];
 }
 
 const PageContainer: React.FC<PageContainerProps> = ({
   children,
   style,
   variant = 'gray',
+  safeAreaEdges = ['top', 'bottom'],
 }) => {
   return (
     <ImageBackground
@@ -33,7 +35,7 @@ const PageContainer: React.FC<PageContainerProps> = ({
           ? require('@assets/EnniaBackground.png')
           : null
       }>
-      <SafeAreaView style={[styles.container, style]} edges={['top', 'bottom']}>
+      <SafeAreaView style={[styles.container, style]} edges={safeAreaEdges}>
         {children}
       </SafeAreaView>
     </ImageBackground>

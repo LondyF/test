@@ -29,9 +29,11 @@ const AppStack = () => {
 
   return (
     <DrawerNavigator.Navigator
+      id="AppDrawer"
       screenOptions={({navigation}) => ({
         drawerStyle: {...styles.drawer},
         headerShown: false,
+        swipeEnabled: false,
         headerLeft: () => (
           <HeaderBackButton onPress={() => navigation.goBack()} />
         ),
@@ -44,7 +46,7 @@ const AppStack = () => {
           logoutUser={logoutUser}
         />
       )}
-      initialRouteName="Login">
+      initialRouteName="Home">
       <DrawerNavigator.Screen name="Home" component={AppStackNavigator} />
       <DrawerNavigator.Screen
         options={{

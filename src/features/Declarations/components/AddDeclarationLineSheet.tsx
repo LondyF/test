@@ -1,11 +1,11 @@
 import React from 'react';
-import {ActivityIndicator, Platform, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {
   BottomSheetBackdrop as BottomSheetBackdropComponent,
   BottomSheetBackdropProps,
   BottomSheetModal,
+  BottomSheetTextInput,
   BottomSheetView,
-  useBottomSheetInternal,
 } from '@gorhom/bottom-sheet';
 
 import * as Yup from 'yup';
@@ -96,7 +96,6 @@ const Content: React.FC<ContentProps> = ({
   isFreeTextDeclaration,
 }) => {
   const styles = createStyles(insets);
-  const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
 
   const {t} = useTranslation();
 
@@ -121,6 +120,7 @@ const Content: React.FC<ContentProps> = ({
       {isFreeTextDeclaration ? (
         <TextInput
           label={t('declarations.procedure')}
+        InputComponent={BottomSheetTextInput}
           mainColor="black"
           icon={faFileInvoiceDollar}
           autoCapitalize="none"
@@ -165,6 +165,7 @@ const Content: React.FC<ContentProps> = ({
               ) : (
                 <FontAwesomeIcon
                   icon={faFileInvoiceDollar}
+                  color={styles.selectIcon.color}
                   style={styles.selectIcon}
                 />
               )}
@@ -182,6 +183,7 @@ const Content: React.FC<ContentProps> = ({
       )}
       <TextInput
         label={t('declarations.unitPrice')}
+        InputComponent={BottomSheetTextInput}
         mainColor="black"
         icon={faReceipt}
         autoCapitalize="none"
@@ -189,19 +191,10 @@ const Content: React.FC<ContentProps> = ({
         value={values.unitPrice ? String(values.unitPrice) : ''}
         onChangeText={handleChange('unitPrice')}
         error={errors.unitPrice}
-        onFocus={() => {
-          if (Platform.OS === 'ios') {
-            shouldHandleKeyboardEvents.value = true;
-          }
-        }}
-        onBlur={() => {
-          if (Platform.OS === 'ios') {
-            shouldHandleKeyboardEvents.value = false;
-          }
-        }}
       />
       <TextInput
         label={t('declarations.amount')}
+        InputComponent={BottomSheetTextInput}
         mainColor="black"
         icon={faReceipt}
         autoCapitalize="none"

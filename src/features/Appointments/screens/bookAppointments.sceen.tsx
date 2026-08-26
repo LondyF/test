@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
+import 'moment/locale/nl';
 
 import {Item} from 'react-native-picker-select';
 import {NavigationProp} from '@react-navigation/core';
@@ -182,7 +183,9 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
     let availableSpotDays = data?.allSpots;
     let sortedSpots = availableSpotDays?.reduce(
       (spots: SortedSpot, spotDay: AvailableSpotDate) => {
-        let availableDateString = spotDay.datum.toString().split('T')[0];
+        let availableDateString = moment(spotDay.datum).format(
+          moment.HTML5_FMT.DATE,
+        );
         spots[availableDateString] = spotDay;
         return spots;
       },
@@ -298,7 +301,7 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
           isFetching || isLoadingAvailableDoctorEstablishments
         }
       />
-      <PageContainer variant="none">
+      <PageContainer variant="none" safeAreaEdges={['bottom']}>
         <KeyboardAwareScrollView
           extraScrollHeight={100}
           showsVerticalScrollIndicator={false}
@@ -326,9 +329,9 @@ const BookAppointmentScreen: React.FC<Props> = ({navigation}) => {
                 color={Theme.colors.primary}
                 variant="b1"
                 fontWeight="bold"
-                text={moment(spotsSortedByDate[selectedDate].datum).format(
-                  'DD MMM YYYY',
-                )}
+                text={moment(spotsSortedByDate[selectedDate].datum)
+                  .locale('nl')
+                  .format('D MMMM YYYY')}
               />
             )}
           </View>
@@ -362,6 +365,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
+    paddingTop: 12,
   },
   calendar: {
     width: 375,

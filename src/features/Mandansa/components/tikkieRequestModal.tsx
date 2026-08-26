@@ -1,7 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
-
-import Modal from 'react-native-modal';
+import {View, TouchableOpacity, StyleSheet, Image, Modal} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import {Typography} from '@components/index';
@@ -65,32 +63,33 @@ const TikkieRequestModal: React.FC<TikkieRequestModalProps> = ({
   );
 
   return (
-    <Modal isVisible={isVisible}>
-      <View style={styles.container}>
-        <View style={styles.profilePicContainer}>
-          <Image
-            style={styles.profilePic}
-            source={{uri: requestingUser.foto}}
+    <Modal transparent visible={isVisible} animationType="fade">
+      <View style={styles.backdrop}>
+        <View style={styles.container}>
+          <View style={styles.profilePicContainer}>
+            <Image
+              style={styles.profilePic}
+              source={{uri: requestingUser.foto}}
+            />
+          </View>
+          <Typography
+            textStyle={styles.incomingRequest}
+            variant="b2"
+            color={theme.colors.darkGray}
+            text={t('mandansaAuthorizedReps.incomingRequest')}
           />
-        </View>
-        <Typography
-          textStyle={styles.incomingRequest}
-          variant="b2"
-          color={theme.colors.darkGray}
-          text={t('mandansaAuthorizedReps.incomingRequest')}
-        />
-        <Typography
-          textStyle={styles.requestingUserName}
-          variant="h3"
-          fontWeight="bold"
-          text={requestingUser.naam}
-        />
-        <View style={styles.flexRow}>
-          {acceptButton}
-          {rejectButton}
+          <Typography
+            textStyle={styles.requestingUserName}
+            variant="h3"
+            fontWeight="bold"
+            text={requestingUser.naam}
+          />
+          <View style={styles.flexRow}>
+            {acceptButton}
+            {rejectButton}
+          </View>
         </View>
       </View>
-      <View />
     </Modal>
   );
 };
@@ -102,6 +101,14 @@ const makeStyles = (theme: Theme) => {
       padding: 22,
       minHeight: 250,
       alignItems: 'center',
+      width: '90%',
+    },
+    backdrop: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      paddingHorizontal: 20,
     },
     flexRow: {
       flexDirection: 'row',

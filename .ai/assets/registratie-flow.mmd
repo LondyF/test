@@ -1,0 +1,24 @@
+flowchart LR
+  subgraph huidig [Huidige volgorde]
+    direction TB
+    H1["1. Persoonsgegevens: naam, adres, geslacht, sedula"]
+    H2["2. Contactgegevens: e-mail, telefoon, land"]
+    H3["3. Verzekeraar: verzekeraar, huisarts"]
+    H4["SMS-verificatie"]
+    H1 -->|"POST checkSedula"| H2
+    H2 --> H3
+    H3 -->|"POST saveAppUser"| H4
+  end
+
+  subgraph nieuw [Nieuwe volgorde]
+    direction TB
+    N1["1. Persoonsgegevens: naam, adres, geslacht, land"]
+    N2["2. Verzekeraar en identificatie: verzekeraar, sedula of SQ-sedula, huisarts"]
+    N3["3. Contactgegevens: e-mail, telefoon"]
+    N4["SMS-verificatie"]
+    N1 --> N2
+    N2 -->|"POST checkSedula"| N3
+    N3 -->|"POST saveAppUser"| N4
+  end
+
+  huidig ~~~ nieuw

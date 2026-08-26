@@ -1,4 +1,5 @@
-import crypto from 'crypto';
+import crypto from 'react-native-quick-crypto';
+import {Buffer} from '@craftzdog/react-native-buffer';
 import * as Keychain from 'react-native-keychain';
 import AES from '@helpers/AES';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +10,44 @@ const IOS_HARDCODED_BASE64_KEY = 'MTIzNDU2Nzg5MGFiY2RlZg==';
 
 const AESEncryption = new AES();
 
+const byteListPattern = /^\d+(,\d+)+$/;
+
+const normalizeDecryptedValue = (value: string) => {
+  if (!byteListPattern.test(value)) {
+    return value;
+  }
+
+  try {
+    return String.fromCharCode(...value.split(',').map(Number));
+  } catch (error) {
+    return value;
+  }
+};
+
 export default class SecureStorage {
+  static async debugSnapshot(label = 'snapshot') {
+    if (!__DEV__) {
+      return;
+    }
+
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const entries = await AsyncStorage.multiGet(keys);
+
+      console.log('[SecureStorage] debugSnapshot', {
+        label,
+        keys,
+        entries: entries.map(([key, value]) => ({
+          key,
+          present: value !== null,
+          length: value?.length ?? 0,
+        })),
+      });
+    } catch (error) {
+      console.log('[SecureStorage] debugSnapshot failed', error);
+    }
+  }
+
   static async _getEncryptionKey() {
     if (Platform.OS === 'ios') {
       const iosVersionNumber =
@@ -71,7 +109,9 @@ export default class SecureStorage {
           throw new Error();
         }
 
-        return AESEncryption.decrypt(encryptedDataString, encryptionKey);
+        return normalizeDecryptedValue(
+          AESEncryption.decrypt(encryptedDataString, encryptionKey),
+        );
       } catch (e) {
         return null;
       }

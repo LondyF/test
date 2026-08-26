@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Image, Alert} from 'react-native';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
@@ -14,6 +14,7 @@ import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
+import DeviceInfo from 'react-native-device-info';
 
 import {Typography, Button} from '@components/index';
 
@@ -74,20 +75,58 @@ const UploadIdStep: React.FC<UploadIdStepProps> = ({
     );
   };
 
-  const handleTakeAPicture = () => {
-    launchCamera(photoOptions, ({assets, didCancel}) => {
-      if (!didCancel) {
-        setImage(assets[0]);
-      }
-    });
+  const handleTakeAPicture = async () => {
+    if (await DeviceInfo.isEmulator()) {
+      Alert.alert(
+        'Camera unavailable',
+        'The simulator has no camera. Choose an image from your gallery instead.',
+        [
+          {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+      return;
+    }
+
+    const {assets, didCancel, errorCode, errorMessage} = await launchCamera(
+      photoOptions,
+    );
+
+    if (errorCode === 'camera_unavailable') {
+      Alert.alert(
+        'Camera unavailable',
+        'This device does not have an available camera. Choose an image from your gallery instead.',
+        [
+          {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+      return;
+    }
+
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (!didCancel && assets?.[0]) {
+      setImage(assets[0]);
+    }
   };
 
-  const handleSelectImageFromLibrary = () => {
-    launchImageLibrary(photoOptions, ({assets, didCancel}) => {
-      if (!didCancel) {
-        setImage(assets[0]);
-      }
-    });
+  const handleSelectImageFromLibrary = async () => {
+    const {assets, didCancel, errorMessage} = await launchImageLibrary(
+      photoOptions,
+    );
+
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (!didCancel && assets?.[0]) {
+      setImage(assets[0]);
+    }
   };
 
   const handleSubmit = () => {

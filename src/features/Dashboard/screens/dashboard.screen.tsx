@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {View, ImageBackground, StyleSheet, Image, Text} from 'react-native';
+import {View, ImageBackground, StyleSheet, Image, ScrollView} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import {vs} from 'react-native-size-matters';
-import {ScrollView} from 'react-native-gesture-handler';
 import {
   faIdCard,
   faUsers,

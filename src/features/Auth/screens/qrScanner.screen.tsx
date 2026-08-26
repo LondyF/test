@@ -1,14 +1,13 @@
 import React from 'react';
 import {} from 'react-native';
 
-import {BarCodeReadEvent} from 'react-native-camera';
-
 import {QRScanner} from '@src/components';
+import {QRScanEvent} from '@components/qrScanner';
 
 interface QRScannerProps {
   topContent: JSX.Element | string;
   bottomContent: JSX.Element | string;
-  onScan(e: BarCodeReadEvent): void;
+  onScan(e: QRScanEvent): void;
 }
 
 const QRScannerScreen: React.FC<QRScannerProps> = ({

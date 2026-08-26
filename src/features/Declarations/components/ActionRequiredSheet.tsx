@@ -28,12 +28,14 @@ import {
   Asset,
 } from 'react-native-image-picker';
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import DeviceInfo from 'react-native-device-info';
 import {
   DeclarationAdditionalInfo,
   type DeclarationAdditionalInfo as DeclarationAdditionalInfoType,
 } from '../types/declarations';
 import useSaveDeclarationPhoto from '../hooks/useSaveDeclarationPhoto';
 import {useTranslation} from 'react-i18next';
+import usePermissions, {Permissions} from '@src/hooks/usePermissions';
 
 type AdditionalInfo = {
   additionalInfo: string;
@@ -117,14 +119,57 @@ const ReuploadPhotoSheetContent = ({
   const {showActionSheetWithOptions} = useActionSheet();
   const styles = createStyles(useSafeAreaInsets());
   const [photo, setPhoto] = React.useState<Asset | null>(null);
+  const [hasCameraPermissions, requestCameraPermissions] = usePermissions(
+    Permissions.camera,
+  );
 
-  const handleTakeAPicture = () => {
+  const handleTakeAPicture = async () => {
     try {
-      launchCamera(PHOTO_OPTIONS, async ({assets, didCancel}) => {
-        if (!didCancel && !!assets) {
-          setPhoto(assets?.[0] || null);
+      if (await DeviceInfo.isEmulator()) {
+        Alert.alert(
+          'Camera unavailable',
+          'The simulator has no camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: uploadPhotoFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
+
+      if (!hasCameraPermissions) {
+        const isGranted = await requestCameraPermissions();
+
+        if (!isGranted) {
+          Alert.alert('No permissions', 'No permissions to use camera');
+          return;
         }
-      });
+      }
+
+      const {assets, didCancel, errorCode, errorMessage} = await launchCamera(
+        PHOTO_OPTIONS,
+      );
+
+      if (errorCode === 'camera_unavailable') {
+        Alert.alert(
+          'Camera unavailable',
+          'This device does not have an available camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: uploadPhotoFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
+
+      if (errorMessage) {
+        Alert.alert('Oops', errorMessage);
+        return;
+      }
+
+      if (!didCancel && assets?.[0]) {
+        setPhoto(assets[0]);
+      }
     } catch (e) {
       Alert.alert(
         'Oops',
@@ -133,14 +178,21 @@ const ReuploadPhotoSheetContent = ({
     }
   };
 
-  const uploadPhotoFromLibrary = () => {
-    launchImageLibrary(PHOTO_OPTIONS, ({didCancel, assets}) => {
-      if (didCancel) {
-        return;
-      }
+  const uploadPhotoFromLibrary = async () => {
+    const {didCancel, assets, errorMessage} = await launchImageLibrary(
+      PHOTO_OPTIONS,
+    );
 
-      setPhoto(assets?.[0] || null);
-    });
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (didCancel) {
+      return;
+    }
+
+    setPhoto(assets?.[0] || null);
   };
 
   const handlePhotoBoxPress = () => {

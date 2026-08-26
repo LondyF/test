@@ -17,7 +17,7 @@ const AuthStack = () => {
   const user = useAuthStore(state => state.user);
 
   return (
-    <AuthNavigator.Navigator screenOptions={{ headerShown: false }}>
+    <AuthNavigator.Navigator screenOptions={{headerShown: false}}>
       {user && user.apuId ? (
         <>
           <AuthNavigator.Screen name="Login" component={LoginScreen} />

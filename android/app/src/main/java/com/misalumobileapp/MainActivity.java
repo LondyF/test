@@ -1,4 +1,10 @@
 package com.misalumobileapp;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Bundle;
+
+import androidx.core.view.WindowCompat;
+
 import expo.modules.ReactActivityDelegateWrapper;
 
 import com.facebook.react.ReactActivity;
@@ -7,6 +13,19 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
 public class MainActivity extends ReactActivity {
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
+
+    WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+    getWindow().setStatusBarColor(Color.TRANSPARENT);
+    getWindow().setNavigationBarColor(Color.TRANSPARENT);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      getWindow().setNavigationBarContrastEnforced(false);
+    }
+  }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule

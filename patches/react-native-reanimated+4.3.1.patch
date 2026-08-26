@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-native-reanimated/lib/module/featureFlags/staticFlags.json b/node_modules/react-native-reanimated/lib/module/featureFlags/staticFlags.json
+index 682c6e8..4286029 100644
+--- a/node_modules/react-native-reanimated/lib/module/featureFlags/staticFlags.json
++++ b/node_modules/react-native-reanimated/lib/module/featureFlags/staticFlags.json
+@@ -4,7 +4,7 @@
+   "ANDROID_SYNCHRONOUSLY_UPDATE_UI_PROPS": false,
+   "IOS_SYNCHRONOUSLY_UPDATE_UI_PROPS": false,
+   "EXPERIMENTAL_CSS_ANIMATIONS_FOR_SVG_COMPONENTS": false,
+-  "USE_SYNCHRONIZABLE_FOR_MUTABLES": true,
++  "USE_SYNCHRONIZABLE_FOR_MUTABLES": false,
+   "USE_COMMIT_HOOK_ONLY_FOR_REACT_COMMITS": true,
+   "ENABLE_SHARED_ELEMENT_TRANSITIONS": false,
+   "FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS": true
+diff --git a/node_modules/react-native-reanimated/src/featureFlags/staticFlags.json b/node_modules/react-native-reanimated/src/featureFlags/staticFlags.json
+index 682c6e8..4286029 100644
+--- a/node_modules/react-native-reanimated/src/featureFlags/staticFlags.json
++++ b/node_modules/react-native-reanimated/src/featureFlags/staticFlags.json
+@@ -4,7 +4,7 @@
+   "ANDROID_SYNCHRONOUSLY_UPDATE_UI_PROPS": false,
+   "IOS_SYNCHRONOUSLY_UPDATE_UI_PROPS": false,
+   "EXPERIMENTAL_CSS_ANIMATIONS_FOR_SVG_COMPONENTS": false,
+-  "USE_SYNCHRONIZABLE_FOR_MUTABLES": true,
++  "USE_SYNCHRONIZABLE_FOR_MUTABLES": false,
+   "USE_COMMIT_HOOK_ONLY_FOR_REACT_COMMITS": true,
+   "ENABLE_SHARED_ELEMENT_TRANSITIONS": false,
+   "FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS": true

@@ -168,7 +168,12 @@ const AllNotifications: React.FC<AllNotificationsProps> = ({navigation}) => {
             paddingHorizontal: theme.spacing.horizontalPadding,
           },
         ]}>
-        <FontAwesomeIcon style={styles.icon} size={30} icon={faAngleLeft} />
+        <FontAwesomeIcon
+          color={primary}
+          style={styles.icon}
+          size={30}
+          icon={faAngleLeft}
+        />
         <Typography
           variant="h2"
           fontWeight="bold"

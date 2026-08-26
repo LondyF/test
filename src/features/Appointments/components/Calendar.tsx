@@ -1,14 +1,58 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
 
 import {
   CalendarList,
   CalendarListProps as CalProps,
+  LocaleConfig,
 } from 'react-native-calendars';
 
 import {Theme} from '@src/styles';
 
 import CalendarDay from './CalendarDay';
+
+LocaleConfig.locales.nl = {
+  monthNames: [
+    'januari',
+    'februari',
+    'maart',
+    'april',
+    'mei',
+    'juni',
+    'juli',
+    'augustus',
+    'september',
+    'oktober',
+    'november',
+    'december',
+  ],
+  monthNamesShort: [
+    'jan.',
+    'feb.',
+    'mrt.',
+    'apr.',
+    'mei',
+    'jun.',
+    'jul.',
+    'aug.',
+    'sep.',
+    'okt.',
+    'nov.',
+    'dec.',
+  ],
+  dayNames: [
+    'zondag',
+    'maandag',
+    'dinsdag',
+    'woensdag',
+    'donderdag',
+    'vrijdag',
+    'zaterdag',
+  ],
+  dayNamesShort: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+  today: 'Vandaag',
+};
+LocaleConfig.defaultLocale = 'nl';
 
 interface CalendarProps extends CalProps {
   markedDays: Array<string>;
@@ -53,6 +97,7 @@ const Calendar: React.FC<CalendarProps> = ({
         }}
         pagingEnabled
         firstDay={1}
+        monthFormat="MMMM yyyy"
         dayComponent={(props: CalendarDayComponentProps) => {
           return (
             <CalendarDay

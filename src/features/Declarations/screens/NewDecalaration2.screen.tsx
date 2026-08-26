@@ -18,6 +18,7 @@ import {
   launchImageLibrary,
   launchCamera,
 } from 'react-native-image-picker';
+import DeviceInfo from 'react-native-device-info';
 
 import * as Yup from 'yup';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -210,13 +211,44 @@ const NewDeclarationScreen = ({}: Props) => {
     maxWidth: 1000,
   };
 
-  const handleTakeAPicture = () => {
+  const handleTakeAPicture = async () => {
     try {
-      launchCamera(photoOptions, async ({assets, didCancel}) => {
-        if (!didCancel && !!assets) {
-          setFieldValue('image', assets?.[0] || null);
-        }
-      });
+      if (await DeviceInfo.isEmulator()) {
+        Alert.alert(
+          'Camera unavailable',
+          'The simulator has no camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: uploadPhotoFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
+
+      const {assets, didCancel, errorCode, errorMessage} = await launchCamera(
+        photoOptions,
+      );
+
+      if (errorCode === 'camera_unavailable') {
+        Alert.alert(
+          'Camera unavailable',
+          'This device does not have an available camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: uploadPhotoFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
+
+      if (errorMessage) {
+        Alert.alert('Oops', errorMessage);
+        return;
+      }
+
+      if (!didCancel && assets?.[0]) {
+        setFieldValue('image', assets[0]);
+      }
     } catch (e) {
       Alert.alert(
         'Oops',
@@ -225,14 +257,21 @@ const NewDeclarationScreen = ({}: Props) => {
     }
   };
 
-  const uploadPhotoFromLibrary = () => {
-    launchImageLibrary(photoOptions, ({didCancel, assets}) => {
-      if (didCancel) {
-        return;
-      }
+  const uploadPhotoFromLibrary = async () => {
+    const {didCancel, assets, errorMessage} = await launchImageLibrary(
+      photoOptions,
+    );
 
-      setFieldValue('image', assets?.[0] || null);
-    });
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (didCancel) {
+      return;
+    }
+
+    setFieldValue('image', assets?.[0] || null);
   };
 
   const closeDateModal = () => {

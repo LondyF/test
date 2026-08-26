@@ -1,0 +1,19 @@
+JvmtiExport can_access_local_variables 0
+JvmtiExport can_hotswap_or_post_breakpoint 0
+JvmtiExport can_post_on_exceptions 0
+# 313 ciObject found
+ciMethod java/lang/Object <init> ()V 1710 0 123063588 0 -1
+ciMethod java/lang/Class getName ()Ljava/lang/String; 512 0 2365623 0 -1
+ciMethod java/lang/Class initClassName ()Ljava/lang/String; 516 0 258 0 -1
+ciMethod java/lang/Iterable iterator ()Ljava/util/Iterator; 0 0 1 0 -1
+ciMethod java/lang/Boolean booleanValue ()Z 268 0 134 0 -1
+ciMethod java/lang/Boolean valueOf (Z)Ljava/lang/Boolean; 794 0 1064234 0 -1
+ciMethod java/util/Iterator hasNext ()Z 0 0 1 0 -1
+ciMethod java/util/Iterator next ()Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/lang/NullPointerException <init> (Ljava/lang/String;)V 0 0 1 0 -1
+ciMethod java/lang/ThreadLocal get ()Ljava/lang/Object; 12326 0 44198 0 -1
+ciMethod java/lang/ThreadLocal set (Ljava/lang/Object;)V 10 0 36896 0 -1
+ciMethodData java/lang/Object <init> ()V 2 123063588 orig 80 1 0 0 0 0 0 0 0 0 0 0 0 192 38 100 34 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 data 4 0x0 0x9 0x1 0x0 oops 0 methods 0
+ciMethodData java/lang/NullPointerException <init> (Ljava/lang/String;)V 1 0 orig 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 data 8 0x20002 0x0 0x0 0x0 0x9 0x2 0xffffffffffffffff 0xffffffffffffffff oops 0 methods 0
+ciMethodData java/lang/Class getName ()Ljava/lang/String; 2 2365623 orig 80 0 0 0 0 0 0 0 0 0 0 0 0 192 38 100 34 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 data 23 0x60007 0x1f71 0x38 0x23f92d 0xa0003 0x23f7df 0x50 0xe0005 0x1f71 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x9 0x1 0xffffffffffffffff oops 0 methods 0
+ciMethodData java/lang/ThreadLocal get ()Ljava/lang/Object; 2 44198 orig 80 2 0 0 0 0 0 0 0 0 0 0 0 192 38 100 34 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 data 40 0x2 0x9493 0x60005 0x3416 0x0 0x135b866e0 0x1eee 0x135b86210 0x419d 0x80000006000b0007 0x7 0x78 0x9494 0x100005 0x948c 0x0 0x0 0x0 0x0 0x0 0x150007 0x109a 0x20 0x83fd 0x220005 0x10a1 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x9 0x1 0x0 oops 2

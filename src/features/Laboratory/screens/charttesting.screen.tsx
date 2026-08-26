@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 
 import {StackedAreaChart, BarChart, Grid} from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
@@ -87,7 +87,5 @@ const ChartTest: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default ChartTest;

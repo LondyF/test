@@ -8,5 +8,9 @@
 	<array>
 		<string>group.com.net.sqlapius.iSalu.onesignal</string>
 	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)$(CFBundleIdentifier)</string>
+	</array>
 </dict>
 </plist>

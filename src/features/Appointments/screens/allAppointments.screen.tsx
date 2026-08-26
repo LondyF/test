@@ -23,6 +23,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import moment, {Moment} from 'moment';
+import 'moment/locale/nl';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faCalendarAlt} from '@fortawesome/free-regular-svg-icons';
 import {
@@ -291,22 +292,12 @@ const AllAppointmentsScreen: React.FC<AllAppointmentsScreenProps> = ({
 
   return (
     <View style={styles.flex}>
-      <PageContainer variant="none" style={styles.mainContainer}>
+      <PageContainer
+        variant="none"
+        style={styles.mainContainer}
+        safeAreaEdges={['bottom']}>
         <React.Fragment>
           <View style={styles.headerContainer}>
-            <Typography
-              textStyle={{
-                ...{textAlign: 'center', marginTop: 40},
-                ...(!showAllAppointments && {
-                  opacity: 0,
-                  height: 0,
-                  marginTop: 0,
-                }),
-              }}
-              fontWeight="bold"
-              variant="h2"
-              text={t('appointments.allAppointments')}
-            />
             <CalendarStrip
               ref={calendarRef}
               updateWeek={false}
@@ -410,9 +401,9 @@ const AllAppointmentsScreen: React.FC<AllAppointmentsScreenProps> = ({
                           variant="h4"
                         />
                         <Typography
-                          text={moment(appointmentDay.date).format(
-                            'DD-MM-YYYY',
-                          )}
+                          text={moment(appointmentDay.date)
+                            .locale('nl')
+                            .format('D MMMM YYYY')}
                           fontWeight="bold"
                           variant="h4"
                         />

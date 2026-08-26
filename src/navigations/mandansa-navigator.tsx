@@ -15,7 +15,10 @@ const MandansaStack: React.FC = () => {
 
   return (
     <MandansaNavigator.Navigator
-      screenOptions={{headerShown: true, title: t('dashboard.mandansa')}}>
+      screenOptions={{
+        headerShown: true,
+        title: t('dashboard.mandansa'),
+      }}>
       <MandansaNavigator.Screen name="AllMandansa" component={AllMandansas} />
       <MandansaNavigator.Screen
         name="RegisterMandansa"

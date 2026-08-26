@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {FlatList, View, TouchableOpacity, StyleSheet} from 'react-native';
 
-import {FlatList} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {faMapMarkedAlt, faSearch} from '@fortawesome/pro-solid-svg-icons';
 import {useTranslation} from 'react-i18next';

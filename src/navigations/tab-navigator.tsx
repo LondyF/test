@@ -52,15 +52,17 @@ const TabNavigator = () => {
 
   return (
     <Tab.Navigator
-      tabBarOptions={{activeTintColor: Theme.colors.primary}}
       screenOptions={({route: {name}}) => ({
         headerShown: false,
+        tabBarActiveTintColor: Theme.colors.primary,
         tabBarIcon: ({color}) => {
+          const iconColor = color ?? Theme.colors.primary;
+
           return (
             <FontAwesomeIcon
-              color={color}
+              color={iconColor}
               icon={
-                name === 'Home'
+                name === 'Home2'
                   ? faHomeAlt
                   : name === 'Identify'
                   ? faQrcode
@@ -74,7 +76,7 @@ const TabNavigator = () => {
           );
         },
       })}
-      initialRouteName="Dashboard">
+      initialRouteName="Home2">
       <Tab.Screen
         name="Home2"
         options={{tabBarLabel: t('tabs.home')}}

@@ -37,6 +37,18 @@ export default class Cache {
       throw new ItemNotInCache();
     }
 
-    return JSON.parse(item);
+    try {
+      return JSON.parse(item);
+    } catch (error) {
+      if (__DEV__) {
+        console.log('[Cache] failed parsing stored JSON', {
+          key: cacheKey,
+          preview: item.slice(0, 120),
+          error: String(error),
+        });
+      }
+
+      throw error;
+    }
   }
 }

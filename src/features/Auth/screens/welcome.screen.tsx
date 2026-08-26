@@ -1,13 +1,5 @@
 import React from 'react';
-import {ScrollView, StyleSheet, View, StatusBar} from 'react-native';
-
-import {
-  Onfido,
-  OnfidoCaptureType,
-  OnfidoCountryCode,
-  OnfidoDocumentType,
-  OnfidoTheme,
-} from '@onfido/react-native-sdk';
+import {StyleSheet, View, StatusBar} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 
@@ -30,6 +22,7 @@ const WelcomeScreen: React.FC = () => {
       variant: 'h1',
       color: Theme.colors.primary,
       align: 'center',
+      fullWidth: true,
     },
   );
 
@@ -46,6 +39,7 @@ const WelcomeScreen: React.FC = () => {
       variant: 'b1',
       textStyle: styles.appDescription,
       align: 'center',
+      fullWidth: true,
     },
   );
 
@@ -56,41 +50,19 @@ const WelcomeScreen: React.FC = () => {
       variant: 'b1',
       color: 'white',
       fontWeight: 'bold',
+      align: 'center',
     },
   );
-
-  const startSdk = () =>
-    Onfido.start({
-      sdkToken:
-        'eyJhbGciOiJFUzUxMiJ9.eyJleHAiOjE3MDk2NTQ4OTYsInBheWxvYWQiOnsiYXBwIjoiOWMxZmRiY2ItYzkzNC00MjViLWI1NzctMmViYTIwYzMxYzBmIiwiYXBwbGljYXRpb25faWQiOiJuZXQuc3FsYXBpdXMuaVNhbHUiLCJjbGllbnRfdXVpZCI6IjkxNzQxOGZiLTg5ZDUtNDkzOC05ZGQxLTRhNWQzMTg2MmZiNiIsImlzX3NhbmRib3giOnRydWUsImlzX3NlbGZfc2VydmljZV90cmlhbCI6ZmFsc2UsImlzX3RyaWFsIjpmYWxzZSwic2FyZGluZV9zZXNzaW9uIjoiZjdhYTAwYjQtODdjOC00YTMwLTg4ZmUtMjg0NTZlYjBjN2ZiIn0sInV1aWQiOiJwbGF0Zm9ybV9zdGF0aWNfYXBpX3Rva2VuX3V1aWQiLCJ1cmxzIjp7ImRldGVjdF9kb2N1bWVudF91cmwiOiJodHRwczovL3Nkay51cy5vbmZpZG8uY29tIiwic3luY191cmwiOiJodHRwczovL3N5bmMub25maWRvLmNvbSIsImhvc3RlZF9zZGtfdXJsIjoiaHR0cHM6Ly9pZC5vbmZpZG8uY29tIiwiYXV0aF91cmwiOiJodHRwczovL2FwaS51cy5vbmZpZG8uY29tIiwib25maWRvX2FwaV91cmwiOiJodHRwczovL2FwaS51cy5vbmZpZG8uY29tIiwidGVsZXBob255X3VybCI6Imh0dHBzOi8vYXBpLnVzLm9uZmlkby5jb20ifX0.MIGHAkIBEAZ7MWsqF2MB5uSB3jcaoISw2fJmA67VvvcEkALvdda1COMjNilGNx4QKNBcKHXixpKMALjWYeV1hU5DeTJPWSICQTKNijSHhr_sGv8zysTgpVcwfeAWn3ZDN763SA2QkCsC5d-_4piHeTaYm8yP-wd2dW7rv9rAn45kj8CiH4PJilYx',
-      flowSteps: {
-        welcome: true,
-        // proofOfAddress: true,
-        captureFace: {
-          type: OnfidoCaptureType.PHOTO,
-        },
-        // captureDocument: {
-        //   docType: OnfidoDocumentType.DRIVING_LICENCE,
-        //   countryCode: OnfidoCountryCode.NLD,
-        // },
-      },
-      theme: OnfidoTheme.AUTOMATIC,
-    })
-      .then(result => {
-        console.log('Onfido result', result);
-      })
-      .catch((error: any) => {
-        console.log(error);
-        // throw error;
-      });
 
   return (
     <PageContainer>
       <StatusBar barStyle="dark-content" />
-      <ScrollView contentContainerStyle={styles.container}>
-        <ActivateTestModeWrapper>
-          <Logo />
-        </ActivateTestModeWrapper>
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <ActivateTestModeWrapper style={styles.logoPressable}>
+            <Logo />
+          </ActivateTestModeWrapper>
+        </View>
         <View style={styles.content}>
           {welcomeText}
           {description}
@@ -98,34 +70,36 @@ const WelcomeScreen: React.FC = () => {
             customTextComponent={continueText as JSX.Element}
             buttonStyle={styles.button}
             onPress={() => navigation.navigate('ChooseLanguage')}
-            // onPress={startSdk}
             text=""
           />
         </View>
-      </ScrollView>
+      </View>
     </PageContainer>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     flex: 1,
     paddingTop: 50,
+    width: '100%',
   },
-  welcomeText: {
-    color: Theme.colors.primary,
-    fontSize: 28,
-    textAlign: 'center',
+  logoContainer: {
+    alignSelf: 'center',
+  },
+  logoPressable: {
+    flex: 0,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     marginTop: -50,
+    width: '100%',
   },
   appDescription: {
     textAlign: 'center',
     marginVertical: 55,
+    width: '100%',
   },
   button: {
     alignSelf: 'stretch',

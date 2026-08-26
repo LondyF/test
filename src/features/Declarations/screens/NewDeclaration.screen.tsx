@@ -14,6 +14,7 @@ import {
 } from 'react-native-image-picker';
 import {NavigationProp} from '@react-navigation/native';
 import {faSave} from '@fortawesome/pro-regular-svg-icons';
+import DeviceInfo from 'react-native-device-info';
 
 import {
   FloatingActionButton,
@@ -55,7 +56,9 @@ const NewDeclarationScreen: React.FC<IProps> = ({
 
   const {showActionSheetWithOptions} = useActionSheet();
   const {mutateAsync, isPending} = useSaveDeclaration();
-  const [hasCameraPermissions] = usePermissions(Permissions.camera);
+  const [hasCameraPermissions, requestCameraPermissions] = usePermissions(
+    Permissions.camera,
+  );
 
   const [showModal, setShowModal] = useState(true);
   const [catalogName, setCatalogName] = useState('');
@@ -124,28 +127,71 @@ const NewDeclarationScreen: React.FC<IProps> = ({
     );
   };
 
-  const handleTakeAPicture = () => {
+  const handleTakeAPicture = async () => {
     try {
-      if (hasCameraPermissions) {
-        launchCamera(photoOptions, ({assets, didCancel}) => {
-          if (!didCancel) {
-            initNewDeclarationPhoto(assets[0]);
-          }
-        });
-      } else {
-        Alert.alert('No permissions', 'No permissions to use camera');
+      if (await DeviceInfo.isEmulator()) {
+        Alert.alert(
+          'Camera unavailable',
+          'The simulator has no camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
+
+      if (!hasCameraPermissions) {
+        const isGranted = await requestCameraPermissions();
+
+        if (!isGranted) {
+          Alert.alert('No permissions', 'No permissions to use camera');
+          return;
+        }
+      }
+
+      const {assets, didCancel, errorCode, errorMessage} = await launchCamera(
+        photoOptions,
+      );
+
+      if (errorCode === 'camera_unavailable') {
+        Alert.alert(
+          'Camera unavailable',
+          'This device does not have an available camera. Choose an image from your gallery instead.',
+          [
+            {text: 'Choose from gallery', onPress: handleSelectImageFromLibrary},
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
+        return;
+      }
+
+      if (errorMessage) {
+        Alert.alert('Oops', errorMessage);
+        return;
+      }
+
+      if (!didCancel && assets?.[0]) {
+        initNewDeclarationPhoto(assets[0]);
       }
     } catch {
       Alert.alert('Action not supported');
     }
   };
 
-  const handleSelectImageFromLibrary = () => {
-    launchImageLibrary(photoOptions, ({assets, didCancel}) => {
-      if (!didCancel) {
-        initNewDeclarationPhoto(assets[0]);
-      }
-    });
+  const handleSelectImageFromLibrary = async () => {
+    const {assets, didCancel, errorMessage} = await launchImageLibrary(
+      photoOptions,
+    );
+
+    if (errorMessage) {
+      Alert.alert('Oops', errorMessage);
+      return;
+    }
+
+    if (!didCancel && assets?.[0]) {
+      initNewDeclarationPhoto(assets[0]);
+    }
   };
 
   const initNewDeclarationPhoto = (asset: Asset) => {

@@ -1,5 +1,6 @@
 import {decimalToHex} from '@src/utils';
-import crypto from 'crypto';
+import crypto from 'react-native-quick-crypto';
+import {Buffer} from '@craftzdog/react-native-buffer';
 import Config from '../config';
 
 export default class AES {
@@ -8,23 +9,23 @@ export default class AES {
   encrypt(data: string, base64Key: string) {
     const iv = crypto.randomBytes(12);
     const keyBytes = Buffer.from(base64Key, 'base64');
-    const cipher = crypto.createCipheriv('aes-128-gcm', keyBytes, iv);
+    const cipher = crypto.createCipheriv('aes-128-gcm', keyBytes as any, iv);
     const encrypted = Buffer.concat([
-      cipher.update(data, 'utf8'),
-      cipher.final(),
+      cipher.update(data, 'utf8') as any,
+      cipher.final() as any,
     ]);
     const tag = cipher.getAuthTag();
 
-    return Buffer.concat([iv, encrypted, tag]).toString('base64');
+    return Buffer.concat([iv as any, encrypted, tag as any]).toString('base64');
   }
 
   encry(data: string, base64Key: string, ivBase64: string) {
     var key = Buffer.from(base64Key, 'base64');
     var iv = Buffer.from(ivBase64, 'base64');
 
-    var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
-    let cip = cipher.update(data, 'utf8', 'base64');
-    cip += cipher.final('base64');
+    var cipher = crypto.createCipheriv('aes-128-cbc', key as any, iv as any);
+    let cip = cipher.update(data, 'utf8', 'base64') as string;
+    cip += cipher.final('base64') as string;
 
     return cip;
   }
@@ -55,7 +56,10 @@ export default class AES {
 
     decipher.setAuthTag(tag);
 
-    return decipher.update(text) + decipher.final('utf-8');
+    return Buffer.concat([
+      decipher.update(text) as any,
+      decipher.final() as any,
+    ]).toString('utf8');
   }
 
   generateNonce() {

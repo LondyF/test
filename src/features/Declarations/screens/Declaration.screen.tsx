@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ActivityIndicator,
   Alert,
+  FlatList,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
@@ -9,7 +10,6 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Button, Typography} from '@src/components';
-import {FlatList} from 'react-native-gesture-handler';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import moment from 'moment';
@@ -389,17 +389,18 @@ const DeclarationScreen = ({route}: Props) => {
           locations={LINEAR_BACKGROUND_LOCATIONS}
           style={styles.linearGradient}>
           <SafeAreaView style={styles.flex}>
-            {isFetchingDeclaration ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <ActivityIndicator size="small" color="#FFFFFF" />
-              </View>
-            ) : (
-              <>
+            <View style={styles.contentContainer}>
+              {isFetchingDeclaration ? (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                </View>
+              ) : (
+                <>
                 <View style={styles.topBarContainer}>
                   <View style={styles.innerHeaderContainer}>
                     <Button
@@ -608,8 +609,9 @@ const DeclarationScreen = ({route}: Props) => {
                     </View>
                   )}
                 </View>
-              </>
-            )}
+                </>
+              )}
+            </View>
           </SafeAreaView>
         </LinearGradient>
         <AddDeclarationLineSheet
@@ -640,9 +642,11 @@ const createStyle = (theme: Theme) =>
     },
     linearGradient: {
       flex: 1,
+    },
+    contentContainer: {
+      flex: 1,
       paddingLeft: 15,
       paddingRight: 15,
-      borderRadius: 5,
       padding: 20,
     },
     innerHeaderContainer: {

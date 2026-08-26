@@ -10,7 +10,7 @@ import useAuthStore from '@stores/useAuthStore';
 
 import AuthStack from './auth-navigator';
 import AppStack from './app-navigator';
-import {Platform, StatusBar, View} from 'react-native';
+import {StatusBar} from 'react-native';
 
 const RootNavigator = createStackNavigator();
 
@@ -26,8 +26,13 @@ const RootStack: React.FC = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <RootNavigator.Navigator screenOptions={{headerShown: false}}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      <RootNavigator.Navigator
+        screenOptions={{headerShown: false}}>
         {!isAuthenticated ? (
           <RootNavigator.Screen name="Auth" component={AuthStack} />
         ) : (

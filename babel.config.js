@@ -1,9 +1,20 @@
+require('dotenv').config();
+
 module.exports = {
   presets: ['babel-preset-expo'],
   plugins: [
-    ['module:react-native-dotenv'],
-    'react-native-reanimated/plugin',
-    'transform-inline-environment-variables',
+    [
+      'transform-inline-environment-variables',
+      {
+        include: [
+          'API_URL',
+          'CLIENT_SECRET',
+          'ENCRYPTION_KEY',
+          'ENCRYPTION_VERSION',
+          'ENCRYPTION_MAGIC',
+        ],
+      },
+    ],
     [
       'module-resolver',
       {
@@ -41,5 +52,6 @@ module.exports = {
         },
       },
     ],
+    'react-native-worklets/plugin',
   ],
 };

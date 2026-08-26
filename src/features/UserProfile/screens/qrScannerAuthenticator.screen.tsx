@@ -1,12 +1,12 @@
 import React, {useCallback, useState} from 'react';
 
-import {BarCodeReadEvent} from 'react-native-camera';
-
 import {ScanQRCodeModal} from '@src/components';
+import {QRScanEvent} from '@components/qrScanner';
 import {
   NavigationProp,
   ParamListBase,
   RouteProp,
+  useFocusEffect,
 } from '@react-navigation/native';
 
 import useAuthStore from '@stores/useAuthStore';
@@ -30,15 +30,23 @@ const QRScannerAuthenticatorScreen: React.FC<QRScannerAuthenticatorProps> = ({
   const [isScanning, setIsScanning] = useState<boolean>(true);
   const {mutateAsync: authUserWithQR} = useAuthUserWithQR();
 
+  useFocusEffect(
+    useCallback(() => {
+      setIsScanning(true);
+    }, []),
+  );
+
   const navigateBackToPreviousTab = useCallback(() => {
-    const previousTab = route.params?.currentSelectedTab ?? 'Home';
+    const previousTab = route.params?.currentSelectedTab ?? 'Home2';
 
     navigation.navigate(previousTab);
   }, [route, navigation]);
 
   const handleOnScan = useCallback(
-    async (e: BarCodeReadEvent) => {
+    async (e: QRScanEvent) => {
       try {
+        setIsScanning(false);
+
         const {
           readQR: {
             status: {msg},
@@ -56,7 +64,6 @@ const QRScannerAuthenticatorScreen: React.FC<QRScannerAuthenticatorProps> = ({
         );
       } finally {
         navigateBackToPreviousTab();
-        setIsScanning(false);
       }
     },
     [authUserWithQR, toast, navigateBackToPreviousTab, user?.apuId],
