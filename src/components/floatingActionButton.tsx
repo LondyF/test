@@ -1,5 +1,11 @@
 import React from 'react';
-import { TouchableOpacity, TouchableOpacityProps, StyleSheet, ColorValue } from 'react-native';
+import {
+  TouchableOpacity,
+  TouchableOpacityProps,
+  StyleSheet,
+  ColorValue,
+  View,
+} from 'react-native';
 
 import { IconDefinition } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -12,6 +18,7 @@ interface FloatingActionButtonProps extends TouchableOpacityProps {
   buttonColor?: ColorValue;
   iconColor?: ColorValue;
   iconSize?: number;
+  iconOffsetX?: number;
 }
 
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
@@ -19,18 +26,34 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   onPress,
   iconColor = 'white',
   buttonColor = Theme.colors.primary,
+  iconSize = 20,
+  iconOffsetX = 0,
+  style,
   ...props
 }) => {
-  const styles = makeStyles(buttonColor, props);
+  const styles = makeStyles(buttonColor, props, iconOffsetX);
 
   return (
-    <TouchableOpacity {...props} onPress={onPress} style={[styles.baseButtonStyle]}>
-      <FontAwesomeIcon color={iconColor.toString()} size={20} icon={icon} />
+    <TouchableOpacity
+      {...props}
+      onPress={onPress}
+      style={[styles.baseButtonStyle, style]}>
+      <View style={styles.iconWrapper}>
+        <FontAwesomeIcon
+          color={iconColor.toString()}
+          size={iconSize}
+          icon={icon}
+        />
+      </View>
     </TouchableOpacity>
   );
 };
 
-const makeStyles = (buttonColor: ColorValue, props: TouchableOpacityProps) =>
+const makeStyles = (
+  buttonColor: ColorValue,
+  props: TouchableOpacityProps,
+  iconOffsetX: number,
+) =>
   StyleSheet.create({
     baseButtonStyle: {
       position: 'absolute',
@@ -43,6 +66,9 @@ const makeStyles = (buttonColor: ColorValue, props: TouchableOpacityProps) =>
       height: 60,
       borderRadius: 30,
       elevation: 1,
+    },
+    iconWrapper: {
+      transform: [{translateX: iconOffsetX}],
     },
   });
 

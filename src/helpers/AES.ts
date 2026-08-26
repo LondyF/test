@@ -1,7 +1,19 @@
 import {decimalToHex} from '@src/utils';
+import {TransactionTypes} from '@src/constants';
 import crypto from 'react-native-quick-crypto';
 import {Buffer} from '@craftzdog/react-native-buffer';
 import Config from '../config';
+
+const getRequiredConfigValue = (
+  value: string | undefined,
+  configKey: string,
+) => {
+  if (!value) {
+    throw new Error(`${configKey} is not configured`);
+  }
+
+  return value;
+};
 
 export default class AES {
   constructor() {}
@@ -84,10 +96,21 @@ export default class AES {
     mdsId: number = 0,
     reserved: number = 0,
   ) => {
-    var magic = Buffer.from(Config.ENCRYPTION_MAGIC).toString('hex');
-    var version = Buffer.from(Config.ENCRYPTION_VERSION, 'hex').toString('hex');
+    const encryptionKey = getRequiredConfigValue(
+      Config.ENCRYPTION_KEY,
+      'ENCRYPTION_KEY',
+    );
+    const encryptionMagic = getRequiredConfigValue(
+      Config.ENCRYPTION_MAGIC,
+      'ENCRYPTION_MAGIC',
+    );
+    const encryptionVersion = getRequiredConfigValue(
+      Config.ENCRYPTION_VERSION,
+      'ENCRYPTION_VERSION',
+    );
 
-    console.log('nonce', nonce);
+    var magic = Buffer.from(encryptionMagic).toString('hex');
+    var version = Buffer.from(encryptionVersion, 'hex').toString('hex');
 
     var _ownerId = decimalToHex(ownerId, 16);
     var _mdsId = decimalToHex(mdsId, 8);
@@ -108,11 +131,9 @@ export default class AES {
       magic +
       version;
 
-    console.log(hexString);
-
     const cipher = crypto.createCipheriv(
       'aes-128-gcm',
-      Buffer.from(Config.ENCRYPTION_KEY, 'hex'),
+      Buffer.from(encryptionKey, 'hex'),
       Buffer.from(nonce, 'hex'),
     );
 
@@ -123,4 +144,16 @@ export default class AES {
 
     return {qr, transactionId};
   };
+
+  generateDigitalSignatureQr = (ownerId: number) =>
+    this.generateQr(
+      this.generateNonce(),
+      ownerId,
+      0,
+      0,
+      0,
+      TransactionTypes.DigitaleHandtekening,
+      0,
+      0,
+    );
 }

@@ -1,40 +1,45 @@
 import React, {useState} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {NavigationProp} from '@react-navigation/core';
+import {faFileSignature} from '@fortawesome/pro-regular-svg-icons';
+import {StackScreenProps} from '@react-navigation/stack';
 import {useTranslation} from 'react-i18next';
 
-import {Button, ErrorView, Loader, Typography} from '@src/components';
+import {
+  Button,
+  ErrorView,
+  FloatingActionButton,
+  Loader,
+  Typography,
+} from '@src/components';
 import {TransactionTypes} from '@src/constants';
 import {Theme} from '@src/styles';
 import useAuthStore from '@src/stores/useAuthStore';
+import {PrescriptionStackParamList} from '@src/navigations/prescription-navigator';
 
 import PrescriptionItem from '../components/PrescriptionItem';
 import useFetchPrescriptions from '../hooks/useFetchPrescriptions';
 import {Prescription} from '../prescription';
 import {useEffect} from 'react';
 
-interface Props {
-  route: RouteProp<{params: {user: User; mdsId?: number}}, 'params'>;
-  navigation: NavigationProp<{}>;
-}
+type Props = StackScreenProps<PrescriptionStackParamList, 'AllPrescriptions'>;
 
 const AllPrescriptionsScreen: React.FC<Props> = ({
   route,
-  navigation: {setOptions},
+  navigation,
 }) => {
-  const navigation = useNavigation();
   const apuId = useAuthStore(state => state.user?.apuId);
 
   const {t} = useTranslation();
   const [isMandansa, setIsMandansa] = useState(false);
   const {data, isPending, refetch, error, isFetching, isError} =
     useFetchPrescriptions(apuId!, route.params?.mdsId);
+  const isOwnPrescriptionContext = route.params?.user === undefined;
 
   useEffect(() => {
-    if (route.params?.user === undefined) {
-      return setOptions({
+    if (isOwnPrescriptionContext) {
+      setIsMandansa(false);
+      return navigation.setOptions({
         title: t('prescriptions.myPrescriptions'),
       });
     }
@@ -42,12 +47,14 @@ const AllPrescriptionsScreen: React.FC<Props> = ({
     const mandansaUser = route.params.user;
 
     setIsMandansa(true);
-    setOptions({
+    navigation.setOptions({
       title: `${mandansaUser.naam}'s ${t('prescriptions.prescriptions')}`,
     });
-  }, [route, setOptions, t]);
+  }, [isOwnPrescriptionContext, navigation, route, t]);
 
   const onQRIconPressed = (prescription: Prescription) => {
+    const mdsUser = route.params?.user;
+
     navigation.navigate('Identify', {
       data: prescription,
       id: prescription.recId,
@@ -55,7 +62,7 @@ const AllPrescriptionsScreen: React.FC<Props> = ({
       transactionType: isMandansa
         ? TransactionTypes.Mandansa
         : TransactionTypes.Recept,
-      mdsUser: isMandansa && route.params.user,
+      mdsUser: isMandansa ? mdsUser : undefined,
     });
   };
 
@@ -102,17 +109,41 @@ const AllPrescriptionsScreen: React.FC<Props> = ({
 
   const keyExtractor = (_: Prescription, index: number) => `${index}`;
 
+  const handleDigitalSignaturePress = () => {
+    navigation.navigate('DigitalSignature');
+  };
+
+  const renderDigitalSignatureButton = () => {
+    if (!isOwnPrescriptionContext) {
+      return null;
+    }
+
+    return (
+      <FloatingActionButton
+        accessibilityLabel={t('digitalSignature.fabAccessibilityLabel')}
+        accessibilityRole="button"
+        icon={faFileSignature}
+        iconOffsetX={3}
+        iconSize={22}
+        onPress={handleDigitalSignaturePress}
+      />
+    );
+  };
+
   const {
     colors: {primary},
   } = Theme;
 
   if (isPending) {
     return (
-      <Loader
-        textColor={primary}
-        indicatorColor={primary}
-        text={t('prescriptions.loadingPrescriptions')}
-      />
+      <View style={styles.container}>
+        <Loader
+          textColor={primary}
+          indicatorColor={primary}
+          text={t('prescriptions.loadingPrescriptions')}
+        />
+        {renderDigitalSignatureButton()}
+      </View>
     );
   }
 
@@ -127,6 +158,7 @@ const AllPrescriptionsScreen: React.FC<Props> = ({
         ListEmptyComponent={renderListEmptyComponent}
         renderItem={renderItem}
       />
+      {renderDigitalSignatureButton()}
     </View>
   );
 };

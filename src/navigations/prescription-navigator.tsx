@@ -1,12 +1,33 @@
 import React from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
 import {useTranslation} from 'react-i18next';
 
+import {TransactionTypes} from '@src/constants';
+import DigitalSignatureScreen from '@src/features/Identify/screens/digitalSignature.screen';
 import IdentifyScreen from '@src/features/Identify/screens/identify.screen';
+import {LabRequest} from '@src/features/Laboratory/types/laboratory';
 import AllPrescriptionsScreen from '@src/features/Prescription/screens/allPrescriptions.screen';
+import {Prescription} from '@src/features/Prescription/prescription';
 
-const PrescriptionNavigator = createStackNavigator();
+export type PrescriptionStackParamList = {
+  AllPrescriptions: {user?: User; mdsId?: number} | undefined;
+  Identify: {
+    data: Prescription | LabRequest;
+    id: number;
+    transactionType: TransactionTypes;
+    mdsId?: number;
+    mdsUser?: User;
+  };
+  DigitalSignature: undefined;
+};
+
+const PrescriptionNavigator =
+  createStackNavigator<PrescriptionStackParamList>();
+
+const PrescriptionIdentifyScreen: React.FC<
+  StackScreenProps<PrescriptionStackParamList, 'Identify'>
+> = ({route}) => <IdentifyScreen route={route} />;
 
 const PrescriptionStack: React.FC = () => {
   const {t} = useTranslation();
@@ -20,7 +41,12 @@ const PrescriptionStack: React.FC = () => {
       <PrescriptionNavigator.Screen
         name="Identify"
         options={{title: t('dashboard.identify')}}
-        component={IdentifyScreen}
+        component={PrescriptionIdentifyScreen}
+      />
+      <PrescriptionNavigator.Screen
+        name="DigitalSignature"
+        options={{title: t('digitalSignature.title')}}
+        component={DigitalSignatureScreen}
       />
     </PrescriptionNavigator.Navigator>
   );

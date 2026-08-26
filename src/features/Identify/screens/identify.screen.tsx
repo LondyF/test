@@ -3,7 +3,7 @@ import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {s, vs} from 'react-native-size-matters';
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import QRCode from 'react-native-qrcode-svg';
 
@@ -33,19 +33,18 @@ import {ToastTypes} from '@src/components/Toast/toastTypes';
 
 const AESEncryption = new AES();
 
+interface IdentifyRouteParams {
+  data?: Prescription | LabRequest;
+  id?: number;
+  transactionType?: TransactionTypes;
+  mdsId?: number;
+  mdsUser?: User;
+}
+
 interface Props {
-  route: RouteProp<
-    {
-      params: {
-        data: Prescription | LabRequest;
-        id: number;
-        transactionType: TransactionTypes;
-        mdsId: number;
-        mdsUser: User;
-      };
-    },
-    'params'
-  >;
+  route: {
+    params?: IdentifyRouteParams;
+  };
 }
 
 const IdentifyScreen: React.FC<Props> = ({route}) => {
@@ -76,7 +75,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
 
   const userInsurance =
     INSURERS.find(
-      x => x.id === (!isMandansa ? user?.vzkId : route.params.mdsUser.vzkId),
+      x => x.id === (!isMandansa ? user?.vzkId : route.params?.mdsUser?.vzkId),
     ) ?? INSURERS[INSURERS.length - 1];
 
   const styles = makeStyles(theme, isInTabStack);

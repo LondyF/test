@@ -94,4 +94,5 @@ export enum TransactionTypes {
   Recept = 4,
   Mandansa,
   PermanenteTikkie,
+  DigitaleHandtekening = 7,
 }
