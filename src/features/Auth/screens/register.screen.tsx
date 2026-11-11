@@ -261,8 +261,8 @@ const RegisterScreen: React.FC = () => {
   const inAppRegistrationTrackerSteps = React.useMemo(
     () => [
       {step: Steps.EnterPersonalInfo, title: t('register.personalInfo')},
-      {step: Steps.EnterContactInfo, title: t('register.contactInfo')},
       {step: Steps.EnterInsuranceInfo, title: t('register.insuranceInfo')},
+      {step: Steps.EnterContactInfo, title: t('register.contactInfo')},
     ],
     [t],
   );
@@ -396,7 +396,7 @@ const RegisterScreen: React.FC = () => {
       const responseStatus = checkSedulaError?.response?.data.check.status;
 
       Alert.alert('error', responseStatus?.msg ?? 'Something went wrong');
-      setStep(Steps.EnterPersonalInfo);
+      setStep(Steps.EnterInsuranceInfo);
     }
   }, [checkSedulaError, checkSedulaStatus]);
 
@@ -427,7 +427,7 @@ const RegisterScreen: React.FC = () => {
         responseStatus?.msg ??
           'Something went wrong creating your account. Please try again later.',
       );
-      setStep(Steps.EnterInsuranceInfo);
+      setStep(Steps.EnterContactInfo);
     }
   }, [registerUserData, registerUserError, registerUserStatus]);
 
@@ -561,19 +561,21 @@ const RegisterScreen: React.FC = () => {
         );
       case Steps.EnterPersonalInfo:
         return (
-          <EnterPersonalInfoStep
-            dispatch={dispatch}
+          <EnterPersonalInfoStep dispatch={dispatch} user={state.user!} />
+        );
+      case Steps.EnterInsuranceInfo:
+        return (
+          <EnterInsuranceInfoStep
+            insurers={insurers?.Verzekeraars ?? []}
+            doctors={doctors?.SQArtsen.lovs ?? []}
             user={state.user!}
+            dispatch={dispatch}
             checkSedula={checkSedula}
           />
         );
       case Steps.EnterContactInfo:
-        return <EnterContactInfoStep user={state.user!} dispatch={dispatch} />;
-      case Steps.EnterInsuranceInfo:
         return (
-          <EnterInsuranceInfoStep
-            insurers={insurers?.verzekeringen.lovs ?? []}
-            doctors={doctors?.SQArtsen.lovs ?? []}
+          <EnterContactInfoStep
             user={state.user!}
             dispatch={dispatch}
             registerUser={registerUser}

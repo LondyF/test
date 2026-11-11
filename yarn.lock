@@ -4151,6 +4151,11 @@ cosmiconfig@^9.0.0:
     js-yaml "^4.1.0"
     parse-json "^5.2.0"
 
+country-flag-icons@1.6.20:
+  version "1.6.20"
+  resolved "https://registry.yarnpkg.com/country-flag-icons/-/country-flag-icons-1.6.20.tgz#aa6f36104568993f9cd43e7da283f9b7d0a802cc"
+  integrity sha512-py8JiEKzjhYw6HPJ0L7SxLgCYim36UPRTZX43/kqGueUCZLSvnrqAiwW8HtQibur7mdkFQUkjOgdK+o/9FBtaw==
+
 create-jest@^29.7.0:
   version "29.7.0"
   resolved "https://registry.npmjs.org/create-jest/-/create-jest-29.7.0.tgz"
@@ -6661,6 +6666,11 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+libphonenumber-js@1.13.15:
+  version "1.13.15"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.13.15.tgz#da973cc4b7cf178acff24bece8b9c2eefdf98818"
+  integrity sha512-AHdhEQeDFEJ4GKDAQ9AwxChy+v2kUILUB3TGQRpkXMkWePjXTU/WQEzWVQoIx/Gz8fE73Wr5SEuZCy2vk8jrMQ==
+
 lighthouse-logger@^1.0.0:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/lighthouse-logger/-/lighthouse-logger-1.4.2.tgz#aef90f9e97cd81db367c7634292ee22079280aaa"
@@ -7222,6 +7232,11 @@ minipass@^7.1.2, minipass@^7.1.3:
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-7.1.3.tgz#79389b4eb1bb2d003a9bba87d492f2bd37bdc65b"
   integrity sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==
+
+mitt@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/mitt/-/mitt-3.0.1.tgz#ea36cf0cc30403601ae074c8f77b7092cdab36d1"
+  integrity sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==
 
 mkdirp@^1.0.4:
   version "1.0.4"
@@ -8265,6 +8280,34 @@ react@19.2.3:
   version "19.2.3"
   resolved "https://registry.yarnpkg.com/react/-/react-19.2.3.tgz#d83e5e8e7a258cf6b4fe28640515f99b87cd19b8"
   integrity sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==
+
+reactotron-core-client@2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/reactotron-core-client/-/reactotron-core-client-2.10.0.tgz#494e6e56bb018774a0a63c797d48b53ac6986256"
+  integrity sha512-mOzkc1Rb4sN98OLY/frkP0e1A60bTFjuXUgG8D4m+pwCcjVCWZupdSFV8c5+gqcZBnreoVR20/ko6D8X/7KPvg==
+  dependencies:
+    reactotron-core-contract "0.4.0"
+
+reactotron-core-contract@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/reactotron-core-contract/-/reactotron-core-contract-0.4.0.tgz#7227fe19be6b564c083318798bdf88af943ca995"
+  integrity sha512-o7m4mSzaUM/IGDc1dBfe0q6rgSi7mZCP7FCs3kHF7AJQwXBOKx/awjVaeNVqz+w6ADiw7X4dtDdQvEROAXdD3w==
+
+reactotron-plugin-zustand@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/reactotron-plugin-zustand/-/reactotron-plugin-zustand-2.0.9.tgz#312f49dbb93a9f956589e8c9c332a98bac7b8af0"
+  integrity sha512-Hcbk9IS5thnhPyyH8Gf5uZh101t5Rwv8N/xBFXXeG63/RkvwOz8KWEdJZpadvtXBGGXxZbWGWA+8irpgBmvYDg==
+  dependencies:
+    deepmerge "^4.3.1"
+
+reactotron-react-native@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/reactotron-react-native/-/reactotron-react-native-5.3.1.tgz#ca8f3f6cf475f7571c8402e025a21b070c7a427e"
+  integrity sha512-kIXJ5bgYiWo0YNHr6gjq0LtDCVCmEs0Fgvf7dL6mDDprRKywifM0wkJX7tMoLvbxn2B9Xcm2wK8EPkx2wsNmXg==
+  dependencies:
+    mitt "^3.0.1"
+    reactotron-core-client "2.10.0"
+    reactotron-core-contract "0.4.0"
 
 readable-stream@^3.4.0:
   version "3.6.2"

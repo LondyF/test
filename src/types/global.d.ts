@@ -1,3 +1,9 @@
+interface Console {
+  tron: typeof import('reactotron-react-native').default;
+}
+
+declare var tron: typeof import('reactotron-react-native').default;
+
 declare interface Language {
   name: string;
   abbreviation: string;
@@ -29,6 +35,14 @@ declare interface Lov {
   flag: number;
   naam: string;
   tabNaam: string;
+}
+
+declare interface LovPhoneCountry {
+  iso: string;
+  naam: string;
+  dialPrefix: string;
+  sortOrder: number;
+  lndKde?: string | null;
 }
 
 declare module '*.svg' {

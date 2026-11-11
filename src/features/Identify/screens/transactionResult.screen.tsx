@@ -28,7 +28,8 @@ const TransactionResultScreen: React.FC<Props> = ({
 
   const isGeldig = geldig === 'Y';
 
-  const insurerInfo = INSURERS.find(x => x.id === vzkId ?? -1);
+  const insurerInfo =
+    INSURERS.find(x => x.id === vzkId) ?? INSURERS[INSURERS.length - 1];
 
   return (
     <SafeAreaView style={styles.pageContainer}>
@@ -75,7 +76,7 @@ const TransactionResultScreen: React.FC<Props> = ({
         />
       </View>
       <View style={styles.logoContainer}>
-        <Image style={styles.insuranceLogo} source={insurerInfo!.logo} />
+        <Image style={styles.insuranceLogo} source={insurerInfo.logo} />
         <Button
           variant="transparent"
           buttonStyle={styles.continueButton}

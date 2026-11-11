@@ -63,7 +63,8 @@ const DashboardScreen: React.FC<{navigation: NavigationProp<any, string>}> = ({
 
   //deleteCacheFolder();
 
-  const userInsurance = INSURERS.find(x => x.id === user?.vzkId);
+  const userInsurance =
+    INSURERS.find(x => x.id === user?.vzkId) ?? INSURERS[INSURERS.length - 1];
 
   console.log(user);
 
@@ -194,7 +195,7 @@ const DashboardScreen: React.FC<{navigation: NavigationProp<any, string>}> = ({
           </View>
         </SafeAreaView>
         <View style={styles.bannerContainer}>
-          <Image source={userInsurance!.banner} style={styles.banner} />
+          <Image source={userInsurance.banner} style={styles.banner} />
         </View>
       </ImageBackground>
     </>

@@ -187,7 +187,7 @@ const RegisterMandansaScreen: React.FC = () => {
 
   const insurersOptions = useMemo(
     () =>
-      insurers?.verzekeringen?.lovs.map(x => {
+      insurers?.Verzekeraars?.filter(x => x.useSedula === 1).map(x => {
         return {
           label: x.naam,
           value: x.id,

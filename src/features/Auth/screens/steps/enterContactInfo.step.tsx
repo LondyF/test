@@ -1,45 +1,44 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
-import {faEnvelope, faPhoneAlt} from '@fortawesome/pro-solid-svg-icons';
+import {AxiosError} from 'axios';
+import {UseMutateFunction} from '@tanstack/react-query';
+import {faEnvelope} from '@fortawesome/pro-solid-svg-icons';
 import {useFormik} from 'formik';
 import {useTranslation} from 'react-i18next';
 import * as Yup from 'yup';
 
-import {
-  Button,
-  RadioButton,
-  RadioButtonGroup,
-  TextInput,
-  Typography,
-} from '@src/components';
+import {Button, PhoneNumberInput, TextInput, Typography} from '@src/components';
 import {Theme} from '@src/styles';
-import {COUNTRIES} from '@src/constants';
+import {RegisterUserResponse} from '@hooks/useRegisterUser';
+import usePhoneCountries from '@hooks/usePhoneCountries';
+import {phoneNumberSchema} from '@helpers/phoneNumber';
 
 import {Action, ActionKind, Steps} from '../register.screen';
 
 interface EnterContactInfoStepProps {
   dispatch: React.Dispatch<Action>;
+  registerUser: UseMutateFunction<
+    RegisterUserResponse,
+    AxiosError<RegisterUserResponse>,
+    any,
+    unknown
+  >;
   user: User;
 }
 
 const EnterContactInfoStep: React.FC<EnterContactInfoStepProps> = ({
   dispatch,
+  registerUser,
   user,
 }) => {
-  const COUNTRIESLABELS = COUNTRIES.map(x => x.name);
-
   const {t} = useTranslation();
   const {darkRed} = Theme.colors;
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(
-    COUNTRIES.findIndex(
-      x => x.abbreviation === (user?.lndKde ?? COUNTRIES[0].abbreviation),
-    ),
-  );
-  const {handleChange, handleSubmit, values, errors} = useFormik({
+  const phoneCountries = usePhoneCountries();
+  const {handleChange, handleSubmit, setFieldValue, values, errors} = useFormik({
     initialValues: {
       email: user.email,
-      phoneNumber: user.sms ?? COUNTRIES[selectedOptionIndex].prefix,
+      phoneNumber: user.sms ?? '',
     },
     onSubmit: submitForm,
     validateOnBlur: false,
@@ -48,10 +47,10 @@ const EnterContactInfoStep: React.FC<EnterContactInfoStepProps> = ({
       email: Yup.string()
         .email(t('register.notValidEmail'))
         .required(t('register.emailRequired')),
-      phoneNumber: Yup.string()
-        .min(10, t('register.phoneNumberLength'))
-        .max(11, t('register.phoneNumberLength'))
-        .required(t('register.phoneNumberRequired')),
+      phoneNumber: phoneNumberSchema(t, {
+        countries: phoneCountries,
+        requiredMessage: t('register.phoneNumberRequired'),
+      }),
     }),
   });
 
@@ -62,21 +61,39 @@ const EnterContactInfoStep: React.FC<EnterContactInfoStepProps> = ({
     email: string;
     phoneNumber: string;
   }) {
-    const selectedCountry = COUNTRIES[selectedOptionIndex];
-    const newUser: User = {
-      ...user,
-      email,
-      sms: phoneNumber,
-      lndKde: selectedCountry.abbreviation as string,
-    };
-
     dispatch({
       type: ActionKind.SET_USER,
-      payload: newUser,
+      payload: {
+        ...user,
+        email,
+        sms: phoneNumber,
+      },
     });
 
-    setStep(Steps.EnterInsuranceInfo);
+    dispatch({
+      type: ActionKind.SET_BUSY,
+      payload: true,
+    });
+
+    registerUser({
+      firstName: user.firstName,
+      name: user.naam,
+      email,
+      phoneNumber,
+      idNumber: user.idNummer,
+      country: user.lndKde,
+      address: user.adres,
+      language: user.language,
+      sex: user.sex,
+      doctorId: user.sqArtId,
+      insuranceId: user.vzkId,
+      idType: user.idType,
+      svbNumber: user.svb001 != null ? String(user.svb001) : undefined,
+    });
   }
+
+  const handleChangePhoneNumber = (phoneNumber: string) =>
+    setFieldValue('phoneNumber', phoneNumber, false);
 
   const setStep = (step: Steps) =>
     dispatch({
@@ -101,47 +118,26 @@ const EnterContactInfoStep: React.FC<EnterContactInfoStepProps> = ({
         value={values.email}
         errorColor={darkRed}
         autoCapitalize="none"
+        autoCorrect={false}
+        autoComplete="email"
+        textContentType="emailAddress"
         labelFontSize={10}
         label={t('register.email')}
         keyboardType="email-address"
       />
-      <TextInput
+      <PhoneNumberInput
         mainColor="white"
-        icon={faPhoneAlt}
-        onChangeText={handleChange('phoneNumber')}
+        onChangeText={handleChangePhoneNumber}
         error={errors.phoneNumber}
         value={values.phoneNumber}
+        residenceCode={user.lndKde}
         errorColor={darkRed}
         labelFontSize={10}
         label={t('register.phoneNumber')}
-        keyboardType="number-pad"
-      />
-      <Typography
-        textStyle={styles.countryTitle}
-        align="left"
-        variant="h4"
-        color="white"
-        fontWeight="bold"
-        text={t('register.country')}
-      />
-      <RadioButtonGroup
-        containerStyle={styles.radioButtonsContainer}
-        optionContainerStyle={styles.optionContainerStyle}
-        options={COUNTRIESLABELS}
-        selectedOptionIndex={selectedOptionIndex}
-        renderOption={(option, isSelected, index) => (
-          <RadioButton
-            onPress={() => setSelectedOptionIndex(index)}
-            isSelected={isSelected}
-            labelColor="white"
-            buttonColor="white"
-            label={option}
-          />
-        )}
       />
       <View style={styles.buttonContainer}>
         <Button
-          onPress={() => setStep(Steps.EnterPersonalInfo)}
+          onPress={() => setStep(Steps.EnterInsuranceInfo)}
           variant="transparent"
           text={t('register.back')}
         />
@@ -161,21 +157,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 50,
   },
-  radioButtonsContainer: {
-    marginTop: 20,
-    alignSelf: 'stretch',
-  },
   buttonContainer: {
     flexDirection: 'row',
     marginTop: 25,
-  },
-  optionContainerStyle: {
-    marginBottom: 10,
-  },
-  countryTitle: {
-    alignSelf: 'flex-start',
-    marginTop: 20,
-    marginBottom: 0,
   },
 });
 

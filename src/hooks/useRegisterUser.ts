@@ -39,6 +39,8 @@ const useRegisterUser = () =>
       sex: 'M' | 'F';
       doctorId: number;
       insuranceId: number;
+      svbNumber?: string;
+      idType?: User['idType'];
       apuMdsId?: number;
     }) =>
       registerUser(
@@ -53,6 +55,8 @@ const useRegisterUser = () =>
         values.language,
         values.insuranceId,
         values.doctorId,
+        values.svbNumber,
+        values.idType,
         values.apuMdsId,
       ),
   });

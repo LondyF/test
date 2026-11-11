@@ -14,6 +14,7 @@ import {Button, Typography} from '@src/components';
 import {Theme} from '@styles/styles';
 import useToast from '@components/Toast/useToast';
 import AES from '@helpers/AES';
+import {getIdTypeTranslationKeys} from '@helpers/idType';
 import useAuthStore from '@stores/useAuthStore';
 import useBiometrics from '@hooks/useBiometrics';
 import useTheme from '@hooks/useTheme';
@@ -97,7 +98,7 @@ const IdentifyScreen: React.FC<Props> = ({route}) => {
             [t('identify.patient')]: {
               naam: user?.firstName,
             },
-            [t('identify.sedula')]: {
+            [t(getIdTypeTranslationKeys(user?.idType).identifyLabel)]: {
               sedula: user?.idNummer,
             },
             [t('identify.insurance')]: {

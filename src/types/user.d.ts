@@ -13,6 +13,8 @@ declare interface User {
   email: string;
   foto: string;
   idNummer: string;
+  idType?: 'SEDULA' | 'SQSEDULA';
+  svb001?: string | number;
   isAppCreated: number;
   isGevalideerd: number;
   isValid: number;

@@ -17,7 +17,6 @@ import {
   faEnvelope,
   faVenusMars,
   faMapMarkerAlt,
-  faPhoneAlt,
   faUserNurse,
   faFlag,
   faSave,
@@ -29,7 +28,11 @@ import {Item} from 'react-native-picker-select';
 import {useFormik} from 'formik';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import {useNavigation} from '@react-navigation/core';
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from '@react-navigation/core';
 import {useTranslation} from 'react-i18next';
 import DeviceInfo from 'react-native-device-info';
 import {
@@ -48,6 +51,8 @@ import {
   Button,
   Typography,
   Loader,
+  SvbNumberInput,
+  PhoneNumberInput,
 } from '@components/index';
 import {Theme} from '@styles/styles';
 import useAuthStore from '@stores/useAuthStore';
@@ -57,6 +62,10 @@ import usePin from '@hooks/usePin';
 import useTheme from '@hooks/useTheme';
 import useFetchAllDoctors, {LovDoctor} from '@hooks/useFetchAllDoctors';
 import useInternetConnection from '@hooks/useInternetConnection';
+import usePhoneCountries from '@hooks/usePhoneCountries';
+import {phoneNumberSchema} from '@helpers/phoneNumber';
+import {getSvbNumberLastDigit, getSvbNumberPrefix} from '@helpers/svbNumber';
+import {getIdTypeTranslationKeys} from '@helpers/idType';
 
 import useSaveUserProfile from '../hooks/useSaveUserProfile';
 import useUploadProiflePicture from '../hooks/useUploadProfilePicture';
@@ -66,9 +75,13 @@ const UserProfileScreen: React.FC = () => {
   const appTheme = useTheme();
 
   const [user, setUser] = useAuthStore(state => [state.user, state.setUser]);
+  const isSvbInsurer = Number(user?.vzkId) === Insurers.SVB;
+  const svbNumberPrefix = getSvbNumberPrefix(user?.idNummer);
+  const svbNumberLastDigit = getSvbNumberLastDigit(user?.svb001);
+  const idTranslationKeys = getIdTypeTranslationKeys(user?.idType);
 
   const {t, i18n} = useTranslation();
-  const {navigate} = useNavigation();
+  const {navigate} = useNavigation<NavigationProp<ParamListBase>>();
   const {mutateAsync, isPending: IsSavingProfile} = useSaveUserProfile();
   const {mutateAsync: uploadProfilePic, isPending} = useUploadProiflePicture();
   const {data: doctorsLOV} = useFetchAllDoctors();
@@ -145,7 +158,8 @@ const UserProfileScreen: React.FC = () => {
     setDoctors(doctorsArr ?? []);
   }, [doctorsLOV]);
 
-  const {handleChange, handleSubmit, values, errors} = useFormik({
+  const phoneCountries = usePhoneCountries();
+  const {handleChange, handleSubmit, setFieldValue, values, errors} = useFormik({
     initialValues: {
       firstName: user!.firstName,
       email: user!.email,
@@ -153,6 +167,7 @@ const UserProfileScreen: React.FC = () => {
       address: user!.adres,
       name: user!.naam,
     },
+    enableReinitialize: true,
     onSubmit: submitForm,
     validateOnBlur: false,
     validateOnChange: false,
@@ -171,17 +186,17 @@ const UserProfileScreen: React.FC = () => {
         .email(t('profile.incorrectEmail'))
         .required("Can't be empty")
         .max(255),
-      phoneNumber: Yup.string()
-        .required(t('profile.fillInEverything'))
-        .matches(
-          /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-          t('profile.incorrectPhoneFormat'),
-        )
-        .max(11, 'telefoon nummber bestaat minimaal uit 10 nummers')
-        .min(10, 'telefoon nummer bestaat maximaal uit 11 nummers'),
+      phoneNumber: phoneNumberSchema(t, {
+        countries: phoneCountries,
+        requiredMessage: t('profile.fillInEverything'),
+        unchangedValue: user!.sms,
+      }),
       address: Yup.string().required(t('profile.fillInEverything')).max(255),
     }),
   });
+
+  const handleChangePhoneNumber = (phoneNumber: string) =>
+    setFieldValue('phoneNumber', phoneNumber, false);
 
   async function submitForm({
     firstName,
@@ -376,9 +391,9 @@ const UserProfileScreen: React.FC = () => {
         variant={
           user?.vzkId === Insurers.Fatum
             ? 'purple'
-            : user?.vzkId === Insurers.SVB
-            ? 'blue'
-            : 'green'
+            : user?.vzkId === Insurers.Ennia
+            ? 'green'
+            : 'blue'
         }>
         <KeyboardAvoidingView
           style={styles.flex}
@@ -445,7 +460,7 @@ const UserProfileScreen: React.FC = () => {
                       autoCapitalize="none"
                     />
                     <TextInput
-                      label={t('profile.idNumber')}
+                      label={t(idTranslationKeys.profileLabel)}
                       value={user!.idNummer}
                       editable={false}
                       icon={faIdCard}
@@ -455,6 +470,20 @@ const UserProfileScreen: React.FC = () => {
                       labelTextStyle={styles.inputLabelText}
                       autoCapitalize="none"
                     />
+                    {isSvbInsurer && (
+                      <TextInput
+                        label={t('profile.svbNumber')}
+                        value={svbNumberLastDigit}
+                        InputComponent={SvbNumberInput}
+                        prefix={svbNumberPrefix}
+                        editable={false}
+                        icon={faIdCard}
+                        iconStyle={{color: inputColor}}
+                        mainColor={inputColor}
+                        textColor="black"
+                        labelTextStyle={styles.inputLabelText}
+                      />
+                    )}
                     <TextInput
                       label={t('profile.insurer')}
                       value={user?.vzkNaam}
@@ -551,20 +580,17 @@ const UserProfileScreen: React.FC = () => {
                       items={doctors}
                     />
 
-                    <TextInput
-                      icon={faPhoneAlt}
+                    <PhoneNumberInput
                       label={t('profile.phoneNumber')}
-                      onChangeText={handleChange('phoneNumber')}
+                      onChangeText={handleChangePhoneNumber}
                       value={values.phoneNumber}
+                      residenceCode={user!.lndKde}
                       errorColor="red"
                       error={errors.phoneNumber}
-                      keyboardType="number-pad"
                       editable={isEditing}
-                      iconStyle={{color: editableInputColor}}
                       mainColor={editableInputColor}
                       textColor="black"
                       labelTextStyle={styles.inputLabelText}
-                      autoCapitalize="none"
                     />
 
                     <SelectInput

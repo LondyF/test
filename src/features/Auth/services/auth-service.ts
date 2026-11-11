@@ -1,4 +1,5 @@
 import request from '@utils/request';
+import {getSvbNumberLastDigit} from '@helpers/svbNumber';
 
 export const loginUser = async (
   email: string,
@@ -91,6 +92,8 @@ export const registerUser = async (
   language: Language['abbreviation'],
   insuranceId: number,
   doctorId: number,
+  svbNumber?: string,
+  idType?: User['idType'],
   apuMdsId: number | undefined = undefined,
 ) => {
   return await request({
@@ -110,12 +113,20 @@ export const registerUser = async (
       language,
       sex,
       email,
+      svb001:
+        svbNumber != null ? Number(getSvbNumberLastDigit(svbNumber)) : undefined,
+      idType,
       apuMdsId,
     },
   });
 };
 
-export const checkSedula = async (sedula: string, lang: string) =>
+export const checkSedula = async (
+  sedula: string,
+  lang: Language['abbreviation'],
+  insuranceId?: number,
+  idType?: User['idType'],
+) =>
   await request({
     url: '/auth-rn1/checkSedula',
     method: 'POST',
@@ -124,6 +135,8 @@ export const checkSedula = async (sedula: string, lang: string) =>
     data: {
       sedula,
       taal: lang,
+      verzekeringsId: insuranceId,
+      idType,
     },
   });
 

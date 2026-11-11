@@ -7,10 +7,14 @@ const useCheckSedula = () =>
     mutationFn: ({
       sedula,
       lang,
+      insuranceId,
+      idType,
     }: {
       sedula: string;
       lang: Language['abbreviation'];
-    }) => checkSedula(sedula, lang),
+      insuranceId?: number;
+      idType?: User['idType'];
+    }) => checkSedula(sedula, lang, insuranceId, idType),
   });
 
 export default useCheckSedula;

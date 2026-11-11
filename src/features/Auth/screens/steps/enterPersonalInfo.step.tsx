@@ -3,14 +3,8 @@ import {View, StyleSheet} from 'react-native';
 
 import {useFormik} from 'formik';
 import {useTranslation} from 'react-i18next';
-import {UseMutateFunction} from '@tanstack/react-query';
-import {AxiosError} from 'axios';
 
-import {
-  faUser,
-  faAddressCard,
-  faIdBadge,
-} from '@fortawesome/pro-solid-svg-icons';
+import {faUser, faAddressCard} from '@fortawesome/pro-solid-svg-icons';
 import * as Yup from 'yup';
 
 import {
@@ -20,34 +14,40 @@ import {
   RadioButtonGroup,
   RadioButton,
 } from '@src/components';
+import {COUNTRIES} from '@src/constants';
 import {Action, ActionKind, Steps} from '../register.screen';
 import {Theme} from '@src/styles';
 
 interface EnterPersonalInfoStepProps {
   dispatch: React.Dispatch<Action>;
-  checkSedula: UseMutateFunction<
-    CheckSedulaResponse,
-    AxiosError<CheckSedulaResponse>,
-    any,
-    unknown
-  >;
   user: User;
 }
 
+const COUNTRY_LABELS = COUNTRIES.map(x => x.name);
+
+const getInitialCountryIndex = (lndKde?: string) =>
+  Math.max(
+    COUNTRIES.findIndex(x => x.abbreviation === lndKde),
+    0,
+  );
+
 const EnterPersonalInfoStep: React.FC<EnterPersonalInfoStepProps> = ({
   dispatch,
-  checkSedula,
   user,
 }) => {
   const {t} = useTranslation();
   const {darkRed} = Theme.colors;
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+  const [selectedGenderIndex, setSelectedGenderIndex] = useState(
+    user?.sex === 'F' ? 1 : 0,
+  );
+  const [selectedCountryIndex, setSelectedCountryIndex] = useState(
+    getInitialCountryIndex(user?.lndKde),
+  );
   const {handleChange, handleSubmit, values, errors} = useFormik({
     initialValues: {
       firstName: user?.firstName ?? '',
       lastName: user?.naam ?? '',
-      address: user.adres,
-      idNumber: user.idNummer,
+      address: user?.adres ?? '',
     },
     onSubmit: submitForm,
     validateOnBlur: false,
@@ -56,14 +56,6 @@ const EnterPersonalInfoStep: React.FC<EnterPersonalInfoStepProps> = ({
       firstName: Yup.string().required(t('register.nameRequired')),
       lastName: Yup.string().required(t('register.lastNameRequired')),
       address: Yup.string().required(t('register.addressRequired')),
-      idNumber: Yup.number()
-        .typeError(t('register.idExistOfNumbers'))
-        .required(t('register.idRequired'))
-        .test(
-          'len',
-          t('register.idLength'),
-          val => val?.toString().length === 10,
-        ),
     }),
   });
 
@@ -73,32 +65,26 @@ const EnterPersonalInfoStep: React.FC<EnterPersonalInfoStepProps> = ({
     firstName,
     lastName,
     address,
-    idNumber,
   }: {
     firstName: string;
     lastName: string;
     address: string;
-    idNumber: string;
   }) {
-    dispatch({
-      type: ActionKind.SET_BUSY,
-      payload: true,
-    });
-
     const newUser: User = {
       ...user,
       firstName: firstName.trim(),
       naam: lastName.trim(),
       adres: address,
-      idNummer: idNumber,
-      sex: GENDERS[selectedOptionIndex] === 'Man' ? 'M' : 'F',
+      sex: selectedGenderIndex === 0 ? 'M' : 'F',
+      lndKde: COUNTRIES[selectedCountryIndex].abbreviation,
     };
 
-    checkSedula({sedula: idNumber, taal: user.lang});
     dispatch({
       type: ActionKind.SET_USER,
       payload: newUser,
     });
+
+    setStep(Steps.EnterInsuranceInfo);
   }
 
   const setStep = (step: Steps) =>
@@ -146,20 +132,9 @@ const EnterPersonalInfoStep: React.FC<EnterPersonalInfoStepProps> = ({
         error={errors.address}
         label={t('register.address')}
       />
-      <TextInput
-        mainColor="white"
-        onChangeText={handleChange('idNumber')}
-        icon={faIdBadge}
-        labelFontSize={10}
-        value={values.idNumber}
-        error={errors.idNumber}
-        errorColor={darkRed}
-        label={t('register.idNumber')}
-        keyboardType="number-pad"
-      />
 
       <Typography
-        textStyle={styles.genderTitle}
+        textStyle={styles.sectionTitle}
         align="left"
         variant="h4"
         color="white"
@@ -172,15 +147,40 @@ const EnterPersonalInfoStep: React.FC<EnterPersonalInfoStepProps> = ({
         optionContainerStyle={styles.optionContainerStyle}
         renderOption={(option, isSelected, index) => (
           <RadioButton
-            onPress={() => setSelectedOptionIndex(index)}
+            onPress={() => setSelectedGenderIndex(index)}
             isSelected={isSelected}
             labelColor="white"
             buttonColor="white"
             label={option}
           />
         )}
-        selectedOptionIndex={selectedOptionIndex}
+        selectedOptionIndex={selectedGenderIndex}
         options={GENDERS}
+      />
+
+      <Typography
+        textStyle={styles.sectionTitle}
+        align="left"
+        variant="h4"
+        color="white"
+        fontWeight="bold"
+        text={t('register.country')}
+      />
+
+      <RadioButtonGroup
+        containerStyle={styles.radioButtonsContainer}
+        optionContainerStyle={styles.optionContainerStyle}
+        renderOption={(option, isSelected, index) => (
+          <RadioButton
+            onPress={() => setSelectedCountryIndex(index)}
+            isSelected={isSelected}
+            labelColor="white"
+            buttonColor="white"
+            label={option}
+          />
+        )}
+        selectedOptionIndex={selectedCountryIndex}
+        options={COUNTRY_LABELS}
       />
 
       <View style={styles.buttonContainer}>
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   optionContainerStyle: {
     marginBottom: 10,
   },
-  genderTitle: {
+  sectionTitle: {
     alignSelf: 'flex-start',
     marginTop: 20,
     marginBottom: 0,

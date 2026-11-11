@@ -9,6 +9,7 @@ import QRHolder from '@assets/qr_holder.svg';
 import InfoSection from '@src/features/Identify/components/infoSection';
 import {INSURERS} from '@src/constants';
 import AES from '@helpers/AES';
+import {getIdTypeTranslationKeys} from '@helpers/idType';
 import useAuthStore from '@stores/useAuthStore';
 import useBiometrics from '@hooks/useBiometrics';
 import useTheme from '@hooks/useTheme';
@@ -41,7 +42,7 @@ const DigitalSignatureScreen: React.FC = () => {
     [t('identify.patient')]: {
       naam: fullName,
     },
-    [t('digitalSignature.idNumber')]: {
+    [t(getIdTypeTranslationKeys(user?.idType).digitalSignatureLabel)]: {
       idNummer: user?.idNummer ?? '',
     },
     [t('identify.insurance')]: {

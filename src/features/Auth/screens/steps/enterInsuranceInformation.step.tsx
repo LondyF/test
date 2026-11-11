@@ -3,21 +3,39 @@ import {View, StyleSheet, Alert} from 'react-native';
 
 import {AxiosError} from 'axios';
 import {UseMutateFunction} from '@tanstack/react-query';
-import {faPoliceBox, faUserNurse} from '@fortawesome/pro-solid-svg-icons';
+import {
+  faIdBadge,
+  faPoliceBox,
+  faUserNurse,
+} from '@fortawesome/pro-solid-svg-icons';
+import {useFormik} from 'formik';
 import {useTranslation} from 'react-i18next';
+import * as Yup from 'yup';
 
-import {Button, Typography, SelectInput} from '@src/components';
+import {
+  Button,
+  Typography,
+  SelectInput,
+  TextInput,
+  SvbNumberInput,
+} from '@src/components';
+import {Theme} from '@src/styles';
 import {LovDoctor} from '@hooks/useFetchAllDoctors';
 import {LovInsurer} from '@hooks/useFetchAllInsurers';
+import {getIdTypeTranslationKeys, getInsurerIdType} from '@helpers/idType';
+import {
+  getSvbNumberLastDigit,
+  getSvbNumberPrefix,
+  sanitizeSvbNumberLastDigit,
+} from '@helpers/svbNumber';
 
 import {Action, ActionKind, Steps} from '../register.screen';
-import {RegisterUserResponse} from '@hooks/useRegisterUser';
 
 interface EnterInsuranceInfoStepProps {
   dispatch: React.Dispatch<Action>;
-  registerUser: UseMutateFunction<
-    RegisterUserResponse,
-    AxiosError<RegisterUserResponse>,
+  checkSedula: UseMutateFunction<
+    CheckSedulaResponse,
+    AxiosError<CheckSedulaResponse>,
     any,
     unknown
   >;
@@ -28,14 +46,42 @@ interface EnterInsuranceInfoStepProps {
 
 const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
   dispatch,
-  registerUser,
+  checkSedula,
   user,
   insurers,
   doctors,
 }) => {
   const {t} = useTranslation();
-  const [selectedInsurerId, setSelectedInsurerId] = useState(insurers[0]?.id);
-  const [selectedDoctorId, setSelectedDoctorId] = useState(0);
+  const {darkRed} = Theme.colors;
+  const [selectedInsurerId, setSelectedInsurerId] = useState(user.vzkId ?? 0);
+  const [selectedDoctorId, setSelectedDoctorId] = useState(user.sqArtId ?? 0);
+  const [svbNumberLastDigit, setSvbNumberLastDigit] = useState(
+    getSvbNumberLastDigit(user.svb001),
+  );
+
+  const selectedInsurer = insurers.find(x => x.id === selectedInsurerId);
+  const idType = getInsurerIdType(selectedInsurer);
+  const idTranslationKeys = getIdTypeTranslationKeys(idType);
+  const isSvbInsurer = selectedInsurer?.useSvb001 === 1;
+
+  const {handleChange, handleSubmit, values, errors} = useFormik({
+    initialValues: {
+      idNumber: user.idNummer ?? '',
+    },
+    onSubmit: submitForm,
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: Yup.object({
+      idNumber: Yup.number()
+        .typeError(t(idTranslationKeys.existOfNumbers))
+        .required(t(idTranslationKeys.required))
+        .test(
+          'len',
+          t(idTranslationKeys.length),
+          val => val?.toString().length === 10,
+        ),
+    }),
+  });
 
   const setStep = (step: Steps) =>
     dispatch({
@@ -43,12 +89,10 @@ const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
       payload: step,
     });
 
-  const insurersOptions = insurers.map(x => {
-    return {
-      label: x.naam,
-      value: x.id,
-    };
-  });
+  const insurersOptions = insurers.map(x => ({
+    label: x.naam.trim(),
+    value: x.id,
+  }));
 
   const doctorsOptions = [
     {
@@ -57,37 +101,69 @@ const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
     },
     ...doctors
       .filter(x => x.lndKde === user.lndKde)
-      .map(x => {
-        return {
-          label: x.naam,
-          value: x.id,
-        };
-      }),
+      .map(x => ({
+        label: x.naam,
+        value: x.id,
+      })),
   ];
 
-  const handleSubmit = () => {
-    if (selectedDoctorId === 0) {
-      return Alert.alert('Error', t('register.selectDoctorToContinue'));
+  function submitForm({idNumber}: {idNumber: string}) {
+    if (!selectedInsurer) {
+      return;
     }
+
+    const svbNumber = isSvbInsurer
+      ? `${getSvbNumberPrefix(idNumber)}${svbNumberLastDigit || '0'}`
+      : undefined;
+
+    dispatch({
+      type: ActionKind.SET_USER,
+      payload: {
+        ...user,
+        idNummer: idNumber,
+        idType,
+        vzkId: selectedInsurer.id,
+        vzkNaam: selectedInsurer.naam.trim(),
+        sqArtId: selectedDoctorId,
+        svb001: svbNumber,
+      },
+    });
 
     dispatch({
       type: ActionKind.SET_BUSY,
       payload: true,
     });
 
-    registerUser({
-      firstName: user.firstName,
-      name: user.naam,
-      email: user.email,
-      phoneNumber: user.sms,
-      idNumber: user.idNummer,
-      country: user.lndKde,
-      address: user.adres,
-      language: user.language,
-      sex: user.sex,
-      doctorId: selectedDoctorId,
-      insuranceId: selectedInsurerId,
+    checkSedula({
+      sedula: idNumber,
+      lang: user.language,
+      insuranceId: selectedInsurer.id,
+      idType,
     });
+  }
+
+  const handleNext = () => {
+    if (!selectedInsurer) {
+      return Alert.alert('Error', t('register.selectInsurer'));
+    }
+
+    if (selectedDoctorId === 0) {
+      return Alert.alert('Error', t('register.selectDoctorToContinue'));
+    }
+
+    handleSubmit();
+  };
+
+  const handleInsurerChange = (value: number | null) => {
+    setSelectedInsurerId(value ?? 0);
+  };
+
+  const handleDoctorChange = (value: number | null) => {
+    setSelectedDoctorId(value ?? 0);
+  };
+
+  const handleSvbNumberLastDigitChange = (value: string) => {
+    setSvbNumberLastDigit(sanitizeSvbNumberLastDigit(value));
   };
 
   return (
@@ -103,12 +179,13 @@ const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
         <SelectInput
           containerStyle={styles.alignStretch}
           bottomBorderStyle={styles.selectBorderBottomStyle}
-          onValueChange={value => {
-            if (value) {
-              setSelectedInsurerId(value);
-            }
-          }}
+          onValueChange={handleInsurerChange}
+          value={selectedInsurerId}
           label={t('register.insurer')}
+          placeholder={{
+            label: t('register.selectInsurer'),
+            value: 0,
+          }}
           labelStyle={styles.selectLabelStyle}
           inputIOSStyle={styles.colorWhite}
           inputAndroidStyle={styles.colorWhite}
@@ -116,14 +193,40 @@ const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
           iconStyle={styles.colorWhite}
           items={insurersOptions}
         />
+        {selectedInsurer && (
+          <TextInput
+            mainColor="white"
+            onChangeText={handleChange('idNumber')}
+            icon={faIdBadge}
+            labelFontSize={10}
+            value={values.idNumber}
+            error={errors.idNumber}
+            errorColor={darkRed}
+            label={t(idTranslationKeys.registerLabel)}
+            keyboardType="number-pad"
+          />
+        )}
+        {isSvbInsurer && (
+          <TextInput
+            mainColor="white"
+            textColor="white"
+            icon={faIdBadge}
+            iconStyle={styles.colorWhite}
+            labelFontSize={10}
+            label={t('register.svbNumber')}
+            value={svbNumberLastDigit}
+            onChangeText={handleSvbNumberLastDigitChange}
+            InputComponent={SvbNumberInput}
+            prefix={getSvbNumberPrefix(values.idNumber)}
+            keyboardType="number-pad"
+          />
+        )}
         <SelectInput
           containerStyle={styles.alignStretch}
           bottomBorderStyle={styles.selectBorderBottomStyle}
-          onValueChange={value => {
-            if (value) {
-              setSelectedDoctorId(value);
-            }
-          }}
+          onValueChange={handleDoctorChange}
+          value={selectedDoctorId}
+          placeholder={{}}
           label={t('register.familyDoctor')}
           labelStyle={styles.selectLabelStyle}
           inputIOSStyle={styles.colorWhite}
@@ -135,12 +238,12 @@ const EnterInsuranceInfoStep: React.FC<EnterInsuranceInfoStepProps> = ({
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          onPress={() => setStep(Steps.EnterContactInfo)}
+          onPress={() => setStep(Steps.EnterPersonalInfo)}
           variant="transparent"
           text={t('register.back')}
         />
         <Button
-          onPress={handleSubmit}
+          onPress={handleNext}
           variant="secondary"
           text={t('register.next')}
         />

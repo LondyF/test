@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {useTranslation} from 'react-i18next';
 import {NotificationClickEvent, OneSignal} from 'react-native-onesignal';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -189,9 +190,11 @@ const App = () => {
       <SafeAreaProvider>
         <NavigationContainer>
           <ActionSheetProvider>
-            <ToastContainer>
-              <RootStack />
-            </ToastContainer>
+            <BottomSheetModalProvider>
+              <ToastContainer>
+                <RootStack />
+              </ToastContainer>
+            </BottomSheetModalProvider>
           </ActionSheetProvider>
         </NavigationContainer>
       </SafeAreaProvider>

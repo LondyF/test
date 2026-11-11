@@ -18,8 +18,10 @@ import {
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
 type TextInputProps = {
-  InputComponent?: React.ComponentType<ReactNativeTextInputProps>;
+  InputComponent?: React.ComponentType<any>;
+  prefix?: string;
   icon?: IconDefinition;
+  leadingAccessory?: React.ReactNode;
   iconStyle?: FontAwesomeIconStyle;
   mainColor: string;
   label?: string;
@@ -45,8 +47,12 @@ type TextInputProps = {
   animationDuration?: number;
 } & ReactNativeTextInputProps;
 
+const ICON_OFFSET = 30;
+const ACCESSORY_OFFSET = 44;
+
 const TextInput: React.FC<TextInputProps> = ({
   icon,
+  leadingAccessory,
   iconStyle,
   mainColor,
   noMarginTop,
@@ -67,9 +73,17 @@ const TextInput: React.FC<TextInputProps> = ({
   inputContainerStyle,
   animationDuration = 225,
   InputComponent = NativeTextInput,
+  prefix,
   ...props
 }) => {
   const hasIcon = icon != null;
+  const hasAccessory = leadingAccessory != null;
+  const hasPrefix = prefix != null && prefix !== '';
+  const leadingOffset = hasAccessory
+    ? ACCESSORY_OFFSET
+    : hasIcon
+      ? ICON_OFFSET
+      : 0;
   const {
     error,
     label,
@@ -91,7 +105,7 @@ const TextInput: React.FC<TextInputProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const hasText = String(inputValue).length > 0;
   const labelAnimation = useRef(
-    new Animated.Value(hasText ? 1 : 0),
+    new Animated.Value(hasText || hasPrefix ? 1 : 0),
   ).current;
   const isEditable = editable !== false && !disabled;
   const inputColor = textColor || mainColor;
@@ -106,7 +120,7 @@ const TextInput: React.FC<TextInputProps> = ({
       ? activeLineWidth
       : lineWidth;
   const underlineStyle = !isEditable ? disabledLineType : lineType;
-  const shouldFloatLabel = isFocused || hasText;
+  const shouldFloatLabel = isFocused || hasText || hasPrefix;
   const underlineDynamicStyle: ViewStyle = underlineStyle
     ? {
         borderBottomColor: fieldColor,
@@ -155,7 +169,7 @@ const TextInput: React.FC<TextInputProps> = ({
       inputRange: [0, 1],
       outputRange: [16, labelFontSize],
     }),
-    left: hasIcon ? 30 : 0,
+    left: leadingOffset,
     top: labelAnimation.interpolate({
       inputRange: [0, 1],
       outputRange: [multiline ? 24 : 25, 4],
@@ -197,18 +211,24 @@ const TextInput: React.FC<TextInputProps> = ({
           onBlur={handleBlur}
           onChangeText={handleChangeText}
           multiline={multiline}
+          {...(prefix != null ? {prefix} : {})}
           style={[
             styles.input,
             {fontSize},
             hasLabel && styles.inputWithLabel,
             multiline && styles.multilineInput,
             {color: inputColor},
-            hasIcon && styles.inputWithIcon,
+            leadingOffset > 0 && {paddingLeft: leadingOffset},
             !isEditable && styles.disabledInput,
             style,
           ]}
           {...textInputProps}
         />
+        {hasAccessory && (
+          <View style={styles.accessory} pointerEvents="box-none">
+            {leadingAccessory}
+          </View>
+        )}
         <View
           style={[
             styles.underline,
@@ -232,6 +252,14 @@ const TextInput: React.FC<TextInputProps> = ({
 };
 
 const styles = StyleSheet.create({
+  accessory: {
+    bottom: 4,
+    height: 36,
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    width: ACCESSORY_OFFSET,
+  },
   container: {
     alignSelf: 'stretch',
   },
@@ -260,9 +288,6 @@ const styles = StyleSheet.create({
     height: 58,
     minHeight: 58,
     position: 'relative',
-  },
-  inputWithIcon: {
-    paddingLeft: 30,
   },
   inputWithLabel: {
     paddingTop: 24,

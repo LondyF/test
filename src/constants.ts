@@ -1,3 +1,5 @@
+import type {CountryCode} from 'libphonenumber-js';
+
 export const LANGUAGES: Array<Language> = [
   {
     name: 'Nederlands',
@@ -73,8 +75,30 @@ export const COUNTRIES: Array<Country> = [
   {
     name: 'St. Maarten',
     abbreviation: 'SXM',
-    prefix: '599',
+    prefix: '1721',
   },
+];
+
+export type PhoneCountry = {
+  code: CountryCode;
+  name: string;
+  dialPrefix: string;
+  displayPrefix: string;
+  residenceCode?: string;
+};
+
+export const FALLBACK_PHONE_COUNTRIES: Array<LovPhoneCountry> = [
+  {iso: 'CW', naam: 'Curaçao', dialPrefix: '5999', sortOrder: 1, lndKde: 'CUR'},
+  {iso: 'BQ', naam: 'Bonaire', dialPrefix: '599', sortOrder: 2, lndKde: 'BON'},
+  {
+    iso: 'SX',
+    naam: 'Sint Maarten',
+    dialPrefix: '1721',
+    sortOrder: 3,
+    lndKde: 'SXM',
+  },
+  {iso: 'NL', naam: 'Nederland', dialPrefix: '31', sortOrder: 4},
+  {iso: 'AW', naam: 'Aruba', dialPrefix: '297', sortOrder: 5},
 ];
 
 export const GENDERS: Array<{name: string; short: string}> = [

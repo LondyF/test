@@ -16,6 +16,8 @@ import InfoButton from './infoButton';
 import GenericPopUp from './genericPopUp';
 import ScanQRCodeModal from './scanQRCodeModal';
 import Drawer from './drawer';
+import SvbNumberInput from './svbNumberInput';
+import PhoneNumberInput from './phoneNumberInput';
 
 export {
   TextInput,
@@ -36,4 +38,6 @@ export {
   GenericPopUp,
   ScanQRCodeModal,
   Drawer,
+  SvbNumberInput,
+  PhoneNumberInput,
 };

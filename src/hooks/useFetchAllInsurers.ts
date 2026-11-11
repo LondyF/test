@@ -4,19 +4,17 @@ import {AxiosError} from 'axios';
 import {fetchAllInsurers} from '@services/lov-service';
 
 export interface LovInsurer {
-  lovId: number;
   id: number;
+  keoId: number;
   naam: string;
-  tabNaam: string;
+  naamShort: string;
+  useSedula: number;
+  useSQSedula: number;
+  useSvb001: number;
 }
 
-interface FetchAllInsurers {
-  lovs: Array<LovInsurer>;
-  status: Status;
-}
-
-interface FetchAllInsurersResponse {
-  verzekeringen: FetchAllInsurers;
+export interface FetchAllInsurersResponse {
+  Verzekeraars: Array<LovInsurer>;
 }
 
 const useFetchAllInsurers = () =>

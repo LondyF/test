@@ -10,24 +10,27 @@ export const fetchAllDoctors = async () =>
     },
   });
 
-export const fetchAllInsurers = async () => {
-  const response = await request({
+export const fetchAllInsurers = async () =>
+  await request({
     url: '/auth-rn1/lov',
     method: 'POST',
     requiresAuth: false,
     data: {
-      lovId: 201,
+      lovId: 207,
     },
   });
 
-  const returnObj = {
-    verzekeringen: {
-      ...response['noName-201'],
+export const fetchPhoneCountries = async () =>
+  await request({
+    url: '/auth-rn1/lov',
+    method: 'POST',
+    requiresAuth: false,
+    // The request cache keys on url + apuId, so caching would overwrite the insurers LOV.
+    storeInCache: false,
+    data: {
+      lovId: 208,
     },
-  };
-
-  return returnObj;
-};
+  });
 
 export const fetchAllBanks = async () =>
   await request({
